@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record id="view_form_zy_vehicle" model="ir.ui.view">
+    <field name="name">中运物流-车辆管理</field>
+    <field name="model">zy.vehicle</field>
+    <field name="arch" type="xml">
+      <form string="车辆信息">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="user_id"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_zy_vehicle" model="ir.ui.view">
+    <field name="name">车辆表</field>
+    <field name="model">zy.vehicle</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="user_id"/>
+      </tree>
+    </field>
+  </record>
+</odoo>

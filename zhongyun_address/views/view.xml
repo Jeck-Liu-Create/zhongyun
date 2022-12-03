@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record id="view_form_zy_address" model="ir.ui.view">
+    <field name="name">中运物流-地址管理</field>
+    <field name="model">zy.address</field>
+    <field name="arch" type="xml">
+      <form string="中运物流-地址">
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="sequence" readonly="1"/>
+            </h1>
+          </div>
+          <sheet>
+            <group string = "发货地信息">
+              <field name="name"/>
+              <field name="transport_company"/>
+              <field name="supplier"/>
+            </group>
+          </sheet>
+          <sheet>
+              <group>
+                <group string="起运地点">
+                  <field name="port_state"/>
+                  <field name="port_city"/>
+                  <field name="port_area"/>
+                </group>
+                <group string="止运地">
+                  <field name="stop_state"/>
+                  <field name="stop_city"/>
+                  <field name="stop_area"/>
+                </group>
+              </group>
+          </sheet>
+          <sheet>
+            <group string="备注">
+              <field name="remarke"/>
+            </group>
+          </sheet>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_demo_odoo_tutorial" model="ir.ui.view">
+    <field name="name">统计表</field>
+    <field name="model">zy.address</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="sequence"/>
+        <field name="name"/>
+        <field name="transport_company"/>
+        <field name="supplier"/>
+      </tree>
+    </field>
+  </record>
+</odoo>

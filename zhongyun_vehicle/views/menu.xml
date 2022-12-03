@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_vehicle App Menu -->
+    <menuitem id="zy_vehicle_menu"
+              name="中运物流-车辆管理" web_icon="zhongyun_vehicle,static/description/icon.png"/>
+
+    <!-- Action to open the zy_vehicle -->
+    <record id="action_zy_vehicle" model="ir.actions.act_window">
+        <field name="name"> 中运物流-车辆管理 </field>
+        <field name="res_model">zy.vehicle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem 
+            id="menu_zy_vehicle"
+            name="中运物流-车辆管理"
+            action="action_zy_vehicle"
+            parent="zy_vehicle_menu" />
+    
+</odoo>
+
+

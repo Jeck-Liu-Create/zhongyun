@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<odoo>
+  <!-- 计量价格视图 -->
+  <record id="view_form_zy_buckle" model="ir.ui.view">
+    <field name="name">计量信息</field>
+    <field name="model">zy.buckle</field>
+    <field name="arch" type="xml">
+      <form string="计量信息">
+        <header>
+          <!-- draft -> to approve -->
+          <!-- 满足需要批准的运价规则,属于当前用户,属于待提交 -->
+          <button
+              name="action_to_approve"
+              type="object"
+              string="发送审核"
+              class="oe_highlight"
+              attrs="{'invisible':['|','|',('is_approval_required','=',False),('am_i_owner','=',False),('state', 'not in', ['draft'])]}"
+          />
+          <!-- approve if i am approver -->
+          <!-- 满足需要批准的运价规则,属于审批人,属于待提交或等待批准状态 -->
+          <button
+              name="action_approve"
+              type="object"
+              string="批准"
+              class="oe_highlight"
+              attrs="{'invisible':['|','|',('is_approval_required','=',False),('am_i_approver','=',False),('state','not in',['draft','to approve'])]}"
+          />
+          <!-- approve if it's not required and i am owner -->
+          <!-- 满足需要批准的运价规则,属于当前用户,属于待提交或等待批准状态 -->
+          <button
+              name="action_approve"
+              type="object"
+              string="批准"
+              class="oe_highlight"
+              attrs="{'invisible':['|','|',('is_approval_required','=',True),('am_i_owner','=',False),('state','not in',['draft', 'to approve'])]}"
+          />
+          <!-- cancel if i am owner or approver -->
+          <!-- 如果是所有者或审批人可以取消 -->
+          <button
+              name="action_cancel"
+              type="object"
+              string="取消"
+              attrs="{'invisible':['|','&amp;',('am_i_owner','=',False),('am_i_approver','=',False),('state','not in',['draft','to approve'])]}"
+          />
+          <!-- reopen if i am owner or approver -->
+          <!-- 如果是所有者可以重开 -->
+          <button
+              name="action_draft"
+              type="object"
+              string="退回到待发送审核"
+              attrs="{'invisible':['|','&amp;',('am_i_owner','=',False),('am_i_approver','=',False),('state','not in',['cancelled'])]}"
+          />
+          <!-- cancel & reopen, if i am owner or approver -->
+          <!-- 如果是所有者或审批人可以取消重开 -->
+          <button
+              name="action_draft"
+              type="object"
+              string="退回到待发送审核"
+              attrs="{'invisible':['|','&amp;',('am_i_owner','=',False),('am_i_approver','=',False),('state','not in',['to approve'])]}"
+          />
+          <field name="am_i_owner" invisible="1" />
+          <field name="am_i_approver" invisible="1" />
+          <field name="is_approval_required" invisible="1" />
+          <field
+              name="state"
+              widget="statusbar"
+              statusbar_visible="draft,approved"
+          />
+        </header>
+        <sheet>
+          <h1>
+              <field name="name" readonly="1"/>
+          </h1>
+          <group>
+            <group>
+              <field name="create_uid" readonly="1" string="创建人"/>
+              <field name="create_date" readonly="1" string="创建时间" />
+              <field name="buckle_rules" attrs="{'readonly': [('state', 'not in', ['draft'])]}" options="{'no_create_edit ': True,'no_create': True}"/>
+            </group>
+            <group>
+              <field name="start_datetime" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+              <field name="stop_datetime" attrs="{'readonly': [('am_i_approver','=',False)]}"/>
+            </group>
+          </group>
+          <group>
+            <field
+                name="approved_uid"
+                readonly="1"
+                attrs="{'invisible':[('state','not in',['approved'])]}"
+            />
+            <field
+                name="approved_date"
+                readonly="1"
+                attrs="{'invisible':[('state','not in',['approved'])]}"
+            />
+          </group>
+          <group>
+            <field name="buckle_percentage"  
+                widget="percentage"  digits="[6, 4]"
+                attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+            />
+            <field name="active" invisible="1" />
+          </group>
+        </sheet>
+        <div class="o_attachment_preview"/>
+        <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" />
+            <field name="activity_ids"/>
+            <field name="message_ids" widget="mail_thread" />
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <!-- 计量信息列表 -->
+  <record id="view_tree_zy_buckle" model="ir.ui.view">
+    <field name="name">计量信息列表</field>
+    <field name="model">zy.buckle</field>
+    <field name="arch" type="xml">
+      <tree class="o_list_view_left" default_order="create_date desc">
+        <field name="name"/>
+        <field name="buckle_rules"/>
+        <field name="buckle_percentage"  widget="percentage" digits="[6, 4]"/>
+        <field name="create_date" readonly="1" string="创建时间" />
+        <field name="start_datetime"/>
+        <field name="stop_datetime"/>
+        <field name="create_uid" string="创建人" />
+        <field name="state"  widget="badge" decoration-success="state == 'approved'"  decoration-warning="state == 'to approve'"  decoration-info="state == 'draft'" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- 运价规则视图 -->
+  <record id="view_form_zy_buckle_rules" model="ir.ui.view">
+    <field name="name">计量规则管理</field>
+    <field name="model">zy.buckle.rules</field>
+    <field name="arch" type="xml">
+      <form string="计量规则管理">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="button_line_ids"
+                    string="SHEET IDs" type="object"
+                    attrs="{'invisible':[('buckle_line_all_ids','=', False)]}" icon="fa-bars"/>
+          </div>
+          <sheet>
+            <div class="oe_title">
+              <h1>
+                <field name="name" />
+              </h1>
+            </div>
+            <sheet>
+              <group string = "发货地信息">
+                <field name="address_name" options="{'no_create_edit ': True,'no_create': True}"/>
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"  digits="[10, 4]"
+                    options="{'no_create_edit ': True,'no_create': True}"
+                />
+              </group>
+            </sheet>
+            <sheet>
+              <group string="备注">
+                <field name="remarke"/>
+              </group>
+            </sheet>
+          </sheet>
+          <notebook>
+              <page string="当前可用计量信息">
+                <field name="buckle_line_now_ids" >
+                  <tree editable="top">
+                    <field name="name"/>
+                    <field name="start_datetime"/>
+                    <field name="stop_datetime" /> 
+                    <field name="state"  widget="badge" decoration-success="state == 'approved'"  decoration-warning="state == 'to approve'"  decoration-info="state == 'draft'" />
+                    <field name="buckle_percentage" widget="percentage"  digits="[6, 4]" />
+                  </tree>
+                </field>
+              </page>
+              <page string="全部计量数据">
+                <field name="buckle_line_all_ids" >
+                  <tree editable="top">
+                    <field name="name"/>
+                    <field name="start_datetime"/>
+                    <field name="stop_datetime"/> 
+                    <field name="state"  widget="badge" decoration-success="state == 'approved'"  decoration-warning="state == 'to approve'"  decoration-info="state == 'draft'" />
+                    <field name="buckle_percentage" widget="percentage"  digits="[6, 4]" />
+                  </tree>
+                </field>
+              </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- 计量列表 -->
+  <record id="view_tree_zy_buckle_rules" model="ir.ui.view">
+    <field name="name">计量列表</field>
+    <field name="model">zy.buckle.rules</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="buckle_line_now_ids"/>
+        <field name="buckle_line_all_ids"/>
+        <field name="company_id" groups="base.group_multi_company" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- 计量价格列表过滤器 -->
+  <record id="view_filter_zy_buckle" model="ir.ui.view">
+    <field name="name">计量信息列表过滤器</field>
+    <field name="model">zy.buckle</field>
+    <field name="arch" type="xml">
+        <search string="计量价格列表过滤器">
+            <field name="name" string="计量价格编号"/>
+            <group expand="0" string="Group By">
+              <filter string="用户" name="sheet" domain="[]" context="{'group_by': 'create_uid'}"/>
+              <filter string="计量规则名称" name="employee" domain="[]" context="{'group_by': 'buckle_rules'}"/>
+            </group>
+            <searchpanel>
+              <field name="create_uid" select="multi" icon="fa-users" enable_counters="1"/>
+              <field name="buckle_rules" icon="fa-truck" enable_counters="1"/>
+            </searchpanel>
+        </search>
+    </field>
+  </record>
+
+</odoo>

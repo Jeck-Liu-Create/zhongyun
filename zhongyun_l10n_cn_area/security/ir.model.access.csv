@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_demo_odoo_user, ZhongYun Statistics  User Access,model_res_area,res_area_group_user,1,0,0,0
+access_demo_odoo_manager, ZhongYun Statistics Manager Access,model_res_area,res_area_group_manager,1,1,1,1
+"access_res_cn_city_group_user","res_cn_city group_user","model_res_cn_city","base.group_partner_manager",1,1,1,1
+"access_res_cn_city_group_all","res_cn_city group_user_all","model_res_cn_city",,1,0,0,0

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_demo_odoo_user, ZhongYun Statistics  User Access,model_zy_statistics,zy_statistics_group_user,1,0,0,0
+access_demo_odoo_manager, ZhongYun Statistics Manager Access,model_zy_statistics,zy_statistics_group_manager,1,1,1,1

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_goods_price App Menu -->
+    <menuitem id="zy_goods_price_menu"
+              name="中运物流-货物管理"  web_icon="zhongyun_goods,static/description/icon.png"/>
+
+    <!-- Action to open the zy_goods_price -->
+    <record id="action_zy_goods_price" model="ir.actions.act_window">
+        <field name="name">中运物-货物价格管理</field>
+        <field name="res_model">zy.goods.price</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the zy_goods_price -->
+    <menuitem id="menu_zy_goods_price"
+              name="中运物流-货物价格管理"
+	          action="action_zy_goods_price"
+              parent="zy_goods_price_menu"
+              sequence="1" />
+
+    <!-- Action to open the zy_goods -->
+    <record id="action_zy_goods" model="ir.actions.act_window">
+        <field name="name">中运物流-货物管理</field>
+        <field name="res_model">zy.goods</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the zy_goods -->
+    <menuitem id="menu_zy_goods"
+              name="中运物流-货物价格管理"
+	          action="action_zy_goods"
+              parent="zy_goods_price_menu" 
+              sequence="100"/>
+</odoo>
+
+

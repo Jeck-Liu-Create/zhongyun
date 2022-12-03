@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_charge App Menu -->
+    <menuitem id="zy_charge_menu"
+              name="中运物流-运价管理"  web_icon="zhongyun_charge,static/description/icon.png"/>
+
+    <!-- Action to open the zy_charge -->
+    <record id="action_zy_charge" model="ir.actions.act_window">
+        <field name="name">中运物-流运价管理</field>
+        <field name="res_model">zy.charge</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <!-- Menu item to open the zy_charge -->
+    <menuitem id="menu_zy_charge"
+              name="中运物流-运价管理"
+	          action="action_zy_charge"
+              parent="zy_charge_menu"
+              sequence="1" />
+
+    <!-- Action to open the zy_charge_rules -->
+    <record id="action_zy_charge_rules" model="ir.actions.act_window">
+        <field name="name">中运物流-运价规则管理</field>
+        <field name="res_model">zy.charge.rules</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the zy_charge_rules -->
+    <menuitem id="menu_zy_charge_rules"
+              name="中运物流-运价规则管理"
+	          action="action_zy_charge_rules"
+              parent="zy_charge_menu" 
+              sequence="100"/>
+</odoo>
+
+

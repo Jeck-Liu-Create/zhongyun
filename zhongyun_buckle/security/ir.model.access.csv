@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+zy_buckle_user,zy.buckle user,model_zy_buckle,zhongyun_buckle.group_buckle_rules_user,1,0,0,0
+zy_buckle_rules_user,zy.buckle.rules user,model_zy_buckle_rules,zhongyun_buckle.group_buckle_rules_user,1,0,0,0
+zy_buckle_editor,zy.buckle editor,model_zy_buckle,group_buckle_rules_editor,1,1,1,0
+zy_buckle_rules_editor,zy.buckle.rules editor,model_zy_buckle_rules,group_buckle_rules_editor,1,1,1,0
+zy_buckle_manager,zy.buckle manager,model_zy_buckle,group_buckle_rules_manager,1,1,1,1
+zy_buckle_rules_manager,zy.buckle.rules manager,model_zy_buckle_rules,group_buckle_rules_manager,1,1,1,1

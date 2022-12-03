@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+.o_list_view_left .o_list_number {
+    text-align: left !important;
+    white-space: nowrap;
+}
+
+.o_list_view_left .o_list_number_th {
+    text-align: left !important;
+    white-space: nowrap;
+}
+
+

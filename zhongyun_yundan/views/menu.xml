@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_yundan App Menu -->
+        <menuitem id="zy_yunadn_root"
+                name="中运物流-运单管理" web_icon="zhongyun_yundan,static/description/icon.png"/>        
+
+        <menuitem id="menu_zy_yundan"
+                name="中运物流-运单管理"
+                sequence="1"
+                action="action_zy_yundan" 
+                parent="zy_yunadn_root"/>
+
+        <!-- Menu item to open the zy_yundan_unit -->
+        <menuitem id="menu_zy_yundan_unit"
+                name="中运物流-运单组"
+                sequence="2"
+                action="action_zy_yundan_unit"
+                parent="zy_yunadn_root"
+                groups="zy_yundan_group_user"/>
+        
+<!--        <menuitem id="menu_zy_yundan_unit_replenish"-->
+<!--                name="中运物流-运单组补单"-->
+<!--                sequence="3"-->
+<!--                action="action_zy_yundan_unit_replenish"-->
+<!--                parent="zy_yunadn_root"-->
+<!--                groups="zy_yundan_group_user"/>-->
+
+
+        <menuitem id="menu_zy_yundan_match"
+                name="运单匹配"
+                sequence="3"
+                parent="zy_yunadn_root"
+                groups="zy_yundan_group_user"/>
+
+        <menuitem id="menu_zy_yundan_to_match_all"
+                name="待匹配运单" sequence="1" parent="menu_zy_yundan_match"
+                action="action_zy_yundan_to_match_all"/>
+
+        <menuitem id="menu_zy_yundan_not_match_all"
+                name="匹配失败运单" sequence="2" parent="menu_zy_yundan_match"
+                action="action_zy_yundan_not_match_all"/>
+
+        <menuitem id="menu_zy_yundan_match_all"
+                name="匹配完成运单" sequence="3" parent="menu_zy_yundan_match"
+                action="action_zy_yundan_match_all"/>
+
+
+
+        <menuitem id="menu_zy_yundan_payment"
+                name="通知付款"
+                sequence="4"
+                parent="zy_yunadn_root"/>
+
+        <menuitem id="menu_zy_yundan_to_payment_all"
+                name="付款计划（待付款）" sequence="1" parent="menu_zy_yundan_payment"
+                action="action_zy_yundan_to_payment_all"/>
+
+        <menuitem id="menu_zy_yundan_rejected_all"
+                name="付款计划（退回通知）" sequence="2" parent="menu_zy_yundan_payment"
+                action="action_zy_yundan_rejected_all"/>
+
+        <menuitem id="menu_zy_yundan_payment_all"
+                name="付款计划（付款完成）" sequence="3" parent="menu_zy_yundan_payment"
+                action="action_zy_yundan_payment_all"/>
+
+        </odoo>
+
+

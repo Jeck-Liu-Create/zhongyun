@@ -1,0 +1,145 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!--zycharge View -->
+    <record id="zy_charge_form_inherit" model="ir.ui.view">
+        <field name="name">zy.charge.form</field>
+        <field name="model">zy.charge</field>
+        <field name="inherit_id" ref="zhongyun_charge.view_form_zy_charge" />
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <header>
+                    <!-- draft -> to approve -->
+                    <!-- 满足需要批准的运价规则,属于当前用户,属于待提交 -->
+                    <button
+                        name="action_to_approve"
+                        type="object"
+                        string="发送审核"
+                        class="oe_highlight"
+                        attrs="{'invisible':['|','|',('is_approval_required','=',False),('am_i_owner','=',False),('state', 'not in', ['draft'])]}"
+                    />
+                    <!-- approve if i am approver -->
+                    <!-- 满足需要批准的运价规则,属于审批人,属于待提交或等待批准状态 -->
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="批准"
+                        class="oe_highlight"
+                        attrs="{'invisible':['|','|',('is_approval_required','=',False),('am_i_approver','=',False),('state','not in',['draft','to approve'])]}"
+                    />
+                    <!-- approve if it's not required and i am owner -->
+                    <!-- 满足需要批准的运价规则,属于当前用户,属于待提交或等待批准状态 -->
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="批准"
+                        class="oe_highlight"
+                        attrs="{'invisible':['|','|',('is_approval_required','=',True),('am_i_owner','=',False),('state','not in',['draft', 'to approve'])]}"
+                    />
+                    <!-- cancel if i am owner or approver -->
+                    <!-- 如果是所有者或审批人可以取消 -->
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="取消"
+                        attrs="{'invisible':['|','&amp;',('am_i_owner','=',False),('am_i_approver','=',False),('state','not in',['draft','to approve'])]}"
+                    />
+                    <!-- reopen if i am owner or approver -->
+                    <!-- 如果是所有者可以重开 -->
+                    <button
+                        name="action_draft"
+                        type="object"
+                        string="退回到待发送审核"
+                        attrs="{'invisible':['|','&amp;',('am_i_owner','=',False),('am_i_approver','=',False),('state','not in',['cancelled'])]}"
+                    />
+                    <!-- cancel & reopen, if i am owner or approver -->
+                    <!-- 如果是所有者或审批人可以取消重开 -->
+                    <button
+                        name="action_draft"
+                        type="object"
+                        string="退回到待发送审核"
+                        attrs="{'invisible':['|','&amp;',('am_i_owner','=',False),('am_i_approver','=',False),('state','not in',['to approve'])]}"
+                    />
+                    <field name="am_i_owner" invisible="1" />
+                    <field name="am_i_approver" invisible="1" />
+                    <field name="is_approval_required" invisible="1" />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,approved"
+                    />
+                </header>
+            </sheet>
+            <xpath expr="//field[@name='create_uid']/parent::group" position="after">
+                <group>
+                    <field
+                        name="approved_uid"
+                        readonly="1"
+                        attrs="{'invisible':[('state','not in',['approved'])]}"
+                    />
+                    <field
+                        name="approved_date"
+                        readonly="1"
+                        attrs="{'invisible':[('state','not in',['approved'])]}"
+                    />
+                </group>
+            </xpath>
+            <!-- Readonly fields -->
+            <field name="name" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'not in', ['draft'])]}</attribute>
+            </field>
+            <field name="charge_rules" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'not in', ['draft'])]}</attribute>
+            </field>
+            <field name="user_id" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'not in', ['draft'])]}</attribute>
+            </field>
+            <field name="transport_price" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'not in', ['draft'])]}</attribute>
+            </field>
+            <field name="start_datetime" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'not in', ['draft'])]}</attribute>
+            </field>
+            <field name="stop_datetime" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('am_i_approver','=',False)]}</attribute>
+            </field>
+            <!-- Chatter -->
+            <sheet position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </sheet>
+        </field>
+    </record>
+
+    <!-- 在运价规则视图添加审核选项 -->
+    <record id="view_category_form_inherit" model="ir.ui.view">
+        <field name="name">zy.charge.rules.form</field>
+        <field name="model">zy.charge.rules</field>
+        <field name="inherit_id" ref="zhongyun_charge.view_form_zy_charge_rules" />
+        <field name="arch" type="xml">
+            <field name="address_name" position="after">
+                <field name="is_approval_required" string="是否需要审核"/>
+                <field
+                    name="approver_gid"
+                    attrs="{'invisible':[('is_approval_required','!=', True)], 'required':[('is_approval_required','=', True)]}"
+                />
+            </field>
+        </field>
+    </record>
+
+
+        
+</odoo>

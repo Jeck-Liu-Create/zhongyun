@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Demo Datetime Menu -->
+    <menuitem id="demo_datetime"
+              name="城市县/区信息" web_icon="zhongyun_l10n_cn_area,static/description/icon.png"/>
+
+    <!-- Action to open the Demo Datetime list -->
+    <record id="action_demo_datetime" model="ir.actions.act_window">
+        <field name="name">城市县/区信息</field>
+        <field name="res_model">res.area</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the Demo Datetime list -->
+    <menuitem id="menu_demo_datetime"
+              name="城市县/区信息"
+	            action="action_demo_datetime"
+              parent="demo_datetime" />
+
+</odoo>
+
+

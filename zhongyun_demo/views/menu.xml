@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_statistics App Menu -->
+    <menuitem id="zy_statistics_menu"
+              name="中运物流-统计" web_icon="zhongyun_demo,static/description/icon.png"/>
+
+    <!-- Action to open the zy_statistics -->
+    <record id="action_zy_statistics" model="ir.actions.act_window">
+        <field name="name"> 中运物流-统计 </field>
+        <field name="res_model">zy.statistics</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.client" id="x_spreadsheet_action">
+        <field name="name">spreadSheet</field>
+        <field name="tag">actions_spreadsheet</field>
+    </record>
+
+    <!-- Menu item to open the zy_statistics -->
+    <menuitem 
+            id="menu_zy_statistics"
+            name="中运物流-统计"
+            action="action_zy_statistics"
+            parent="zy_statistics_menu" />
+    
+    <menuitem
+            name="spreadSheet"
+            id="spreadSheet_menu"
+            action="x_spreadsheet_action"
+            parent="zy_statistics_menu"
+            sequence="1"/>
+</odoo>
+
+

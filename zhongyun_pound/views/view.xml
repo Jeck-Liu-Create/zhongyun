@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record id="view_form_zy_pound" model="ir.ui.view">
+    <field name="name">中运物流-磅单管理</field>
+    <field name="model">zy.pound</field>
+    <field name="arch" type="xml">
+      <form string="车辆信息">
+        <sheet>
+          <sheet>
+            <h1>
+                <field name="name"/>
+            </h1>
+            <group>
+              <group>
+                <field name="pound_supplier"/>
+                <field name="transport_goods"/>
+                <field name="car_id"/>
+                <field name="manufacture_date"/>
+                <field name="delivery_date"/>
+                <field name="car_number"/>
+              </group>
+              <group>
+                <field name="net_weight"/>
+                <field name="primary_weight"/>
+                <field name="transport_company"/>
+                <field name="Tdelivery_location"/>
+                <field name="car_id_other"/>
+                <field name="tram_carrier_unit"/>
+              </group>
+            </group>
+          </sheet>
+          <sheet>
+            <field name="remark"/>
+          </sheet>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_demo_odoo_tutorial" model="ir.ui.view">
+    <field name="name">车辆表</field>
+    <field name="model">zy.pound</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="pound_supplier"/>
+        <field name="transport_goods"/>
+        <field name="car_id"/>
+        <field name="manufacture_date"/>
+        <field name="delivery_date"/>
+        <field name="car_number"/>
+        <field name="net_weight"/>
+        <field name="primary_weight"/>
+        <field name="transport_company"/>
+        <field name="Tdelivery_location"/>
+        <field name="car_id_other"/>
+        <field name="tram_carrier_unit"/>
+        <field name="remark"/>
+      </tree>
+    </field>
+  </record>
+</odoo>

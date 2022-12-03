@@ -1,0 +1,722 @@
+<?xml version="1.0"?>
+<odoo>
+  <record id="view_form_zy_yundan" model="ir.ui.view">
+    <field name="name">中运物流-运单</field>
+    <field name="model">zy.yundan</field>
+    <field name="arch" type="xml">
+      <form string="中运物流-运单">
+        <header>
+          <button
+              name="action_matching_data"
+              type="object"
+              string="匹配磅单"
+              class="oe_highlight"
+              attrs="{'invisible':[('state', 'in', ['match','to_payment','rejected','payment'])]}"
+          />
+          <button
+              name="action_notice_of_payment"
+              type="object"
+              string="通知付款"
+              class="oe_highlight"
+              attrs="{'invisible':[('state', 'in', ['to_match','not_match','to_payment','rejected','payment','confirm_rejected'])]}"
+          />
+          <button
+              name="action_payment"
+              type="object"
+              string="确认付款"
+              class="oe_highlight"
+              attrs="{'invisible':[('state', 'in', ['to_match','not_match','match','rejected','payment','confirm_rejected'])]}"
+          />
+          <button
+              name="action_rejected"
+              type="object"
+              string="运单退回"
+              class="oe_highlight"
+              attrs="{'invisible':['|', ('state', 'in', ['to_match','not_match','match','rejected','payment','confirm_rejected']), ('am_i_cashier','=',False)]}"
+          />
+          <button
+              name="action_confirm_rejected"
+              type="object"
+              string="退回确认"
+              class="oe_highlight"
+              attrs="{'invisible':['|', ('state', 'in', ['to_match','not_match','to_payment','match','payment','confirm_rejected']), ('am_i_cashier','=',False)]}"
+          />
+          <field
+                name="state"
+                widget="statusbar"
+                statusbar_visible="to_match,match,to_payment,payment"
+          />
+          <field 
+                name="am_i_cashier" invisible="1"
+          />
+        </header>
+        <sheet>
+            <div class="oe_title">
+              <h1>
+                <field name="name" />
+              </h1>
+            </div>
+            <sheet>
+              <group string = "运单信息">
+                <group>
+                  <field name="car_id"/>
+                  <field name="yundan_unit" options="{'no_create_edit ': True,'no_create': True}" />
+                  <field name="single_supplement"/>
+                  <field name="establish_date"/>
+                  <field name="establish_datetime"/>
+                  <field
+                        name="single_supplement_datetime"
+                        attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
+                  />
+                  <field 
+                        name="single_supplement_date"
+                        attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"/>
+                  <field name="pound_id" options="{'no_create_edit ': True,'no_create': True}"/>
+                  <field name="edit_function" readonly="1" invisible="1"/>
+                  <field name="pound_id_bool" invisible="1"/>
+                </group>
+                <group>
+                  <field name="currency_id" invisible="1"/>
+                  <field name="transport_price" widget="monetary"  options = "{'currency_field': 'currency_id'}"/>
+                  <field
+                    name="buckle_percentage"  
+                    widget="percentage"  digits="[6, 4]"
+                    attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+                  />
+                  <field name="goods_price"  
+                      widget="monetary" 
+                      options = "{'currency_field': 'currency_id'}"  
+                      attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+                  />
+                </group>
+              </group>
+            </sheet>
+            <sheet >
+                <group string= "磅单信息">
+                  <group>
+                    <field name="pound_id_supplier" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_transport_goods" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_car_id" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_manufacture_date" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_delivery_date" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_car_number" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                  </group>
+                  <group>
+                    <field name="pound_id_net_weight" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_primary_weight" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_transport_company" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_Tdelivery_location" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_car_id_other" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                    <field name="pound_id_tram_carrier_unit" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+                  </group>
+                </group>
+            </sheet>
+            <group col="12" class="oe_invoice_lines_tab">
+                <group class="oe_subtotal_footer oe_right">
+                    <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                        <label for="amount_total" />
+                    </div>
+                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                </group>
+                <div class="oe_clear"/>
+            </group>
+        </sheet>
+        <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers"/>
+          <field name="activity_ids" widget="mail_activity"/>
+          <field name="message_ids" widget="mail_thread"/>
+        </div>
+      </form>
+    </field>
+  </record>
+
+  <!--zy.yundan Tree视图 -->
+  <record id="view_tree_zy_yundan" model="ir.ui.view">
+    <field name="name">运单表</field>
+    <field name="model">zy.yundan</field>
+    <field name="arch" type="xml">
+      <tree default_order="create_date desc">
+        <field name="name"/> 
+        <field name="car_id"/>
+        <field name="yundan_unit"/>
+        <field name="single_supplement"/>
+        <field name="establish_datetime"/>
+        <field name="yundan_zy_charge_rules"/>
+        <field
+              name="single_supplement_datetime"
+              attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
+        />
+        <field name="pound_id" />
+        <field name="transport_price"/>
+        <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
+      </tree>
+    </field>
+  </record>
+
+    <!--zy.yundan kanban视图 -->
+  <record id="view_zy_yundan_kanban" model="ir.ui.view">
+      <field name="name">zy.yundan.kanban</field>
+      <field name="model">zy.yundan</field>
+      <field name="arch" type="xml">
+          <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc">
+              <field name="name"/>
+              <field name="car_id"/>
+              <field name="transport_price"/>
+              <field name="yundan_unit"/>
+              <field name="single_supplement_datetime"/>
+              <field name="state"/>
+              <field name="currency_id"/>
+              <templates>
+                  <t t-name="kanban-box">
+                      <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                          <div class="row">
+                              <div class="col-12">
+                                  <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                  <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="transport_price" widget="monetary"/></span></strong>
+                              </div>
+                          </div>
+                          <div class="row mt8">
+                              <div class="col-6 text-muted">
+                                  <span><t t-esc="record.car_id.value"/> <t t-esc="record.yundan_unit.value"/></span>
+                                  <span><t t-esc="record.single_supplement_datetime.value"/> </span>
+                              </div>
+                              <div class="col-6">
+                                  <span class="float-end text-end">
+                                    <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  </t>
+              </templates>
+          </kanban>
+      </field>
+  </record>
+
+  <!-- zy.yundan Search查询 -->
+  <record id="zy_yundan_view_search" model="ir.ui.view">
+    <field name="name">zy.yundan.view.search</field>
+    <field name="model">zy.yundan</field>
+    <field name="arch" type="xml">
+      <search string="Expense">
+        <field string="运单列表" name="name"/>
+        <field name="establish_datetime"/>
+        <filter string="我的运单" name="my_yundan" domain="[('create_uid', '=', uid)]"/>
+        <separator/>
+        <filter string="待匹配" name="to_match" domain="[('state', '=', 'to_match')]"/>
+        <filter string="匹配失败" name="not_match" domain="[('state', '=', 'not_match')]"/>
+        <filter string="匹配完成" name="match" domain="[('state', '=', 'match')]"/>
+        <filter string="待付款" name="to_payment" domain="[('state', '=', 'to_payment')]"/>
+        <filter string="退回" name="rejected" domain="[('state', '=', 'rejected')]"/>
+        <filter string="付款完成" name="payment" domain="[('state', '=', 'payment')]"/>
+        <separator/>
+        <filter string="建单日期" name="filter_establish_date" date="establish_date"/>
+        <filter string="补单日期" name="filter_single_supplement_date" date="single_supplement_date"/>
+        <separator/>
+        <filter string="补单" name="my_single_supplement" domain="[('single_supplement', '=', True)]"/>
+
+        <searchpanel>
+            <field name="create_uid" select="multi" icon="fa-users" enable_counters="1"/>
+            <field name="yundan_unit" icon="fa-bars" enable_counters="1" color="#d10202"/>
+            <field name="state" string="状态" select="multi" enable_counters="1"/>
+            <field name="yundan_zy_charge_rules"  icon=" fa-sliders" string="运价规则" select="multi" enable_counters="1"/>
+        </searchpanel>
+      </search>
+    </field>
+  </record>
+
+
+  <!-- 运单组视图 -->
+  <record id="view_form_zy_yundan_unit" model="ir.ui.view">
+    <field name="name">运单组</field>
+    <field name="model">zy.yundan.unit</field>
+    <field name="arch" type="xml">
+      <form string="运单组">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="button_line_ids"
+                    string="SHEET IDs" type="object"
+                    attrs="{'invisible':[('yun_dan','=', False)]}" icon="fa-bars"/>
+          </div>
+          <sheet>
+            <div class="oe_title">
+              <h1>
+                <field name="name" />
+              </h1>
+            </div>
+            <sheet>
+              <group string = "运单组信息">
+                <group>
+                  <field name="establish_datetime"/>
+                  <field name="yundan_unit_zy_charge_rules"/>
+                  <field name="zy_charge" options="{'no_create_edit ': True,'no_create': True}"/>
+                  <field 
+                    name="edit_function"
+                    invisible="0"
+                  />
+                </group>
+                <group>
+                  <field name="single_supplement_date" attrs="{'invisible':[('replenish_state','=', False)]}" />
+                  <field name="yundan_unit_charge_buckle_rules"/>
+                  <field name="yundan_unit_zy_buckle" options="{'no_create_edit ': True,'no_create': True}"/>
+                  <field name="yundan_unit_charge_goods_rules"/>
+                  <field name="yundan_unit_zy_goods_price" options="{'no_create_edit ': True,'no_create': True}"/>
+                  <field name="replenish_state" attrs="{'invisible':[('replenish_state','=', False)]}" readonly="1"/>
+                </group>
+              </group>
+            </sheet>
+          </sheet>
+          <notebook>
+              <page string="运单信息">
+                  <field name="yun_dan"  widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('edit_function', '=' ,False)]}" >
+                      <tree>
+                          <field name="name"/>
+                          <field name="single_supplement" attrs="{'invisible':[('single_supplement','=', False)]}" force_save="1" readonly="1"/>
+                          <field name="establish_datetime"/>
+                          <field name="car_id"/>
+                          <field
+                            name="single_supplement_datetime"
+                            attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
+                          />
+                          <field name="state" />
+                      </tree>
+                  </field>
+              </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+
+<!--              <page string="运单信息">-->
+<!--                &lt;!&ndash; <field name="yun_dan" attrs="{'readonly': [('edit_function', '=' ,False)]}"> &ndash;&gt;-->
+<!--                <field name="yun_dan"  widget="section_and_note_one2many" mode="tree,kanban" attrs="{'readonly': [('edit_function', '=' ,False)]}" context="{'default_single_supplement':replenish_state}">-->
+<!--                    <tree editable="top" default_order="create_date desc">-->
+<!--                        <field name="name"/>-->
+<!--                        <field name="single_supplement" attrs="{'invisible':[('single_supplement','=', False)]}" force_save="1" readonly="1"/>-->
+<!--                        <field name="establish_datetime"/>-->
+<!--                        <field name="car_id"/>-->
+<!--                        <field-->
+<!--                          name="single_supplement_datetime"-->
+<!--                          attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"-->
+<!--                        />-->
+<!--                        <field name="state" />-->
+<!--                    </tree>-->
+<!--&lt;!&ndash;                    <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc">&ndash;&gt;-->
+<!--                    <kanban class="o_kanban_mobile">-->
+<!--                      <field name="name"/>-->
+<!--                      <field name="car_id"/>-->
+<!--                      <field name="transport_price"/>-->
+<!--                      <field name="yundan_unit"/>-->
+<!--                      <field name="single_supplement_datetime"/>-->
+<!--                      <field name="state"/>-->
+<!--                      <field name="currency_id"/>-->
+<!--                      <templates>-->
+<!--                          <t t-name="kanban-box">-->
+<!--                              <div t-attf-class="oe_kanban_card oe_kanban_global_click">-->
+<!--                                  <div class="row">-->
+<!--                                      <div class="col-12">-->
+<!--                                          <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>-->
+<!--                                          <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="transport_price" widget="monetary"/></span></strong>-->
+<!--                                      </div>-->
+<!--                                  </div>-->
+<!--                                  <div class="row mt8">-->
+<!--                                      <div class="col-6 text-muted">-->
+<!--                                          <span><t t-esc="record.car_id.value"/> <t t-esc="record.yundan_unit.value"/></span>-->
+<!--                                          <span><t t-esc="record.single_supplement_datetime.value"/> </span>-->
+<!--                                      </div>-->
+<!--                                      <div class="col-6">-->
+<!--                                          <span class="float-end text-end">-->
+<!--                                            <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />-->
+<!--                                          </span>-->
+<!--                                      </div>-->
+<!--                                  </div>-->
+<!--                              </div>-->
+<!--                          </t>-->
+<!--                      </templates>-->
+<!--                    </kanban>-->
+<!--                    <form string="新建运单">-->
+<!--                        <sheet>-->
+<!--                          <group string = "运单信息">-->
+<!--                            <div class="form-group row">-->
+<!--                                <label class="col-sm-2 col-form-label" for="name">name</label>-->
+<!--                                <div class="col-sm-10">-->
+<!--                                    <field name="name"/>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <field name="single_supplement" attrs="{'invisible':[('single_supplement','=', False)]}" force_save="1" readonly="1"/>-->
+<!--                            <field name="establish_datetime"/>-->
+<!--                            <div class="form-group row">-->
+<!--                                <label class="col-sm-2 col-form-label" for="car_id">car_id</label>-->
+<!--                                <div class="col-sm-10">-->
+<!--                                    <field name="car_id"/>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; <field name="car_id"/> &ndash;&gt;-->
+<!--                            <field-->
+<!--                              name="single_supplement_datetime"-->
+<!--                              attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"-->
+<!--                            />-->
+<!--                            <field name="state" />-->
+<!--                          </group>-->
+<!--                        </sheet>-->
+<!--                      </form>-->
+<!--                </field>-->
+<!--              </page>-->
+<!--          </notebook>-->
+<!--        </sheet>-->
+<!--      </form>-->
+<!--    </field>-->
+<!--  </record>-->
+
+  <!-- 运单组补单视图 -->
+<!--  <record id="view_form_zy_yundan_unit_replenish" model="ir.ui.view">-->
+<!--    <field name="name">运单组补单</field>-->
+<!--    <field name="model">zy.yundan.unit</field>-->
+<!--    <field name="arch" type="xml">-->
+<!--      <form string="运单组补单">-->
+<!--        <sheet>-->
+<!--          <div class="oe_button_box" name="button_box">-->
+<!--            <button class="oe_stat_button" name="button_line_ids"-->
+<!--                    string="SHEET IDs" type="object"-->
+<!--                    attrs="{'invisible':[('yun_dan','=', False)]}" icon="fa-bars"/>-->
+<!--          </div>-->
+<!--          <sheet>-->
+<!--            <div class="oe_title">-->
+<!--              <h1>-->
+<!--                <field name="name" />-->
+<!--              </h1>-->
+<!--            </div>-->
+<!--            <sheet>-->
+<!--              <group string = "运单组信息">-->
+<!--                <group>-->
+<!--                  <field name="establish_datetime"/>-->
+<!--                  <field name="single_supplement_datetime"/>-->
+<!--                  <field name="yundan_unit_zy_charge_rules"/>-->
+<!--                  <field name="zy_charge" options="{'no_create_edit ': True,'no_create': True}"/>-->
+<!--                  <field -->
+<!--                    name="edit_function"-->
+<!--                    invisible="0"-->
+<!--                  />-->
+<!--                </group>-->
+<!--                <group>-->
+<!--                  <field name="single_supplement_date" invisible="1" />-->
+<!--                  <field name="yundan_unit_charge_buckle_rules"/>-->
+<!--                  <field name="yundan_unit_zy_buckle" options="{'no_create_edit ': True,'no_create': True}"/>-->
+<!--                  <field name="yundan_unit_charge_goods_rules"/>-->
+<!--                  <field name="yundan_unit_zy_goods_price" options="{'no_create_edit ': True,'no_create': True}"/>-->
+<!--                  <field name="replenish_state" invisible="0" readonly="1"/>-->
+<!--                </group>-->
+<!--              </group>-->
+<!--            </sheet>-->
+<!--          </sheet>-->
+<!--          <notebook>-->
+<!--              <page string="运单信息">-->
+<!--                &lt;!&ndash; <field name="yun_dan" attrs="{'readonly': [('edit_function', '=' ,False)]}"> &ndash;&gt;-->
+<!--                <field name="yun_dan" attrs="{'readonly': [('edit_function', '=' ,False)]}" context="{'default_single_supplement':True,'default_single_supplement_datetime':single_supplement_datetime}"> -->
+<!--                  &lt;!&ndash; <tree editable="top" default_order="establish_datetime desc"> &ndash;&gt;-->
+<!--                  <form string="新建运单">-->
+<!--                    <sheet>-->
+<!--                      <group string = "运单信息">-->
+<!--                        <div class="form-group row">-->
+<!--                            <label class="col-sm-2 col-form-label" for="name">name</label>-->
+<!--                            <div class="col-sm-10">-->
+<!--                                <field name="name"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <field name="single_supplement" attrs="{'invisible':[('single_supplement','=', False)]}" force_save="1" readonly="1"/>-->
+<!--                        <field name="establish_datetime"/>-->
+<!--                        <div class="form-group row">-->
+<!--                            <label class="col-sm-2 col-form-label" for="car_id">car_id</label>-->
+<!--                            <div class="col-sm-10">-->
+<!--                                <field name="car_id"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; <field name="car_id"/> &ndash;&gt;-->
+<!--                        <field-->
+<!--                          name="single_supplement_datetime"-->
+<!--                          attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"-->
+<!--                        />-->
+<!--                        <field name="state" />-->
+<!--                      </group>-->
+<!--                    </sheet>-->
+<!--                  </form>-->
+<!--                  <tree editable="top">-->
+<!--                    <control>-->
+<!--                      <create name="add_product_control" string="添加运单"/>-->
+<!--                    </control>-->
+<!--                    <field name="name"/>-->
+<!--                    <field name="single_supplement" invisible="0" force_save="1" readonly="1"/>-->
+<!--                    <field name="establish_datetime"/>-->
+<!--                    <field name="car_id"/>-->
+<!--                    <field-->
+<!--                      name="single_supplement_datetime"-->
+<!--                      attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"-->
+<!--                    />-->
+<!--                    <field name="state" />-->
+<!--                  </tree>-->
+<!--                  <kanban class="o_kanban_mobile" sample="1">-->
+<!--                      <field name="name"/>-->
+<!--                      <field name="car_id"/>-->
+<!--                      <field name="transport_price"/>-->
+<!--                      <field name="yundan_unit"/>-->
+<!--                      <field name="single_supplement_datetime"/>-->
+<!--                      <field name="state"/>-->
+<!--                      <field name="currency_id"/>-->
+<!--                      <templates>-->
+<!--                          <t t-name="kanban-box">-->
+<!--                              <div t-attf-class="oe_kanban_card oe_kanban_global_click">-->
+<!--                                  <div class="row">-->
+<!--                                      <div class="col-12">-->
+<!--                                          <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>-->
+<!--                                          <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="transport_price" widget="monetary"/></span></strong>-->
+<!--                                      </div>-->
+<!--                                  </div>-->
+<!--                                  <div class="row mt8">-->
+<!--                                      <div class="col-6 text-muted">-->
+<!--                                          <span><t t-esc="record.car_id.value"/> <t t-esc="record.yundan_unit.value"/></span>-->
+<!--                                          <span><t t-esc="record.single_supplement_datetime.value"/> </span>-->
+<!--                                      </div>-->
+<!--                                      <div class="col-6">-->
+<!--                                          <span class="float-end text-end">-->
+<!--                                            <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />-->
+<!--                                          </span>-->
+<!--                                      </div>-->
+<!--                                  </div>-->
+<!--                              </div>-->
+<!--                          </t>-->
+<!--                      </templates>-->
+<!--                  </kanban>-->
+<!--                </field>-->
+<!--              </page>-->
+<!--          </notebook>-->
+<!--        </sheet>-->
+<!--      </form>-->
+<!--    </field>-->
+<!--  </record>-->
+
+  <!-- 运单组tree -->
+  <record id="view_tree_zy_yundan_unit" model="ir.ui.view">
+    <field name="name">运单组</field>
+    <field name="model">zy.yundan.unit</field>
+    <field name="arch" type="xml">
+      <tree default_order="create_date desc">
+          <header>
+              <button
+                  name="button_replenish"
+                  type="object"
+                  string="补单组"
+                  class="oe_highlight"
+                  attrs="{'force_show': 1}"
+              />
+          </header>
+        <field name="name"/>
+        <field name="establish_datetime"/>
+        <field name="yundan_unit_zy_charge_rules"/>
+        <field name="yun_dan"/>
+        <field name="yun_dan_match"/>
+        <field name="zy_charge"/>
+      </tree>
+    </field>
+  </record>
+
+  <!--zy.yundan.unit kanban视图 -->
+  <record id="view_zy_yundan_unit_kanban" model="ir.ui.view">
+      <field name="name">zy.yundan.unit.kanbankanban</field>
+      <field name="model">zy.yundan.unit</field>
+      <field name="arch" type="xml">
+          <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc">
+              <field name="name"/>
+              <field name="establish_datetime"/>
+              <field name="yundan_unit_zy_charge_rules"/>
+<!--              <field name="zy_charge"/>-->
+              <templates>
+                  <t t-name="kanban-box">
+                      <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                          <div class="row">
+                              <div class="col-12">
+                                  <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+<!--                                  <strong class="o_kanban_record_subtitle float-right"><span class="text-right"><field name="transport_price" widget="monetary"/></span></strong>-->
+                              </div>
+                          </div>
+                          <div class="row mt8">
+                              <div class="col-6 text-muted">
+                                  <span><t t-esc="record.yundan_unit_zy_charge_rules.value"/></span>
+                                  <span><t t-esc="record.establish_datetime.value"/> </span>
+                              </div>
+                              <div class="col-6">
+                                  <span class="float-end text-end">
+<!--                                    <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />-->
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  </t>
+              </templates>
+          </kanban>
+      </field>
+  </record>
+
+    <!-- zy.yundan.unit Search查询 -->
+  <record id="zy_yundan_unit_view_search" model="ir.ui.view">
+    <field name="name">zy.yundan.unit.view.search</field>
+    <field name="model">zy.yundan.unit</field>
+    <field name="arch" type="xml">
+      <search string="Expense">
+        <searchpanel>
+            <field name="yundan_unit_zy_charge_rules"  icon=" fa-sliders" string="运价规则" select="multi" enable_counters="1"/>
+        </searchpanel>
+      </search>
+    </field>
+  </record>
+
+  <!-- Action to open the zy_yundan -->
+  <record id="action_zy_yundan" model="ir.actions.act_window">
+      <field name="name"> 中运物流-运单管理 </field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form</field>
+  </record>
+  
+  <!-- Action to open the zy_yundan_unit -->
+
+  <record id="action_zy_yundan_unit" model="ir.actions.act_window">
+      <field name="name">中运物流-运价组</field>
+      <field name="res_model">zy.yundan.unit</field>
+      <field name="view_mode">tree,kanban,form</field>
+      <field name="view_ids" eval="[(5,0,0),
+                                      (0,0,{'view_mode': 'tree','view_id': ref('view_tree_zy_yundan_unit')}),
+                                      (0,0,{'view_mode': 'form','view_id': ref('view_form_zy_yundan_unit')}),]"/>
+  </record>
+
+<!--  <record id="action_zy_yundan_unit_replenish" model="ir.actions.act_window">-->
+<!--      <field name="name">中运物流-运价组补单</field>-->
+<!--      <field name="res_model">zy.yundan.unit</field>-->
+<!--      <field name="context">{'default_replenish_state':True}</field>-->
+<!--      <field name="view_mode">form</field>-->
+<!--      <field name="view_ids" eval="[(5,0,0),-->
+<!--                                      (0,0,{'view_mode': 'form','view_id': ref('view_form_zy_yundan_unit_replenish')}),]"/>-->
+<!--  </record>-->
+
+  <!-- 我的运单 act_window-->
+  <record id="action_zy_yundan_my_all" model="ir.actions.act_window">
+      <field name="name">我的运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_my_yundan': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到任何运单
+          </p><p>
+          请创建一些运单
+          </p>
+      </field>
+  </record>
+
+  <!-- 待匹配运单 act_window-->
+  <record id="action_zy_yundan_to_match_all" model="ir.actions.act_window">
+      <field name="name">待匹配运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_to_match': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到你创建的运单
+          </p><p>
+          请创建一些运单
+          </p>
+      </field>
+  </record>
+
+  <!-- 匹配失败运单 act_window-->
+  <record id="action_zy_yundan_not_match_all" model="ir.actions.act_window">
+      <field name="name">匹配失败运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_not_match': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有匹配失败的运单
+          </p><p>
+          很好继续努力！！
+          </p>
+      </field>
+  </record>
+
+  <!-- 匹配完成运单 act_window-->
+  <record id="action_zy_yundan_match_all" model="ir.actions.act_window">
+      <field name="name">匹配完成运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_match': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到新的运单匹配成功
+          </p><p>
+          请对待匹配运单进行匹配操作
+          </p>
+      </field>
+  </record>
+
+  <!-- 待付款运单 act_window-->
+  <record id="action_zy_yundan_to_payment_all" model="ir.actions.act_window">
+      <field name="name">待付款运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_to_payment': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到待付款运单
+          </p><p>
+          请对匹配成功运单进行付款通知操作
+          </p>
+      </field>
+  </record>
+
+  <!-- 退回运单 act_window-->
+  <record id="action_zy_yundan_rejected_all" model="ir.actions.act_window">
+      <field name="name">退回运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_rejected': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到退回的运单
+          </p><p>
+          很好继续努力！！
+          </p>
+      </field>
+  </record>
+
+  <!-- 付款完成的运单 act_window-->
+  <record id="action_zy_yundan_payment_all" model="ir.actions.act_window">
+      <field name="name">付款完成的运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_payment': 1}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到付款完成的运单
+          </p><p>
+          你可以提交付款通知等待支付完成
+          </p>
+      </field>
+  </record>
+
+</odoo>

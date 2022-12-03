@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_buckle App Menu -->
+    <menuitem id="zy_buckle_menu"
+              name="中运物流-计量管理"  web_icon="zhongyun_buckle,static/description/icon.png"/>
+
+    <!-- Action to open the zy_buckle -->
+    <record id="action_zy_buckle" model="ir.actions.act_window">
+        <field name="name">中运物-计量管理</field>
+        <field name="res_model">zy.buckle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the zy_buckle -->
+    <menuitem id="menu_zy_buckle"
+              name="中运物流-计量管理"
+	          action="action_zy_buckle"
+              parent="zy_buckle_menu"
+              sequence="1" />
+
+    <!-- Action to open the zy_buckle -->
+    <record id="action_zy_buckle_rules" model="ir.actions.act_window">
+        <field name="name">中运物流-计量规则管理</field>
+        <field name="res_model">zy.buckle.rules</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the zy_buckle_rule -->
+    <menuitem id="menu_zy_buckle_rules"
+              name="中运物流-计量规则管理"
+	          action="action_zy_buckle_rules"
+              parent="zy_buckle_menu" 
+              sequence="100"/>
+</odoo>
+
+

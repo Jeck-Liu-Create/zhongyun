@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- zy_pound App Menu -->
+    <menuitem id="zy_pound_menu"
+              name="中运物流-磅单管理" web_icon="zhongyun_pound,static/description/icon.png"/>
+
+    <!-- Action to open the zy_pound -->
+    <record id="action_zy_pound" model="ir.actions.act_window">
+        <field name="name"> 中运物流-磅单管理 </field>
+        <field name="res_model">zy.pound</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem 
+            id="menu_zy_pound"
+            name="中运物流-磅单管理"
+            action="action_zy_pound"
+            parent="zy_pound_menu" />
+    
+</odoo>
+
+

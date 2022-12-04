@@ -61,16 +61,6 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
-<!--    <record model="ir.rule" id="zy_charge_rules_rule">-->
-<!--        <field name="name">运价规则-公司查看权限</field>-->
-<!--        <field name="model_id" ref="model_zy_charge_rules" />-->
-<!--        <field name="global" eval="True" />-->
-<!--        <field-->
-<!--            name="domain_force"-->
-<!--        >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>-->
-<!--        <field name="groups" eval="[(4, ref('group_charge_rule_editor')),(4, ref('group_charge_rule_user'))]"/>-->
-<!--    </record>-->
-
     <record model="ir.rule" id="zy_change_rule_request_global">
         <field name="name">全局运价规则</field>
         <field name="model_id" ref="model_zy_charge_rules" />

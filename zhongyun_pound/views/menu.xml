@@ -10,11 +10,23 @@
         <field name="res_model">zy.pound</field>
         <field name="view_mode">tree,form</field>
     </record>
+    <!-- Action to open the zy_pound_uint -->
+    <record id="action_zy_pound_unit" model="ir.actions.act_window">
+        <field name="name"> 中运物流-磅单组管理 </field>
+        <field name="res_model">zy.pound.unit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
     
     <menuitem 
             id="menu_zy_pound"
             name="中运物流-磅单管理"
             action="action_zy_pound"
+            parent="zy_pound_menu" />
+
+    <menuitem
+            id="menu_zy_pound_unit"
+            name="中运物流-磅单管理"
+            action="action_zy_pound_unit"
             parent="zy_pound_menu" />
     
 </odoo>

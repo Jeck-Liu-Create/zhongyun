@@ -13,33 +13,36 @@
             </h1>
             <group>
               <group>
-                <field name="pound_supplier"/>
-                <field name="transport_goods"/>
-                <field name="car_id"/>
-                <field name="manufacture_date"/>
-                <field name="delivery_date"/>
-                <field name="car_number"/>
+                <field name="ZyPound_company_id"/>
+                <field name="pound_id"/>
               </group>
               <group>
-                <field name="net_weight"/>
-                <field name="primary_weight"/>
-                <field name="transport_company"/>
-                <field name="Tdelivery_location"/>
-                <field name="car_id_other"/>
-                <field name="tram_carrier_unit"/>
+                <group>
+                  <field name="pound_supplier"/>
+                  <field name="transport_goods"/>
+                  <field name="car_id"/>
+                  <field name="manufacture_date"/>
+                  <field name="delivery_date"/>
+                  <field name="car_number"/>
+                </group>
+                <group>
+                  <field name="net_weight"/>
+                  <field name="primary_weight"/>
+                  <field name="transport_company"/>
+                  <field name="delivery_location"/>
+                  <field name="car_id_other"/>
+                  <field name="tram_carrier_unit"/>
+                </group>
               </group>
             </group>
-          </sheet>
-          <sheet>
-            <field name="remark"/>
           </sheet>
         </sheet>
       </form>
     </field>
   </record>
 
-  <record id="view_tree_demo_odoo_tutorial" model="ir.ui.view">
-    <field name="name">车辆表</field>
+  <record id="view_tree_zy_pound" model="ir.ui.view">
+    <field name="name">过磅单</field>
     <field name="model">zy.pound</field>
     <field name="arch" type="xml">
       <tree>
@@ -53,10 +56,51 @@
         <field name="net_weight"/>
         <field name="primary_weight"/>
         <field name="transport_company"/>
-        <field name="Tdelivery_location"/>
+        <field name="delivery_location"/>
         <field name="car_id_other"/>
         <field name="tram_carrier_unit"/>
-        <field name="remark"/>
+      </tree>
+    </field>
+  </record>
+
+
+  <!--  过磅单组-->
+
+  <record id="view_form_zy_pound_unit" model="ir.ui.view">
+    <field name="name">中运物流-磅单组管理</field>
+    <field name="model">zy.pound.unit</field>
+    <field name="arch" type="xml">
+      <form string="车辆信息">
+        <sheet>
+          <sheet>
+            <h1>
+                <field name="name"/>
+            </h1>
+            <group>
+              <field name="ZyPoundUint_establish_datetime"/>
+              <field name="ZyPoundUint_user_id"/>
+              <field name="ZyPoundUint_company_id"/>
+            </group>
+          </sheet>
+          <notebook>
+              <page string="运单信息">
+                <field name="pound_ids"/>
+              </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_zy_pound_unit" model="ir.ui.view">
+    <field name="name">磅单组</field>
+    <field name="model">zy.pound.unit</field>
+    <field name="arch" type="xml">
+      <tree>
+         <field name="name"/>
+          <field name="ZyPoundUint_establish_datetime"/>
+          <field name="ZyPoundUint_user_id"/>
+          <field name="ZyPoundUint_company_id"/>
       </tree>
     </field>
   </record>

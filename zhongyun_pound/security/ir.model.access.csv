@@ -1,3 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_demo_odoo_user, ZhongYun pound  User Access,model_zy_pound,zy_pound_group_user,1,0,0,0
-access_demo_odoo_manager, ZhongYun pound Manager Access,model_zy_pound,zy_pound_group_manager,1,1,1,1
+access_pound_odoo_user, ZhongYun pound  User Access,model_zy_pound,zy_pound_group_user,1,0,0,0
+access_pound_odoo_manager, ZhongYun pound Manager Access,model_zy_pound,zy_pound_group_manager,1,1,1,1
+access_pound_odoo_editor, ZhongYun pound Editor Access,model_zy_pound,zy_pound_group_editor_user,1,1,1,0
+access_pound_unit_odoo_user, ZhongYun pound unit User Access,model_zy_pound_unit,zy_pound_unit_group_user,1,0,0,0
+access_pound_unit_odoo_manager, ZhongYun pound unit Manager Access,model_zy_pound_unit,zy_pound_unit_group_editor_user,1,1,1,0
+access_pound_unit_odoo_editor, ZhongYun pound unit Editor Access,model_zy_pound_unit,zy_pound_unit_group_manager,1,1,1,1

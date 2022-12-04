@@ -3,9 +3,20 @@
   <data noupdate="1">
     <record id="seq_pound_sequence_sn" model="ir.sequence">
       <field name="name">zhongyun_pound_SN</field>
-      <field name="code">zy.pound.sequence</field>
+      <field name="code">zy.pound</field>
       <field name="active">True</field>
       <field name="prefix">SNZP%(y)s%(month)s%(day)s</field>
+      <field name="padding">5</field>
+      <field name="number_next">1</field>
+      <field name="number_increment">1</field>
+      <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_pound_unit_sequence_sn" model="ir.sequence">
+      <field name="name">zhongyun_pound_unit_SN</field>
+      <field name="code">zy.pound.unit</field>
+      <field name="active">True</field>
+      <field name="prefix">SNZPU%(y)s%(month)s%(day)s</field>
       <field name="padding">5</field>
       <field name="number_next">1</field>
       <field name="number_increment">1</field>

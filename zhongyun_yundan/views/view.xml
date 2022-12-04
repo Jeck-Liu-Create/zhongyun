@@ -466,15 +466,6 @@
                                       (0,0,{'view_mode': 'form','view_id': ref('view_form_zy_yundan_unit')}),]"/>
   </record>
 
-<!--  <record id="action_zy_yundan_unit_replenish" model="ir.actions.act_window">-->
-<!--      <field name="name">中运物流-运价组补单</field>-->
-<!--      <field name="res_model">zy.yundan.unit</field>-->
-<!--      <field name="context">{'default_replenish_state':True}</field>-->
-<!--      <field name="view_mode">form</field>-->
-<!--      <field name="view_ids" eval="[(5,0,0),-->
-<!--                                      (0,0,{'view_mode': 'form','view_id': ref('view_form_zy_yundan_unit_replenish')}),]"/>-->
-<!--  </record>-->
-
   <!-- 我的运单 act_window-->
   <record id="action_zy_yundan_my_all" model="ir.actions.act_window">
       <field name="name">我的运单</field>

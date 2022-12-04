@@ -384,15 +384,10 @@ class ZyYundan(models.Model):
         domain_goods_price_now = ['&', ('state', '=', "approved"),
                                   '&', ('start_datetime', '<=', fields.Datetime.now()),
                                   '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
-        print(domain_chrage_now)
-        print(domain_buckle_now)
-        print(domain_goods_price_now)
+
         res_chrage_new = Model_charge.search_read(domain_chrage_now, ['name'])
         res_buckle_now = Model_buckle.search_read(domain_buckle_now, ['name'])
         res_goods_price_now = Model_goods_price.search_read(domain_goods_price_now, ['name'])
-        print(res_chrage_new)
-        print(res_buckle_now)
-        print(res_goods_price_now)
 
         res_chrage_new_list = []
         for i, val in enumerate(res_chrage_new):
@@ -405,16 +400,12 @@ class ZyYundan(models.Model):
         res_goods_price_now_list = []
         for i, val in enumerate(res_goods_price_now):
             res_goods_price_now_list.append(val['id'])
-        print(res_chrage_new_list)
-        print(res_buckle_now_list)
-        print(res_goods_price_now_list)
 
         """ 运单组满足当前可用限制 """
         # if not self.single_supplement:
         domain = ['&', ("replenish_state", '=', False), '&', ("zy_charge", 'in', res_chrage_new_list), '&',
                   ("yundan_unit_zy_buckle", 'in', res_buckle_now_list),
                   ("yundan_unit_zy_goods_price", 'in', res_goods_price_now_list)]
-        print(domain)
 
         return domain
 
@@ -769,11 +760,3 @@ class ZyYunDanUnit(models.Model):
             "mode": 'edit',
             'views': [[form_id, 'form']],
         }
-
-    # def write(self, vals):
-    #     if (self.single_supplement_datetime is not None) and ("single_supplement_datetime" in vals or "yundan_unit_zy_charge_rules" in vals):
-    #         raise UserError(
-    #             _('【%s】状态下无法修改数据 ') % (
-    #                 self.state,))
-    #
-    #     return super(ZyYunDanUnit, self).write(vals)

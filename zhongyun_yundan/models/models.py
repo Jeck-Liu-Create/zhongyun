@@ -111,7 +111,7 @@ class ZyYundan(models.Model):
     pound_id_transport_company = fields.Many2one(string='运输单位', related='pound_id.transport_company', store=True,
                                                  readonly=True)
 
-    pound_id_Tdelivery_location = fields.Many2one(string='发货地址', related='pound_id.Tdelivery_location', store=True,
+    pound_id_Tdelivery_location = fields.Many2one(string='发货地址', related='pound_id.delivery_location', store=True,
                                                   readonly=True)
 
     pound_id_car_id_other = fields.Many2one(string='油车车号', related='pound_id.car_id_other', store=True, readonly=True)
@@ -119,7 +119,6 @@ class ZyYundan(models.Model):
     pound_id_tram_carrier_unit = fields.Char(string='电车承运单位', related='pound_id.tram_carrier_unit', store=True,
                                              readonly=True)
 
-    pound_id_remark = fields.Char(string='备注', related='pound_id.remark', store=True, readonly=True)
     """"""""" """""""""
 
     """ 运单总价值相关字段 """

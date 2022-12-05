@@ -15,7 +15,7 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/data.xml',
-        'data/action_data.xml',
+        # 'data/action_data.xml',
         'views/view.xml',
         'views/menu.xml',
         # 'views/template.xml',

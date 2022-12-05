@@ -154,6 +154,7 @@
         />
         <field name="pound_id" />
         <field name="transport_price"/>
+        <field name="zy_yundan_company_id" invisible="1"/>
         <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
       </tree>
     </field>
@@ -394,6 +395,7 @@
         <field name="yun_dan"/>
         <field name="yun_dan_match"/>
         <field name="zy_charge"/>
+        <field name="yundan_unit_company_id" invisible="1"/>
       </tree>
     </field>
   </record>

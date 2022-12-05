@@ -10,7 +10,7 @@
     'website': "http://www.yourcompany.com",
     'category': 'Uncategorized',
     'version': '0.1',
-    'depends': ['base', 'mail', 'zhongyun_vehicle'],
+    'depends': ['base', 'mail', 'zhongyun_vehicle','zhongyun_address'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',

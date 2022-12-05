@@ -51,13 +51,13 @@
 
        <record model="ir.rule" id="zy_yudnan_company_rule">
               <field name="name">运单-公司查看权限</field>
-              <field name="model_id" ref="module_zy_yundan" />
+              <field name="model_id" ref="model_zy_yundan" />
               <field name="global" eval="True" />
               <field name="domain_force" >['|',('zy_yundan_company_id','=',False),('zy_yundan_company_id', 'in', company_ids)]</field>
-              <!--<field name="groups" eval="[(4, ref('group_charge_rule_editor')),(4, ref('group_charge_rule_user'))]"/>-->
+<!--              <field name="groups" eval="[(4, ref('zy_yundan_group_user')),(4, ref('zy_yundan_group_business_user')),(4, ref('zy_yundan_group_account_cashier'))]"/>-->
        </record>
 
-              <record id="only_responsible_can_modify" model="ir.rule">
+       <record id="only_responsible_can_modify" model="ir.rule">
               <field name="name">出纳人员可查看编辑</field>
               <field name="model_id" ref="model_zy_yundan"/>
               <field name="groups" eval="[(4, ref('zy_yundan_group_account_cashier'))]"/>
@@ -103,10 +103,10 @@
 
        <record model="ir.rule" id="zy_yudnan_unit_company_rule">
               <field name="name">运单组-公司查看权限</field>
-              <field name="model_id" ref="module_zy_yundan_unit" />
+              <field name="model_id" ref="model_zy_yundan_unit" />
               <field name="global" eval="True" />
               <field name="domain_force" >['|',('yundan_unit_company_id','=',False),('yundan_unit_company_id', 'in', company_ids)]</field>
-              <!--<field name="groups" eval="[(4, ref('group_charge_rule_editor')),(4, ref('group_charge_rule_user'))]"/>-->
+<!--              <field name="groups" eval="[(4, ref('zy_yundan_unit_group_user')),(4, ref('zy_yundan_unit_group_business'))]"/>-->
        </record>
 
 </odoo>

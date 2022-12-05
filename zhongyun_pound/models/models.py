@@ -12,16 +12,20 @@ class ZyPound(models.Model):
     # 继承消息部分
     _inherit = ['mail.thread', 'mail.activity.mixin']  # track_visibility
 
+    pound_id = fields.Many2one('zy.pound.unit', '过磅单组', required=True)
+
     ZyPound_company_id = fields.Many2one(
         "res.company",
         "所属公司",
         help="如果设置，页面只能从该公司访问",
         index=True,
         ondelete="cascade",
-        default=lambda self: self.env.company,
+        related='pound_id.ZyPoundUint_company_id',
+        readonly=True,
+        # default=lambda self: self.env.context.get('company_id'),
     )
 
-    name = fields.Char('磅单编号', default="磅单编号", index=True, required=True)
+    name = fields.Char(string='磅单编号', index=True, required=True)
 
     pound_supplier = fields.Char('发货人（供应商）')
 
@@ -49,8 +53,6 @@ class ZyPound(models.Model):
     tram_carrier_unit = fields.Char(string='电车承运单位')
 
     ZyPound_user_id = fields.Many2one('res.users', default=lambda self: self.env.user, string='创建者', readonly=True)
-
-    pound_id = fields.Many2one('zy.pound.unit', '过磅单组', required=True)
 
     _sql_constraints = [
         ('pound_name_uniq', 'unique(name)', 'pounds single only'),
@@ -87,10 +89,10 @@ class ZyPoundUint(models.Model):
         help="如果设置，页面只能从该公司访问",
         index=True,
         ondelete="cascade",
-        default=lambda self: self.env.company,
+        default=lambda self: self.env.user.company_id,
     )
 
-    name = fields.Char('磅单组编号', index=True, default='新建运单组', readonly=True)
+    name = fields.Char('磅单组编号', index=True, default='新建磅单组', readonly=True)
 
     ZyPoundUint_establish_datetime = fields.Datetime('创建时间', default=lambda self: fields.Datetime.now(), required=True,
                                                      readonly=True)

@@ -63,11 +63,11 @@ class ZyYundan(models.Model):
     """"""""" """""""""
     " 计量信息相关信息 "
     """"""""" """""""""
-    yundan_zy_buckle = fields.Many2one(string='计量信息', related='yundan_unit.yundan_unit_zy_buckle', store=True,
-                                       readonly=True)
-
-    buckle_percentage = fields.Float(string='计量比例', related='yundan_zy_buckle.buckle_percentage', store=True,
-                                     readonly=True, compute='_amount_all')
+    # yundan_zy_buckle = fields.Many2one(string='计量信息', related='yundan_unit.yundan_unit_zy_buckle', store=True,
+    #                                    readonly=True)
+    #
+    # buckle_percentage = fields.Float(string='计量比例', related='yundan_zy_buckle.buckle_percentage', store=True,
+    #                                  readonly=True, compute='_amount_all')
 
     """"""""" """""""""
     " 货物价格相关信息 "
@@ -119,6 +119,14 @@ class ZyYundan(models.Model):
     pound_id_tram_carrier_unit = fields.Char(string='电车承运单位', related='pound_id.tram_carrier_unit', store=True,
                                              readonly=True)
 
+    # pound_id_buckle = fields.Many2one(string='计量信息', related='pound_id.pound_id_percentage', store=True,
+    #                                    readonly=True)
+
+    pound_id_buckle = fields.Many2one(string='计量信息', related='pound_id.pound_id_percentage', store=True,
+                                      readonly=True)
+    pound_id_percentage_data = fields.Float(string="计量比例", related="pound_id_buckle.buckle_percentage", store=True,
+                                            readonly=True, compute='_amount_all')
+
     """"""""" """""""""
 
     """ 运单总价值相关字段 """
@@ -164,7 +172,7 @@ class ZyYundan(models.Model):
             amount_untaxed = rec.pound_id_net_weight * rec.transport_price
 
             # 亏吨量 亏吨量=净重-原发重x（1-运损率)
-            kui_tons = rec.pound_id_net_weight - rec.pound_id_primary_weight * (1 - rec.buckle_percentage)
+            kui_tons = rec.pound_id_net_weight - rec.pound_id_primary_weight * (1 - rec.pound_id_percentage_data)
 
             # 亏吨款
             kui_tons_price = kui_tons * rec.goods_price
@@ -378,23 +386,23 @@ class ZyYundan(models.Model):
         domain_chrage_now = ['&', ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()),
                              '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
 
-        domain_buckle_now = ['&', ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()),
-                             '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
+        # domain_buckle_now = ['&', ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()),
+        #                      '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
         domain_goods_price_now = ['&', ('state', '=', "approved"),
                                   '&', ('start_datetime', '<=', fields.Datetime.now()),
                                   '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
 
         res_chrage_new = Model_charge.search_read(domain_chrage_now, ['name'])
-        res_buckle_now = Model_buckle.search_read(domain_buckle_now, ['name'])
+        # res_buckle_now = Model_buckle.search_read(domain_buckle_now, ['name'])
         res_goods_price_now = Model_goods_price.search_read(domain_goods_price_now, ['name'])
 
         res_chrage_new_list = []
         for i, val in enumerate(res_chrage_new):
             res_chrage_new_list.append(val['id'])
 
-        res_buckle_now_list = []
-        for i, val in enumerate(res_buckle_now):
-            res_buckle_now_list.append(val['id'])
+        # res_buckle_now_list = []
+        # for i, val in enumerate(res_buckle_now):
+        #     res_buckle_now_list.append(val['id'])
 
         res_goods_price_now_list = []
         for i, val in enumerate(res_goods_price_now):
@@ -402,8 +410,7 @@ class ZyYundan(models.Model):
 
         """ 运单组满足当前可用限制 """
         # if not self.single_supplement:
-        domain = ['&', ("replenish_state", '=', False), '&', ("zy_charge", 'in', res_chrage_new_list), '&',
-                  ("yundan_unit_zy_buckle", 'in', res_buckle_now_list),
+        domain = ['&', ("replenish_state", '=', False), '&', ("zy_charge", 'in', res_chrage_new_list),
                   ("yundan_unit_zy_goods_price", 'in', res_goods_price_now_list)]
 
         return domain
@@ -443,7 +450,7 @@ class ZyYundan(models.Model):
                 rec.message_subscribe([u.id for u in users])
                 _logger.info('message_subscribe')
             else:
-                raise UserError((" 在'%s'状态下无法执行付款通知 .") % rec.state)
+                raise UserError(" 在'%s'状态下无法执行付款通知 ." % rec.state)
 
     """ 确认付款 """
 
@@ -519,14 +526,14 @@ class ZyYunDanUnit(models.Model):
     zy_charge_stop_datetime = fields.Datetime(related='zy_charge.stop_datetime', store=True)
 
     """ 计量规则相关字段 """
-    yundan_unit_charge_buckle_rules = fields.Many2one(string='计量规则',
-                                                      related='yundan_unit_zy_charge_rules.charge_buckle_rules')
+    # yundan_unit_charge_buckle_rules = fields.Many2one(string='计量规则',
+    #                                                   related='yundan_unit_zy_charge_rules.charge_buckle_rules')
 
-    yundan_unit_zy_buckle = fields.Many2one('zy.buckle', string='计量信息', required=True,
-                                            domain=lambda self: self.yundan_unit_zy_buckle_function())
-
-    yundan_unit_zy_buckle_start_datetime = fields.Datetime(related='yundan_unit_zy_buckle.start_datetime', store=True)
-    yundan_unit_zy_buckle_stop_datetime = fields.Datetime(related='yundan_unit_zy_buckle.stop_datetime', store=True)
+    # yundan_unit_zy_buckle = fields.Many2one('zy.buckle', string='计量信息', required=True,
+    #                                         domain=lambda self: self.yundan_unit_zy_buckle_function())
+    #
+    # yundan_unit_zy_buckle_start_datetime = fields.Datetime(related='yundan_unit_zy_buckle.start_datetime', store=True)
+    # yundan_unit_zy_buckle_stop_datetime = fields.Datetime(related='yundan_unit_zy_buckle.stop_datetime', store=True)
 
     """ 物料相关字段 """
     yundan_unit_charge_goods_rules = fields.Many2one(string='货物信息',
@@ -589,24 +596,24 @@ class ZyYunDanUnit(models.Model):
 
     """ 计量信息触发变更规则 """
 
-    @api.onchange('yundan_unit_zy_charge_rules')
-    def _onchange_yundan_unit_zy_buckle(self):
-        # self.zy_charge = False
-        Model_charge = self.env['zy.buckle']
-        domain = ['&', ('buckle_rules', '=', self.yundan_unit_charge_buckle_rules.id), '&', ('state', '=', "approved"),
-                  '&', ('start_datetime', '<=', self.establish_datetime), '|',
-                  ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
-        res = Model_charge.search(domain, limit=1, order='id DESC')
-        _logger.info('运单组计量信息更新')
-
-        if len(res):
-            self.yundan_unit_zy_buckle = res[0].id
-
-        return {'domain': {
-            'yundan_unit_zy_buckle': ['&', ('buckle_rules', '=', self.yundan_unit_charge_buckle_rules.id), '&',
-                                      ('state', '=', "approved"), '&',
-                                      ('start_datetime', '<=', self.establish_datetime), '|',
-                                      ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]}}
+    # @api.onchange('yundan_unit_zy_charge_rules')
+    # def _onchange_yundan_unit_zy_buckle(self):
+    #     # self.zy_charge = False
+    #     Model_charge = self.env['zy.buckle']
+    #     domain = ['&', ('buckle_rules', '=', self.yundan_unit_charge_buckle_rules.id), '&', ('state', '=', "approved"),
+    #               '&', ('start_datetime', '<=', self.establish_datetime), '|',
+    #               ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
+    #     res = Model_charge.search(domain, limit=1, order='id DESC')
+    #     _logger.info('运单组计量信息更新')
+    #
+    #     if len(res):
+    #         self.yundan_unit_zy_buckle = res[0].id
+    #
+    #     return {'domain': {
+    #         'yundan_unit_zy_buckle': ['&', ('buckle_rules', '=', self.yundan_unit_charge_buckle_rules.id), '&',
+    #                                   ('state', '=', "approved"), '&',
+    #                                   ('start_datetime', '<=', self.establish_datetime), '|',
+    #                                   ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]}}
 
     """ 货物价格触发变更规则 """
 
@@ -664,12 +671,12 @@ class ZyYunDanUnit(models.Model):
             domain_chrage_now = ['&', ('charge_rules', '=', rec.yundan_unit_zy_charge_rules.id), '&',
                                  ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()),
                                  '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
-            domain_buckle_old = ['&', ('buckle_rules', '=', rec.yundan_unit_charge_buckle_rules.id), '&',
-                                 ('state', '=', "approved"), '&', ('start_datetime', '<=', rec.establish_datetime),
-                                 '|', ('stop_datetime', '>', rec.establish_datetime), ('stop_datetime', '=', False)]
-            domain_buckle_now = ['&', ('buckle_rules', '=', rec.yundan_unit_charge_buckle_rules.id), '&',
-                                 ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()),
-                                 '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
+            # domain_buckle_old = ['&', ('buckle_rules', '=', rec.yundan_unit_charge_buckle_rules.id), '&',
+            #                      ('state', '=', "approved"), '&', ('start_datetime', '<=', rec.establish_datetime),
+            #                      '|', ('stop_datetime', '>', rec.establish_datetime), ('stop_datetime', '=', False)]
+            # domain_buckle_now = ['&', ('buckle_rules', '=', rec.yundan_unit_charge_buckle_rules.id), '&',
+            #                      ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()),
+            #                      '|', ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
             domain_goods_price_old = ['&', ('goods_rules', '=', rec.yundan_unit_charge_goods_rules.id), '&',
                                       ('state', '=', "approved"), '&',
                                       ('start_datetime', '<=', rec.establish_datetime), '|',
@@ -681,15 +688,21 @@ class ZyYunDanUnit(models.Model):
 
             res_chrage_old = Model_charge.search(domain_charge_old, limit=1, order='id DESC')
             res_chrage_new = Model_charge.search(domain_chrage_now, limit=1, order='id DESC')
-            res_buckle_old = Model_buckle.search(domain_buckle_old, limit=1, order='id DESC')
-            res_buckle_now = Model_buckle.search(domain_buckle_now, limit=1, order='id DESC')
+            # res_buckle_old = Model_buckle.search(domain_buckle_old, limit=1, order='id DESC')
+            # res_buckle_now = Model_buckle.search(domain_buckle_now, limit=1, order='id DESC')
             res_goods_price_old = Model_goods_price.search(domain_goods_price_old, limit=1, order='id DESC')
             res_goods_price_now = Model_goods_price.search(domain_goods_price_now, limit=1, order='id DESC')
 
             _logger.info("res_chrage_old res_chrage_new 验证")
             _logger.info(res_chrage_old)
             _logger.info(res_chrage_new)
-            if (res_chrage_old == res_chrage_new) and (res_buckle_old == res_buckle_now) and (
+            # if (res_chrage_old == res_chrage_new) and (res_buckle_old == res_buckle_now) and (
+            #         res_goods_price_old == res_goods_price_now):
+            #     rec.edit_function = True
+            # else:
+            #     rec.edit_function = False
+
+            if (res_chrage_old == res_chrage_new) and (
                     res_goods_price_old == res_goods_price_now):
                 rec.edit_function = True
             else:
@@ -705,11 +718,11 @@ class ZyYunDanUnit(models.Model):
 
     """ 计量信息domain """
 
-    def yundan_unit_zy_buckle_function(self):
-        domain = ['&', ('buckle_rules', '=', self.yundan_unit_charge_buckle_rules.id), '&', ('state', '=', "approved"),
-                  '&', ('start_datetime', '<=', self.establish_datetime), '|',
-                  ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
-        return domain
+    # def yundan_unit_zy_buckle_function(self):
+    #     domain = ['&', ('buckle_rules', '=', self.yundan_unit_charge_buckle_rules.id), '&', ('state', '=', "approved"),
+    #               '&', ('start_datetime', '<=', self.establish_datetime), '|',
+    #               ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
+    #     return domain
 
     """ 货物价格domain """
 

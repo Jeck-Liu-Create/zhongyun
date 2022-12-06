@@ -6,6 +6,20 @@
     <field name="model">zy.pound</field>
     <field name="arch" type="xml">
       <form string="车辆信息">
+        <header>
+            <button
+                name="action_matching_data"
+                type="object"
+                string="匹配磅单"
+                class="oe_highlight"
+                attrs="{'invisible':[('state', 'in', ['match','to_payment','rejected','payment'])]}"
+            />
+            <field
+              name="state"
+              widget="statusbar"
+              statusbar_visible="to_match,match,to_payment,payment"
+            />
+        </header>
         <sheet>
             <sheet>
               <h1>
@@ -13,8 +27,11 @@
                 <field name="name"/>
               </h1>
               <group>
-                <field name="pound_id"/>
-                <field name="ZyPound_company_id"/>
+                <field name="pound_id" />
+                <field name="ZyPound_company_id" />
+                <field name="pound_id_percentage" />
+                <field name="yundan_id" />
+<!--                <field name="pound_id_percentage"  widget="percentage"  digits="[6, 4]"/>-->
               </group>
             </sheet>
               <sheet>
@@ -66,7 +83,6 @@
     </field>
   </record>
 
-
   <!--  过磅单组-->
 
   <record id="view_form_zy_pound_unit" model="ir.ui.view">
@@ -75,20 +91,38 @@
     <field name="arch" type="xml">
       <form string="车辆信息">
         <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="pound_line_ids"
+                    string="ALL" type="object"
+                    attrs="{'invisible':[('pound_ids','=', False)]}" icon="fa-bars"/>
+            <button class="oe_stat_button" name="pound_line_match_ids"
+                    string="Match" type="object"
+                    attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
+          </div>
           <sheet>
             <h1>
                 <field name="name"/>
             </h1>
             <group>
-              <field name="ZyPoundUint_establish_datetime"/>
-              <field name="ZyPoundUint_user_id"/>
-              <field name="ZyPoundUint_company_id"/>
+              <group>
+                <field name="ZyPoundUint_establish_datetime"/>
+                <field name="ZyPoundUint_user_id"/>
+                <field name="ZyPoundUint_company_id"/>
+              </group>
+              <group>
+                <field name="pound_uint_buckle_rules"/>
+                <field name="pound_establish_datetime"/>
+                <field name="pound_unit_zy_buckle"/>
+              </group>
             </group>
           </sheet>
           <notebook>
-              <page string="运单信息">
+              <page string="全部磅单">
                 <field name="pound_ids"/>
               </page>
+              <page string="匹配成功磅单">
+                <field name="pound_ids_match"/>
+              </page>>
           </notebook>
         </sheet>
       </form>
@@ -104,6 +138,8 @@
           <field name="ZyPoundUint_establish_datetime"/>
           <field name="ZyPoundUint_user_id"/>
           <field name="ZyPoundUint_company_id"/>
+          <field name="pound_ids"/>
+          <field name="pound_ids_match"/>
       </tree>
     </field>
   </record>

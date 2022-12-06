@@ -78,11 +78,11 @@
                 <group>
                   <field name="currency_id" invisible="1"/>
                   <field name="transport_price" widget="monetary"  options = "{'currency_field': 'currency_id'}"/>
-                  <field
-                    name="buckle_percentage"  
-                    widget="percentage"  digits="[6, 4]"
-                    attrs="{'readonly': [('state', 'not in', ['draft'])]}"
-                  />
+<!--                  <field-->
+<!--                    name="buckle_percentage"  -->
+<!--                    widget="percentage"  digits="[6, 4]"-->
+<!--                    attrs="{'readonly': [('state', 'not in', ['draft'])]}"-->
+<!--                  />-->
                   <field name="goods_price"  
                       widget="monetary" 
                       options = "{'currency_field': 'currency_id'}"  
@@ -108,6 +108,12 @@
                     <field name="pound_id_Tdelivery_location" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
                     <field name="pound_id_car_id_other" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
                     <field name="pound_id_tram_carrier_unit" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>
+<!--                    <field name="pound_id_buckle_percentage" attrs="{'invisible':[('pound_id_bool','!=', True)]}"/>-->
+                    <field
+                    name="pound_id_percentage_data"
+                    widget="percentage"  digits="[6, 4]"
+                    attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+                    />
                   </group>
                 </group>
             </sheet>
@@ -249,6 +255,7 @@
   </record>
 
 
+
   <!-- 运单组视图 -->
   <record id="view_form_zy_yundan_unit" model="ir.ui.view">
     <field name="name">运单组</field>
@@ -281,8 +288,8 @@
                 </group>
                 <group>
                   <field name="single_supplement_date" attrs="{'invisible':[('replenish_state','=', False)]}" />
-                  <field name="yundan_unit_charge_buckle_rules"/>
-                  <field name="yundan_unit_zy_buckle" options="{'no_create_edit ': True,'no_create': True}"/>
+<!--                  <field name="yundan_unit_charge_buckle_rules"/>-->
+<!--                  <field name="yundan_unit_zy_buckle" options="{'no_create_edit ': True,'no_create': True}"/>-->
                   <field name="yundan_unit_charge_goods_rules"/>
                   <field name="yundan_unit_zy_goods_price" options="{'no_create_edit ': True,'no_create': True}"/>
                   <field name="replenish_state" attrs="{'invisible':[('replenish_state','=', False)]}" readonly="1"/>

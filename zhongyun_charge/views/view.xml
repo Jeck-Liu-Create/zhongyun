@@ -133,6 +133,7 @@
     </field>
   </record>
 
+  <!-- 看板视图 -->
   <record id="view_zy_charge_kanban" model="ir.ui.view">
       <field name="name">zy.charge.kanban</field>
       <field name="model">zy.charge</field>
@@ -200,7 +201,7 @@
                     options="{'no_create_edit ': True,'no_create': True}"
                   />
                   <field name="charge_goods_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>
-                  <field name="charge_buckle_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>
+<!--                  <field name="charge_buckle_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>-->
                   <field name="available_uid"  groups="base.group_system"/>
               </group>
             </sheet>

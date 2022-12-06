@@ -117,7 +117,7 @@ class ZyCharge(models.Model):
         """ 运价单增加请求设置为待提交 """
         for rec in self:
             if not rec.state == "cancelled":
-                raise UserError(("你需要在重新打开前取消"))
+                raise UserError("你需要在重新打开前取消")
             if not (rec.am_i_owner or rec.am_i_approver):
                 raise UserError(
                     (
@@ -138,7 +138,7 @@ class ZyCharge(models.Model):
         )
         for rec in self:
             if rec.state != "draft":
-                raise UserError((" 在'%s'状态下无法进入审批界面 .") % rec.state)
+                raise UserError(" 在'%s'状态下无法进入审批界面 ." % rec.state)
             if not (rec.am_i_owner or rec.am_i_approver):
                 raise UserError(
                     (
@@ -179,7 +179,7 @@ class ZyCharge(models.Model):
         """ 将运价单设置为已批准 """
         for rec in self:
             if rec.state not in ["draft", "to approve"]:
-                raise UserError(("在'%s'状态下无法被批准.") % rec.state)
+                raise UserError("在'%s'状态下无法被批准." % rec.state)
             if not rec.am_i_approver:
                 raise UserError(
                     (
@@ -206,13 +206,13 @@ class ZyCharge(models.Model):
             # 通知状态变化
             rec.message_post(
                 subtype_xmlid="mail.mt_comment",
-                body=("运价单已经被%s批准.")
-                     % (self.env.user.name)
+                body="运价单已经被%s批准."
+                     % self.env.user.name
             )
             # 通知关注者运价单可用
             rec.charge_rules.message_post(
                 subtype_xmlid="mail.mt_comment",
-                body=("新的运价单在%s规则中生效 .") % (rec.charge_rules.name),
+                body="新的运价单在%s规则中生效 ." % (rec.charge_rules.name),
             )
             # 更新 activity
             self.activity_feedback(['zhongyun_charge.mail_zhongyun_approval'])
@@ -221,13 +221,13 @@ class ZyCharge(models.Model):
         """ 将更改请求设置为取消 """
         for rec in self:
             if rec.state in ["approved"] and not rec.am_i_approver:
-                raise UserError(("在'%s'状态下无法取消.") % rec.state)
+                raise UserError("在'%s'状态下无法取消." % rec.state)
             else:
                 self.write({"state": "cancelled"})
 
                 rec.message_post(
                     subtype_xmlid="mail.mt_comment",
-                    body=("变更请求 <b>%s</b> 已被取消 %s.")
+                    body="变更请求 <b>%s</b> 已被取消 %s."
                          % (rec.display_name, self.env.user.name))
 
                 self.activity_unlink(['zhongyun_charge.mail_zhongyun_approval'])
@@ -246,7 +246,7 @@ class ZyCharge(models.Model):
         """ 当最新的运价单审批通过后,上一笔运价单截止日期修改为,该笔运价单的启用日期 """
         for rec in self:
             _logger.info(rec.charge_rules)
-            if ((rec.start_datetime > fields.Datetime.now()) or (rec.start_datetime == fields.Datetime.now())):
+            if (rec.start_datetime > fields.Datetime.now()) or (rec.start_datetime == fields.Datetime.now()):
                 data_charge = self.env['zy.charge'].search_read(
                     ['&', ('charge_rules', '=', rec.charge_rules.id), ('state', '=', 'approved')], limit=1,
                     order='id DESC')
@@ -315,7 +315,7 @@ class ZyChargeRules(models.Model):
     supplier = fields.Char(string='供应商', related='address_name.supplier', store=True, readonly=True)
 
     charge_goods_rules = fields.Many2one('zy.goods', string='物料信息', required=True)
-    charge_buckle_rules = fields.Many2one('zy.buckle.rules', string='计量规则', required=True)
+    # charge_buckle_rules = fields.Many2one('zy.buckle.rules', string='计量规则', required=True)
 
     port_state = fields.Many2one(string='省', related='address_name.port_state', store=True, readonly=True)
     port_city = fields.Many2one(string='市', related='address_name.port_city', store=True, readonly=True)
@@ -337,7 +337,7 @@ class ZyChargeRules(models.Model):
     )
 
     def _domain_zy_charge_now_id(self):
-        domain = ['&', ('state', '=', "approved"), '&', (('start_datetime'), '<=', fields.Datetime.now()), '|',
+        domain = ['&', ('state', '=', "approved"), '&', ('start_datetime', '<=', fields.Datetime.now()), '|',
                   ('stop_datetime', '>', fields.Datetime.now()), ('stop_datetime', '=', False)]
         return domain
 

@@ -93,8 +93,9 @@ class ZyPound(models.Model):
                 result.append((rec.id, name))
         return result
 
+    """ 匹配运单 """
     def action_matching_data(self):
-        Model_yundan = self.env['zy.yundan']
+        Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
                 domain = ['|', '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
@@ -118,19 +119,12 @@ class ZyPound(models.Model):
             else:
                 raise UserError(" 在'%s'状态下无法匹配运单." % rec.state)
 
-    # def action_yundan(self):
-    #     Model_yundan = self.env['zy.yundan']
-    #
-    #     for rec in self:
-    #         yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
-    #         action1 = Model_yundan.action_notice_of_payment(yudna_data)
-    #         print(action1)
-
+    """ 通知付款 """
     def action_notice_of_payment(self):
         account_cashier_gid = self.env.ref(
             "zhongyun_yundan.zy_yundan_group_account_cashier"
         )
-        Model_yundan = self.env['zy.yundan']
+        Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
             if yudna_data.state == 'match':

@@ -414,7 +414,7 @@ class ZyYundan(models.Model):
 
     def action_notice_of_payment(self):
         _logger.warning('=== 通知付款 ===')
-        Model_pound = self.env['zy.pound']
+        Model_pound = self.env['zy.pound'].sudo()
         account_cashier_gid = self.env.ref(
             "zhongyun_yundan.zy_yundan_group_account_cashier"
         )
@@ -445,7 +445,7 @@ class ZyYundan(models.Model):
 
     def action_payment(self):
         _logger.warning('=== 确认付款 ===')
-        Model_pound = self.env['zy.pound']
+        Model_pound = self.env['zy.pound'].sudo()
         for rec in self:
             if rec.state == 'to_payment':
                 rec.write({"state": "payment"})
@@ -458,7 +458,7 @@ class ZyYundan(models.Model):
 
     def action_rejected(self):
         _logger.warning('=== 运单退回 ===')
-        Model_pound = self.env['zy.pound']
+        Model_pound = self.env['zy.pound'].sudo()
         group_user_gid = self.env.ref(
             "zhongyun_yundan.zy_yundan_group_user"
         )
@@ -481,7 +481,7 @@ class ZyYundan(models.Model):
 
     def action_confirm_rejected(self):
         _logger.warning('=== 确认退回 ===')
-        Model_pound = self.env['zy.pound']
+        Model_pound = self.env['zy.pound'].sudo()
         for rec in self:
             rec.write({"state": "confirm_rejected"})
             Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "confirm_rejected"})

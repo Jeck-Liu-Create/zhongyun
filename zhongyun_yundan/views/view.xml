@@ -254,8 +254,6 @@
     </field>
   </record>
 
-
-
   <!-- 运单组视图 -->
   <record id="view_form_zy_yundan_unit" model="ir.ui.view">
     <field name="name">运单组</field>

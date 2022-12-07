@@ -79,6 +79,8 @@
         <field name="delivery_location"/>
         <field name="car_id_other"/>
         <field name="tram_carrier_unit"/>
+        <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
+
       </tree>
     </field>
   </record>
@@ -93,10 +95,22 @@
         <sheet>
           <div class="oe_button_box" name="button_box">
             <button class="oe_stat_button" name="pound_line_ids"
-                    string="ALL" type="object"
+                    string="全部磅单" type="object"
+                    attrs="{'invisible':[('pound_ids','=', False)]}" icon="fa-bars"/>
+            <button class="oe_stat_button" name="pound_line_to_match_ids"
+                    string="待匹配磅单" type="object"
                     attrs="{'invisible':[('pound_ids','=', False)]}" icon="fa-bars"/>
             <button class="oe_stat_button" name="pound_line_match_ids"
-                    string="Match" type="object"
+                    string="匹配成功磅" type="object"
+                    attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
+            <button class="oe_stat_button" name="pound_line_to_payment_ids"
+                    string="待付款磅单" type="object"
+                    attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
+            <button class="oe_stat_button" name="pound_line_payment_ids"
+                    string="付款完成磅单" type="object"
+                    attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
+            <button class="oe_stat_button" name="pound_line_confirm_rejected"
+                    string="确认退回磅单" type="object"
                     attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
           </div>
           <sheet>
@@ -117,12 +131,24 @@
             </group>
           </sheet>
           <notebook>
-              <page string="全部磅单">
+              <page string="全部">
                 <field name="pound_ids"/>
               </page>
-              <page string="匹配成功磅单">
+              <page string="待匹配">
+                <field name="pound_ids_to_match"/>
+              </page>
+              <page string="匹配成功">
                 <field name="pound_ids_match"/>
-              </page>>
+              </page>
+              <page string="待付款">
+                <field name="pound_ids_to_payment"/>
+              </page>
+              <page string="付款完成">
+                <field name="pound_ids_payment"/>
+              </page>
+              <page string="确认退回">
+                <field name="pound_ids_confirm_rejected"/>
+              </page>
           </notebook>
         </sheet>
       </form>

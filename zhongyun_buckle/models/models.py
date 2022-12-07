@@ -123,7 +123,7 @@ class ZyBuckle(models.Model):
             "zhongyun_buckle.email_template_new_draft_need_approval"
         )
         approver_gid = self.env.ref(
-            "zhongyun_buckle.group_buckle_percentage_approver_user"
+            "zhongyun_buckle.group_buckle_approver_user"
         )
         for rec in self:
             if rec.state != "draft":

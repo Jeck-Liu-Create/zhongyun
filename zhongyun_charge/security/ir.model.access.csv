@@ -1,8 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-zy_charge_user,zy.charge user,model_zy_charge,zhongyun_charge.group_charge_user,1,0,0,0
-zy_charge_rules_user,zy.charge.rules user,model_zy_charge_rules,zhongyun_charge.group_charge_rule_user,1,0,0,0
+zy_charge_user,zy.charge user,model_zy_charge,group_charge_user,1,0,0,0
+zy_charge_rules_user,zy.charge.rules user,model_zy_charge_rules,group_charge_rule_user,1,0,0,0
 zy_charge_editor,zy.charge editor,model_zy_charge,group_charge_editor,1,1,1,0
 zy_charge_rules_editor,zy.charge.rules editor,model_zy_charge_rules,group_charge_rule_editor,1,1,1,0
 zy_charge_manager,zy.charge manager,model_zy_charge,group_charge_manager,1,1,1,1
 zy_charge_rules_manager,zy.charge.rules manager,model_zy_charge_rules,group_charge_rule_manager,1,1,1,1
-zy_charge_approver_user,zy.charge approver user,model_zy_charge,zhongyun_charge.group_charge_approver_user,1,1,1,
+zy_charge_approver_user,zy.charge approver user,model_zy_charge,zhongyun_charge.group_charge_approver_user,1,1,1,0

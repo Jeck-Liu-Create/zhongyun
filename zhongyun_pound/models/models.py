@@ -111,7 +111,7 @@ class ZyPound(models.Model):
                     # self._amount_all()
                     rec.state = 'match'
                     res_write = Model_yundan.search([('id', '=', res[0].id)]).write(
-                        {'pound_id': res.id, 'state': 'match'})
+                        {'pound_id': rec.id, 'state': 'match'})
                     print(res_write)
                 else:
                     rec.state = 'not_match'
@@ -197,24 +197,55 @@ class ZyPoundUint(models.Model):
         domain=[('state', '=', 'match')]
     )
 
-    """ 磅单相关字段 """
-    pound_ids = fields.One2many(
+    pound_ids_not_match = fields.One2many(
         'zy.pound',
         'pound_id',
         store=True,
-        string='全部磅单',
+        string='匹配失败',
+        domain=[('state', '=', 'not_match')]
 
     )
-    pound_ids_match = fields.One2many(
+    pound_ids_to_match = fields.One2many(
         'zy.pound',
         'pound_id',
         store=True,
-        string='匹配完成',
-        domain=[('state', '=', 'match')]
+        string='待匹配',
+        domain=[('state', '=', 'to_match')]
     )
 
-    """" 列表按钮 """
+    pound_ids_to_payment = fields.One2many(
+        'zy.pound',
+        'pound_id',
+        store=True,
+        string='待付款',
+        domain=[('state', '=', 'to_payment')]
+    )
 
+    pound_ids_rejected = fields.One2many(
+        'zy.pound',
+        'pound_id',
+        store=True,
+        string='退回',
+        domain=[('state', '=', 'rejected')]
+    )
+
+    pound_ids_payment = fields.One2many(
+        'zy.pound',
+        'pound_id',
+        store=True,
+        string='付款完成',
+        domain=[('state', '=', 'payment')]
+    )
+
+    pound_ids_confirm_rejected = fields.One2many(
+        'zy.pound',
+        'pound_id',
+        store=True,
+        string='确认退回',
+        domain=[('state', '=', 'confirm_rejected')]
+    )
+
+    """" 全部磅单列表按钮 """
     def pound_line_ids(self):
         return {
             'name': '全部磅单',
@@ -227,8 +258,7 @@ class ZyPoundUint(models.Model):
             'context': {'create': False},
         }
 
-    """" 列表按钮 """
-
+    """" 匹配成功磅单列表按钮 """
     def pound_line_match_ids(self):
         return {
             'name': '匹配成功磅单',
@@ -238,6 +268,62 @@ class ZyPoundUint(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'match')],
+            'context': {'create': False},
+        }
+
+    """" 待匹配磅单列表按钮 """
+
+    def pound_line_to_match_ids(self):
+        return {
+            'name': '待匹配磅单',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'zy.pound',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'to_match')],
+            'context': {'create': False},
+        }
+
+    """" 待付款磅单列表按钮 """
+
+    def pound_line_to_payment_ids(self):
+        return {
+            'name': '待付款磅单',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'zy.pound',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'to_payment')],
+            'context': {'create': False},
+        }
+
+    """" 付款完成单列表按钮 """
+
+    def pound_line_payment_ids(self):
+        return {
+            'name': '付款完成磅单',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'zy.pound',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'payment')],
+            'context': {'create': False},
+        }
+
+    """" 确认退回单列表按钮 """
+
+    def pound_line_confirm_rejected(self):
+        return {
+            'name': '确认退回磅单',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'zy.pound',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'confirm_rejected')],
             'context': {'create': False},
         }
 

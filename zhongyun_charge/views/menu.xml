@@ -6,7 +6,7 @@
 
     <!-- Action to open the zy_charge -->
     <record id="action_zy_charge" model="ir.actions.act_window">
-        <field name="name">中运物-流运价管理</field>
+        <field name="name">中运物流-运价管理</field>
         <field name="res_model">zy.charge</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>

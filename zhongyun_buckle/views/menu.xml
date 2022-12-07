@@ -6,7 +6,7 @@
 
     <!-- Action to open the zy_buckle -->
     <record id="action_zy_buckle" model="ir.actions.act_window">
-        <field name="name">中运物-计量管理</field>
+        <field name="name">中运物流-计量管理</field>
         <field name="res_model">zy.buckle</field>
         <field name="view_mode">tree,form</field>
     </record>

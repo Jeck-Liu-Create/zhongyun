@@ -308,7 +308,7 @@
                         <field
                           name="single_supplement_datetime"
                           attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]} "
-                          readonly="1"
+                          force_save="1" readonly="1"
                         />
                         <field name="state" />
                     </tree>
@@ -411,6 +411,15 @@
       <field name="model">zy.yundan.unit</field>
       <field name="arch" type="xml">
           <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc">
+              <header>
+                  <button
+                      name="button_replenish"
+                      type="object"
+                      string="补单组"
+                      class="oe_highlight"
+                      attrs="{'force_show': 1}"
+                  />
+              </header>
               <field name="name"/>
               <field name="establish_datetime"/>
               <field name="yundan_unit_zy_charge_rules"/>

@@ -202,7 +202,7 @@
                   />
                   <field name="charge_goods_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>
 <!--                  <field name="charge_buckle_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>-->
-                  <field name="available_uid"  groups="base.group_system"/>
+                  <field name="available_uid"/>
               </group>
             </sheet>
             <sheet>

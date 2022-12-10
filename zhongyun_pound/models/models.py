@@ -1,6 +1,7 @@
 from operator import index
 import string
 from odoo import models, fields, api
+from odoo.api import call_kw
 from odoo.exceptions import UserError, ValidationError
 import datetime
 
@@ -119,34 +120,19 @@ class ZyPound(models.Model):
             else:
                 raise UserError(" 在'%s'状态下无法匹配运单." % rec.state)
 
+
+
     """ 通知付款 """
     def action_notice_of_payment(self):
-        account_cashier_gid = self.env.ref(
-            "zhongyun_yundan.zy_yundan_group_account_cashier"
-        )
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
-            if yudna_data.state == 'match':
-                yudna_data.write({"state": "to_payment"})
-                rec.write({"state": "to_payment"})
+            call_kw(self.env['zy.yundan'],
+                    'action_notice_of_payment',
+                    [yudna_data.id],
+                    {})
+            rec.write({"state": "to_payment"})
 
-                users = self.env["res.users"].search(
-                    [("groups_id", "in", account_cashier_gid.id)]
-                )
-
-
-                for u in users:
-                    self.activity_schedule(
-                        'zhongyun_yundan.mail_zhongyun_notice_of_payment',
-                        user_id=u.id
-                    )
-
-
-                yudna_data.message_subscribe([u.id for u in users])
-
-            else:
-                raise UserError(" 在'%s'状态下无法执行付款通知 ." % yudna_data.state)
 
 
 class ZyPoundUint(models.Model):

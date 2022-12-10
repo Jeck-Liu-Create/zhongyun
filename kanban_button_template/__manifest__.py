@@ -21,7 +21,10 @@
 
     'assets': {
         'web.assets_backend': [
-            'kanban_button_template/static/src/kanban_button/kanban_button.xml'
+            'kanban_button_template/static/src/kanban_button/kanban_button.xml',
+            'kanban_button_template/static/src/kanban_button/kanban_button.js',
+            'kanban_button_template/static/src/mixins/add_kanban.js',
+
         ]
     }
 }

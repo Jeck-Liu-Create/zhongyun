@@ -410,7 +410,7 @@
       <field name="name">zy.yundan.unit.kanbankanban</field>
       <field name="model">zy.yundan.unit</field>
       <field name="arch" type="xml">
-          <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc">
+          <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc" js_class="add_button_kanban">
               <header>
                   <button
                       name="button_replenish"

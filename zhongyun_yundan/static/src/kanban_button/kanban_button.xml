@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="add.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons"
+       t-inherit-mode="primary" owl="1">
+         <xpath expr="//t[@t-if='canCreate']" position="after">
+            <button type="button" class="btn btn-secondary o_button_upload_bill" t-on-click.prevent="replenishButton">
+                    补单组
+            </button>
+        </xpath>
+    </t>
+</templates>

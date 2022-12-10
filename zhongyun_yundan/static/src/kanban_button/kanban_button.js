@@ -10,14 +10,11 @@ import { registry } from "@web/core/registry";
 export class AddKanbanController extends KanbanController {}
 patch(AddKanbanController.prototype, 'add_kanban_controller_upload', AddDocumentUpload);
 
-// export class AddKanbanRenderer extends KanbanRenderer {}
-// AddKanbanRenderer.template = 'add.KanbanView.Buttons';
-
-
 registry.category('views').add('add_button_kanban', {
     ...kanbanView,
     buttonTemplate: 'add.KanbanView.Buttons',
     Controller: AddKanbanController,
-    Renderer: KanbanRenderer,
+    Renderer:KanbanRenderer,
+
 });
 

@@ -25,7 +25,7 @@
 
     <menuitem
             id="menu_zy_pound_unit"
-            name="中运物流-磅单管理"
+            name="中运物流-磅单组管理"
             action="action_zy_pound_unit"
             parent="zy_pound_menu" />
     

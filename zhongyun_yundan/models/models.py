@@ -59,7 +59,6 @@ class ZyYundan(models.Model):
     transport_price = fields.Monetary(string='运输价格', related='zy_charge.transport_price', store=True, readonly=True,
                                       compute='_amount_all')
 
-
     """"""""" """""""""
     " 货物价格相关信息 "
     """"""""" """""""""
@@ -109,7 +108,6 @@ class ZyYundan(models.Model):
 
     pound_id_tram_carrier_unit = fields.Char(string='电车承运单位', related='pound_id.tram_carrier_unit', store=True,
                                              readonly=True)
-
 
     pound_id_buckle = fields.Many2one(string='计量信息', related='pound_id.pound_id_percentage', store=True,
                                       readonly=True)
@@ -164,14 +162,15 @@ class ZyYundan(models.Model):
             kui_tons = rec.pound_id_net_weight - rec.pound_id_primary_weight * (1 - rec.pound_id_percentage_data)
 
             # 亏吨款
-            kui_tons_price = kui_tons * rec.goods_price
+            kui_tools = lambda x: x if x < 0 else 0
+            kui_tons_price = kui_tools(kui_tons) * rec.goods_price
 
             # 扣减亏吨款
-            deduct_tools = lambda x: x if x < 0 else 0
+            deduct_tools = lambda x: -x if x < 0 else 0
             deduct_price = deduct_tools(kui_tons_price)
 
             # 实际付车
-            amount_tax = amount_untaxed + deduct_price
+            amount_tax = amount_untaxed + kui_tons_price
 
             # 结算金额
             if amount_tax % 10 < 9:
@@ -287,6 +286,7 @@ class ZyYundan(models.Model):
                             {'yundan_id': rec.id, 'state': 'match'})
                         print(res_write)
                         self._amount_all()
+
                     else:
                         rec.state = 'not_match'
                 else:
@@ -577,7 +577,6 @@ class ZyYunDanUnit(models.Model):
                                          ('stop_datetime', '>', self.establish_datetime),
                                          ('stop_datetime', '=', False)]}}
 
-
     """ 货物价格触发变更规则 """
 
     @api.onchange('yundan_unit_zy_charge_rules')
@@ -715,3 +714,8 @@ class ZyYunDanUnit(models.Model):
             "mode": 'edit',
             'views': [[form_id, 'form']],
         }
+
+    @api.model
+    def add_kanban_button(self):
+        form_id = self.env.ref('zhongyun_yundan.view_form_zy_yundan_unit').id
+        return {'data': {'id': form_id}}

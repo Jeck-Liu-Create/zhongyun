@@ -23,13 +23,14 @@
     # 'qweb': [
     #     "static/src/xml/button.xml",
     # ],
-    # 'assets': {
-    #     'web.assets_backend': [
-    #         "zhongyun_yundan/static/src/xml/button.xml",
-    #         'zhongyun_yundan/static/src/js/add_button.js',
-    #
-    #     ],
-    # },
+    'assets': {
+        'web.assets_backend': [
+            'zhongyun_yundan/static/src/kanban_button/kanban_button.xml',
+            'zhongyun_yundan/static/src/kanban_button/kanban_button.js',
+            'zhongyun_yundan/static/src/mixins/add_kanban.js',
+
+        ],
+    },
     'installable': True,
     'auto_install': False,
     'application': True,

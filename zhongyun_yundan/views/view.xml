@@ -384,7 +384,7 @@
     <field name="name">运单组</field>
     <field name="model">zy.yundan.unit</field>
     <field name="arch" type="xml">
-      <tree default_order="create_date desc">
+      <tree default_order="create_date desc" expand="context.get('expand',False)">
           <header>
               <button
                   name="button_replenish"
@@ -422,6 +422,7 @@
               </header>
               <field name="name"/>
               <field name="establish_datetime"/>
+              <field name="replenish_state"/>
               <field name="yundan_unit_zy_charge_rules"/>
 <!--              <field name="zy_charge"/>-->
               <templates>
@@ -440,7 +441,11 @@
                               </div>
                               <div class="col-6">
                                   <span class="float-end text-end">
+                                      <t t-if="record.replenish_state.raw_value">
+                                              <span class="badge rounded-pill text-bg-success">补单组</span>
+                                      </t>
 <!--                                    <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />-->
+<!--                                    <field name="replenish_state" string="补单" widget="badge" decoration-primary="replenish_state == '1'"    decoration-info="replenish_state == '0'" />-->
                                   </span>
                               </div>
                           </div>
@@ -457,6 +462,9 @@
     <field name="model">zy.yundan.unit</field>
     <field name="arch" type="xml">
       <search string="Expense">
+        <group expand="0" string="Group By">
+            <filter string="补单状态" name="group_by_replenish_state" context="{'group_by':'replenish_state'}"/>
+        </group>
         <searchpanel>
             <field name="yundan_unit_zy_charge_rules"  icon=" fa-sliders" string="运价规则" select="multi" enable_counters="1"/>
         </searchpanel>
@@ -477,6 +485,7 @@
       <field name="name">中运物流-运价组</field>
       <field name="res_model">zy.yundan.unit</field>
       <field name="view_mode">tree,kanban,form</field>
+      <field name="context">{'search_default_group_by_replenish_state': 1}</field>
       <field name="view_ids" eval="[(5,0,0),
                                       (0,0,{'view_mode': 'tree','view_id': ref('view_tree_zy_yundan_unit')}),
                                       (0,0,{'view_mode': 'form','view_id': ref('view_form_zy_yundan_unit')}),]"/>

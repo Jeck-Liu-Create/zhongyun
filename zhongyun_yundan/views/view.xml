@@ -25,7 +25,7 @@
               type="object"
               string="确认付款"
               class="oe_highlight"
-              attrs="{'invisible':[('state', 'in', ['to_match','not_match','match','rejected','payment','confirm_rejected'])]}"
+              attrs="{'invisible':['|',('state', 'in', ['to_match','not_match','match','rejected','payment','confirm_rejected']),('am_i_cashier','=',False)]}"
           />
           <button
               name="action_rejected"

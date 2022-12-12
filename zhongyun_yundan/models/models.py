@@ -355,14 +355,15 @@ class ZyYundan(models.Model):
             rec.am_i_owner = rec.create_uid == self.env.user
 
     def _compute_am_i_cashier(self):
+        """ 判断【确认付款】和【运单退回】按钮权限 """
         for rec in self:
             rec.am_i_cashier = rec.am_i_cashier_info(self.env.user)
 
     def am_i_cashier_info(self, user):
-        if user.has_group('zhongyun_yundan.zy_yundan_group_account_cashier'):
-            return False
-        else:
+        if user.has_group('zhongyun_yundan.zy_yundan_group_account_cashier') or user.has_group('zhongyun_yundan.zy_yundan_group_manager'):
             return True
+        else:
+            return False
 
     def _pound_id_function(self):
         """ 磅单自动满足匹配限制 """

@@ -10,7 +10,7 @@
     'website': "http://www.yourcompany.com",
     'category': 'Uncategorized',
     'version': '0.1',
-    'depends': ['base', 'mail', 'zhongyun_charge','list_button_template','zhongyun_pound'],
+    'depends': ['base', 'mail', 'zhongyun_charge','list_button_template','zhongyun_pound','zhongyun_vehicle'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
@@ -18,7 +18,7 @@
         'data/action_data.xml',
         'views/view.xml',
         'views/menu.xml',
-        # 'views/template.xml',
+        'views/view_vehicle.xml',
     ],
     # 'qweb': [
     #     "static/src/xml/button.xml",

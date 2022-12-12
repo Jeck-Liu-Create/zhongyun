@@ -17,7 +17,9 @@ class ZyVehicle(models.Model):
 
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user, string='创建者', readonly=True)
 
-    # car_yundan = fields.One2many('zy.yundan', 'car_id', string="运单数据")
+    # yundan_ids = fields.char('zy.yundan', 'car_id', string='运单')
+
+    # yundan_ids = fields.One2many('zy.yundan', 'car_id', string="运单数据")
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'CarID only'),

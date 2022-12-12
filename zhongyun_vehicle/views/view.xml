@@ -7,10 +7,17 @@
     <field name="arch" type="xml">
       <form string="车辆信息">
         <sheet>
-          <group>
-            <field name="name"/>
-            <field name="user_id"/>
-          </group>
+          <sheet string="车辆信息">
+            <group>
+              <field name="name"/>
+              <field name="user_id"/>
+            </group>
+          </sheet>
+<!--          <notebook>-->
+<!--              <page string="运单信息">-->
+<!--                <field name="yundan_ids" />-->
+<!--              </page>-->
+<!--          </notebook>-->
         </sheet>
       </form>
     </field>

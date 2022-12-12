@@ -719,3 +719,9 @@ class ZyYunDanUnit(models.Model):
     def add_kanban_button(self):
         form_id = self.env.ref('zhongyun_yundan.view_form_zy_yundan_unit').id
         return {'data': {'id': form_id}}
+
+
+class ZyVehicle(models.Model):
+    _inherit = 'zy.vehicle'
+
+    yundan_ids = fields.One2many('zy.yundan', 'car_id', string="运单号")

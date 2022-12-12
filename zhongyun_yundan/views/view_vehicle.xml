@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- zhongyun Form View -->
+
+    <record id="zy_vehicle_form_inherit" model="ir.ui.view">
+            <field name="name">车辆管理</field>
+            <field name="model">zy.vehicle</field>
+            <field name="inherit_id" ref="zhongyun_vehicle.view_form_zy_vehicle" />
+            <field name="arch" type="xml">
+                <sheet>
+                    <xpath expr="//field[@name='name']/parent" position="after">
+<!--                    <xpath expr="//group" position="after">-->
+                        <notebook>
+                          <page string="运单信息">
+                            <field name="yundan_ids"/>
+                          </page>
+                        </notebook>
+                    </xpath>
+                </sheet>
+            </field>
+    </record>
+</odoo>

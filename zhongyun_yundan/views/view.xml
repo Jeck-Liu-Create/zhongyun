@@ -11,7 +11,7 @@
               type="object"
               string="匹配磅单"
               class="oe_highlight"
-              attrs="{'invisible':[('state', 'in', ['match','to_payment','rejected','payment'])]}"
+              attrs="{'invisible':['|',('state', 'in', ['match','to_payment','rejected','payment']),('am_i_admin','=',False)]}"
           />
           <button
               name="action_notice_of_payment"
@@ -46,8 +46,11 @@
                 widget="statusbar"
                 statusbar_visible="to_match,match,to_payment,payment"
           />
-          <field 
+            <field
                 name="am_i_cashier" invisible="1"
+          />
+            <field
+                name="am_i_admin" invisible="1"
           />
         </header>
         <sheet>

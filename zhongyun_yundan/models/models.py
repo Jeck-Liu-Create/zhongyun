@@ -73,6 +73,9 @@ class ZyYundan(models.Model):
     """ 判断用户是否为出纳人员 """
     am_i_cashier = fields.Boolean(compute="_compute_am_i_cashier")
 
+    """ 判断用户是否管理员 """
+    am_i_admin = fields.Boolean(compute="_compute_am_i_admin")
+
     pound_id = fields.Many2one('zy.pound', '磅单', domain=lambda self: self._pound_id_function(), readonly=True)
 
     pound_id_bool = fields.Boolean(default=False, compute="_pound_id_bool_function")
@@ -360,7 +363,20 @@ class ZyYundan(models.Model):
             rec.am_i_cashier = rec.am_i_cashier_info(self.env.user)
 
     def am_i_cashier_info(self, user):
+        """ 判断【确认付款】和【运单退回】按钮权限 """
         if user.has_group('zhongyun_yundan.zy_yundan_group_account_cashier') or user.has_group('zhongyun_yundan.zy_yundan_group_manager'):
+            return True
+        else:
+            return False
+
+    def _compute_am_i_admin(self):
+        """ 判断【匹配磅单】按钮权限 """
+        for rec in self:
+            rec.am_i_admin = rec.am_i_admin_info(self.env.user)
+
+    def am_i_admin_info(self, user):
+        """ 判断【匹配磅单】按钮权限 """
+        if user.has_group('zhongyun_yundan.zy_yundan_group_manager'):
             return True
         else:
             return False

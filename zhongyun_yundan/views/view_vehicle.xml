@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 <odoo>
     <!-- 车辆管理视图增加page -->
-
     <record id="zy_vehicle_form_inherit" model="ir.ui.view">
             <field name="name">车辆管理</field>
             <field name="model">zy.vehicle</field>
@@ -18,5 +17,4 @@
                 </sheet>
             </field>
     </record>
-
 </odoo>

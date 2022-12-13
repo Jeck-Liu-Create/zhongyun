@@ -19,6 +19,7 @@
         'views/view.xml',
         'views/menu.xml',
         'views/view_vehicle.xml',
+        # 'data/email_template.xml'
     ],
     # 'qweb': [
     #     "static/src/xml/button.xml",
@@ -29,6 +30,13 @@
             'zhongyun_yundan/static/src/kanban_button/kanban_button.js',
             'zhongyun_yundan/static/src/mixins/add_kanban.js',
 
+            'zhongyun_yundan/static/src/views/yundan_dashboard.js',
+            'zhongyun_yundan/static/src/views/yundan_dashboard.xml',
+            'zhongyun_yundan/static/src/views/yundan_listview.js',
+            'zhongyun_yundan/static/src/views/yundan_listview.scss',
+            'zhongyun_yundan/static/src/views/yundan_listview.xml',
+            'zhongyun_yundan/static/src/views/yundan_kanbanview.xml',
+            'zhongyun_yundan/static/src/views/yundan_kanbanview.js',
         ],
     },
     'installable': True,

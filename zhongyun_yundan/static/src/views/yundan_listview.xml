@@ -1,0 +1,21 @@
+<templates>
+    <t t-name="Yundan.RfqNoContent" t-inherit="web.ActionHelper" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_view_nocontent')]" position="attributes">
+            <attribute name="class" add="o_yundan_no_content" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="Yundan.PurchaseListView" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ActionHelper']" position="replace">
+            <YundanDashBoard />
+            <t t-if="showNoContentHelper">
+                <t t-if="!showTable" t-call="Yundan.RfqNoContent">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

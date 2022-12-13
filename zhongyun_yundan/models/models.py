@@ -5,9 +5,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import math
 import datetime
-import time
 import logging
-from decimal import Decimal
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -506,6 +505,48 @@ class ZyYundan(models.Model):
             # 更新 activity
             self.activity_feedback(['zhongyun_yundan.mail_zhongyun_rejected'])
 
+    """ 自定义仪表盘数据 """
+
+    @api.model
+    def retrieve_dashboard(self):
+        """ 此函数返回用于填充自定义仪表板的值
+            运单管理视图。
+        """
+        self.check_access_rights('read')
+        result = {
+            'all_to_send': 0,
+            'all_waiting': 0,
+            'all_late': 0,
+            'my_to_send': 0,
+            'my_waiting': 0,
+            'my_late': 0,
+            'all_avg_order_value': 0,
+            'all_avg_days_to_purchase': 0,
+            'all_total_last_7_days': 0,
+            'all_sent_rfqs': 0,
+            'company_currency_symbol': self.env.company.currency_id.symbol
+        }
+
+        # easy counts
+        zy = self.env['zy.yundan']
+        result['all_to_send'] = zy.search_count([('state', '=', 'to_match')])
+        result['my_to_send'] = zy.search_count([('state', '=', 'to_match'), ('create_uid', '=', self.env.uid)])
+        result['all_waiting'] = zy.search_count(
+            [('state', 'in', [ 'not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected'])])
+        result['my_waiting'] = zy.search_count(
+            [('state', 'in', [ 'not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected']),
+             ('create_uid', '=', self.env.uid)])
+        result['all_late'] = zy.search_count(
+            ['&', ('state', '=', 'to_match'), '|',
+             ('establish_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3)),
+             ('single_supplement_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3))])
+        result['my_late'] = zy.search_count(
+            ['&', '&', ('state', '=', 'to_match'), '|',
+             ('establish_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3)),
+             ('single_supplement_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3)),
+             ('create_uid', '=', self.env.uid)])
+
+        return result
 
 class ZyYunDanUnit(models.Model):
     _name = 'zy.yundan.unit'
@@ -736,5 +777,3 @@ class ZyVehicle(models.Model):
     _inherit = 'zy.vehicle'
 
     yundan_ids = fields.One2many('zy.yundan', 'car_id', string="运单号")
-
-

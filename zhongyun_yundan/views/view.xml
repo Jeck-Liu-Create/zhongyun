@@ -142,11 +142,12 @@
   </record>
 
   <!--zy.yundan Tree视图 -->
-  <record id="view_tree_zy_yundan" model="ir.ui.view">
+  <record id="view_tree_zy_yundan" model="ir.ui.view" >
     <field name="name">运单表</field>
     <field name="model">zy.yundan</field>
     <field name="arch" type="xml">
-      <tree default_order="create_date desc">
+<!--        yundan_dashboard_list-->
+      <tree default_order="create_date desc" js_class="yundan_dashboard_list">
         <field name="name"/> 
         <field name="car_id"/>
         <field name="yundan_unit"/>
@@ -174,7 +175,7 @@
       <field name="name">zy.yundan.kanban</field>
       <field name="model">zy.yundan</field>
       <field name="arch" type="xml">
-          <kanban class="o_kanban_mobile" sample="1" default_order="create_date desc">
+          <kanban class="o_kanban_mobile"  js_class="yudnan_dashboard_kanban"  default_order="create_date desc" sample="1">
               <field name="name"/>
               <field name="car_id"/>
               <field name="transport_price"/>
@@ -228,20 +229,22 @@
         <filter string="我的运单" name="my_yundan" domain="[('create_uid', '=', uid)]"/>
         <separator/>
         <filter string="待匹配" name="to_match" domain="[('state', '=', 'to_match')]"/>
+        <filter string="正在处理" name="to_matching" domain="[('state', 'in', ['not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected'])]"/>
+        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match'),'|',('establish_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d')),('single_supplement_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
+<!--        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match'),'|',('establish_datetime', '&lt;', (datetime.now() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S)),('single_supplement_datetime', '&lt;', (datetime.now() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S))]"/>-->
+<!--        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match')],('establish_datetime', '&lt;', (context_today() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S)))"/>-->
+        <separator/>
         <filter string="匹配失败" name="not_match" domain="[('state', '=', 'not_match')]"/>
         <filter string="匹配完成" name="match" domain="[('state', '=', 'match')]"/>
         <filter string="待付款" name="to_payment" domain="[('state', '=', 'to_payment')]"/>
         <filter string="退回" name="rejected" domain="[('state', '=', 'rejected')]"/>
         <filter string="付款完成" name="payment" domain="[('state', '=', 'payment')]"/>
         <separator/>
-          <filter name="before_twodays" string="前天"
-            domain="[('establish_datetime','&gt;=',(context_today() - relativedelta(days=2)).strftime('%Y-%m-%d')),
-            ('establish_datetime','&lt;',(context_today() - relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
-<!--        <filter string="今日" name="today" invisible="0" domain="[('establish_datetime','=', current_date)]"/>-->
-<!--        <filter string="本月" name="month" invisible="0" domain="['&amp;',('establish_datetime','&gt;=', time.strftime('%Y-%m-01')),('establish_datetime',''&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01') ) ]"/>-->
-<!--        <filter string="上月" name="month2" invisible="0" domain="[('establish_datetime','<', time.strftime('%Y-%m-01')),('establish_datetime','>=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01') ) ]"/>-->
-<!--        <filter string="本年" name="year" invisible="0" domain="[('establish_datetime','<=', time.strftime('%Y-12-31')),('establish_datetime','>=', time.strftime('%Y-01-01'))]"/>-->
-<!--        <separator/>-->
+        <filter string="近三天" name="filter_last_3_days" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
+        <filter string="近一个月" name="filter_last_30_days" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+        <filter string="近三个月" name="filter_last_3_months" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
+        <filter string="近一年" name="filter_last_12_months" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+        <separator/>
         <filter string="建单日期" name="filter_establish_date" date="establish_datetime"/>
         <filter string="补单日期" name="filter_single_supplement_date" date="single_supplement_datetime"/>
         <separator/>
@@ -518,7 +521,7 @@
       <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
       <field name="search_view_id" ref="zy_yundan_view_search"/>
       <field name="domain">[]</field>
-      <field name="context">{'search_default_to_match': 1}</field>
+      <field name="context">{'search_default_to_match': 1,'create': False}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
           没有找到你创建的运单
@@ -535,7 +538,7 @@
       <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
       <field name="search_view_id" ref="zy_yundan_view_search"/>
       <field name="domain">[]</field>
-      <field name="context">{'search_default_not_match': 1}</field>
+      <field name="context">{'search_default_not_match': 1,'create': False}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
           没有匹配失败的运单
@@ -552,7 +555,7 @@
       <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
       <field name="search_view_id" ref="zy_yundan_view_search"/>
       <field name="domain">[]</field>
-      <field name="context">{'search_default_match': 1}</field>
+      <field name="context">{'search_default_match': 1,'create': False}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
           没有找到新的运单匹配成功
@@ -569,7 +572,7 @@
       <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
       <field name="search_view_id" ref="zy_yundan_view_search"/>
       <field name="domain">[]</field>
-      <field name="context">{'search_default_to_payment': 1}</field>
+      <field name="context">{'search_default_to_payment': 1,'create': False}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
           没有找到待付款运单
@@ -586,7 +589,7 @@
       <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
       <field name="search_view_id" ref="zy_yundan_view_search"/>
       <field name="domain">[]</field>
-      <field name="context">{'search_default_rejected': 1}</field>
+      <field name="context">{'search_default_rejected': 1,'create': False}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
           没有找到退回的运单
@@ -603,7 +606,7 @@
       <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
       <field name="search_view_id" ref="zy_yundan_view_search"/>
       <field name="domain">[]</field>
-      <field name="context">{'search_default_payment': 1}</field>
+      <field name="context">{'search_default_payment': 1,'create': False}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
           没有找到付款完成的运单

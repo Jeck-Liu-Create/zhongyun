@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- If user wants to make upgrade-proof customizations to email templates, he should edit ir.model.data and check noupdate himself -->
+    <record id="mail_zhongyun_notice_of_payment" model="mail.template">
+        <field name="name">通知付款</field>
+        <field
+            name="email_from"
+        >${object.create_uid.company_id.email or 'noreply@localhost.com'}</field>
+        <field
+            name="subject"
+        >运单${object.name} 车号【${object.car_id}】 需要你来付款</field>
+        <field name="model_id" ref="model_zy_yundan" />
+        <field name="auto_delete" eval="True" />
+        <field name="lang">${object.create_uid.partner_id.lang}</field>
+        <field name="body_html">
+            <![CDATA[
+                <p>你好,</p>
+
+                <p>${object.create_uid.name} 发送了运单<b>${object.name}</b>的付款通知，需要你来处理</p>
+
+                <h1><a href="${object.page_url}">${object.display_name}</a></h1>
+                <p>
+                <b>Modified by:</b> ${object.create_uid.name}<br/>
+                <b>Date:</b> ${object.create_date}<br>
+                </p>
+
+                <p>祝你有美好的一天.</p>
+
+                --<br/>
+
+                <p>中运物流</p>
+            ]]>
+        </field>
+    </record>
+</odoo>

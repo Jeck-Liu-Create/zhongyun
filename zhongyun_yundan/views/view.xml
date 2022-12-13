@@ -401,7 +401,7 @@
         <field name="establish_datetime"/>
         <field name="yundan_unit_zy_charge_rules"/>
         <field name="yun_dan"/>
-        <field name="yun_dan_match"/>
+<!--        <field name="yun_dan_match"/>-->
         <field name="zy_charge"/>
         <field name="yundan_unit_company_id" invisible="1"/>
       </tree>

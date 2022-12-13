@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <odoo>
-    <!-- zhongyun Form View -->
+    <!-- 车辆管理视图增加page -->
 
     <record id="zy_vehicle_form_inherit" model="ir.ui.view">
             <field name="name">车辆管理</field>
@@ -9,7 +9,6 @@
             <field name="arch" type="xml">
                 <sheet>
                     <xpath expr="//field[@name='name']/parent" position="after">
-<!--                    <xpath expr="//group" position="after">-->
                         <notebook>
                           <page string="运单信息">
                             <field name="yundan_ids"/>
@@ -19,4 +18,5 @@
                 </sheet>
             </field>
     </record>
+
 </odoo>

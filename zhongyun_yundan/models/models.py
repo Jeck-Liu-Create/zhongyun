@@ -364,7 +364,8 @@ class ZyYundan(models.Model):
 
     def am_i_cashier_info(self, user):
         """ 判断【确认付款】和【运单退回】按钮权限 """
-        if user.has_group('zhongyun_yundan.zy_yundan_group_account_cashier') or user.has_group('zhongyun_yundan.zy_yundan_group_manager'):
+        if user.has_group('zhongyun_yundan.zy_yundan_group_account_cashier') or user.has_group(
+                'zhongyun_yundan.zy_yundan_group_manager'):
             return True
         else:
             return False
@@ -622,13 +623,6 @@ class ZyYunDanUnit(models.Model):
         string='全部运单条数'
     )
 
-    yun_dan_match = fields.One2many(
-        'zy.yundan',
-        'yundan_unit',
-        domian=[('state', '=', 'match')],
-        string='匹配完成条数'
-    )
-
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('zy.yundan.unit') or '/'
@@ -742,3 +736,5 @@ class ZyVehicle(models.Model):
     _inherit = 'zy.vehicle'
 
     yundan_ids = fields.One2many('zy.yundan', 'car_id', string="运单号")
+
+

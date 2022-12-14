@@ -10,7 +10,24 @@
                     <xpath expr="//field[@name='name']/parent" position="after">
                         <notebook>
                           <page string="运单信息">
-                            <field name="yundan_ids"/>
+                            <field name="yundan_ids"  mode="tree,kanban"  readonly="1">
+                                <tree default_order="establish_datetime desc">
+                                    <field name="name"/>
+                                    <field name="car_id"/>
+                                    <field name="yundan_unit"/>
+                                    <field name="single_supplement" readonly="1"/>
+                                    <field name="establish_datetime"/>
+                                    <field name="yundan_zy_charge_rules"/>
+                                    <field
+                                          name="single_supplement_datetime"
+                                          attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
+                                    />
+                                    <field name="pound_id" />
+                                    <field name="transport_price"/>
+                                    <field name="zy_yundan_company_id" invisible="1"/>
+                                    <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
+                                </tree>
+                            </field>
                           </page>
                         </notebook>
                     </xpath>

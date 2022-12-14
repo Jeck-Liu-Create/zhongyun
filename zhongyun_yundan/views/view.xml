@@ -146,9 +146,8 @@
     <field name="name">运单表</field>
     <field name="model">zy.yundan</field>
     <field name="arch" type="xml">
-<!--        yundan_dashboard_list-->
-      <tree default_order="create_date desc" js_class="yundan_dashboard_list">
-        <field name="name"/> 
+      <tree default_order="establish_datetime desc" js_class="yundan_dashboard_list">
+        <field name="name"/>
         <field name="car_id"/>
         <field name="yundan_unit"/>
         <field name="single_supplement" readonly="1"/>

@@ -86,7 +86,6 @@
   </record>
 
   <!--  过磅单组-->
-
   <record id="view_form_zy_pound_unit" model="ir.ui.view">
     <field name="name">中运物流-磅单组管理</field>
     <field name="model">zy.pound.unit</field>
@@ -101,8 +100,11 @@
                     string="待匹配磅单" type="object"
                     attrs="{'invisible':[('pound_ids','=', False)]}" icon="fa-bars"/>
             <button class="oe_stat_button" name="pound_line_match_ids"
-                    string="匹配成功磅" type="object"
+                    string="匹配成功磅单" type="object"
                     attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
+            <button class="oe_stat_button" name="pound_line_not_match_ids"
+                    string="匹配失败磅单" type="object"
+                    attrs="{'invisible':[('pound_ids','=', False)]}" icon="fa-bars"/>
             <button class="oe_stat_button" name="pound_line_to_payment_ids"
                     string="待付款磅单" type="object"
                     attrs="{'invisible':[('pound_ids_match','=', False)]}" icon="fa-bars"/>
@@ -139,6 +141,9 @@
               </page>
               <page string="匹配成功">
                 <field name="pound_ids_match"/>
+              </page>
+              <page string="匹配失败">
+                <field name="pound_ids_not_match"/>
               </page>
               <page string="待付款">
                 <field name="pound_ids_to_payment"/>

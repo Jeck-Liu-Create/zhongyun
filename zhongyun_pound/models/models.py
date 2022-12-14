@@ -251,6 +251,20 @@ class ZyPoundUint(models.Model):
             'context': {'create': False},
         }
 
+    """" 匹配失败单列表按钮 """
+
+    def pound_line_not_match_ids(self):
+        return {
+            'name': '匹配失败',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'zy.pound',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'not_match')],
+            'context': {'create': False},
+        }
+
     """" 待匹配磅单列表按钮 """
 
     def pound_line_to_match_ids(self):
@@ -306,6 +320,8 @@ class ZyPoundUint(models.Model):
             'domain': ['&', ('pound_id', '=', self.id), ('state', '=', 'confirm_rejected')],
             'context': {'create': False},
         }
+
+
 
     @api.onchange('pound_uint_buckle_rules')
     def _onchange_pound_unit_zy_buckle(self):

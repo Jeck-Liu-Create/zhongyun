@@ -532,9 +532,9 @@ class ZyYundan(models.Model):
         result['all_to_send'] = zy.search_count([('state', '=', 'to_match')])
         result['my_to_send'] = zy.search_count([('state', '=', 'to_match'), ('create_uid', '=', self.env.uid)])
         result['all_waiting'] = zy.search_count(
-            [('state', 'in', [ 'not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected'])])
+            [('state', 'in', ['not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected'])])
         result['my_waiting'] = zy.search_count(
-            [('state', 'in', [ 'not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected']),
+            [('state', 'in', ['not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected']),
              ('create_uid', '=', self.env.uid)])
         result['all_late'] = zy.search_count(
             ['&', ('state', '=', 'to_match'), '|',
@@ -547,6 +547,7 @@ class ZyYundan(models.Model):
              ('create_uid', '=', self.env.uid)])
 
         return result
+
 
 class ZyYunDanUnit(models.Model):
     _name = 'zy.yundan.unit'
@@ -621,20 +622,38 @@ class ZyYunDanUnit(models.Model):
     def _onchange_zy_charge(self):
 
         Model_charge = self.env['zy.charge']
-        domain = ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&', ('state', '=', "approved"), '&',
-                  ('start_datetime', '<=', self.establish_datetime), '|',
-                  ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
-        res = Model_charge.search(domain, limit=1, order='id DESC')
-        _logger.info('运单组运价更新')
+        if self.single_supplement_datetime:
+            domain = ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&', ('state', '=', "approved"),
+                      '&',
+                      ('start_datetime', '<=', self.single_supplement_datetime), '|',
+                      ('stop_datetime', '>', self.single_supplement_datetime), ('stop_datetime', '=', False)]
+            res = Model_charge.search(domain, limit=1, order='id DESC')
+            _logger.info('运单组运价更新')
 
-        if len(res):
-            self.zy_charge = res[0].id
+            if len(res):
+                self.zy_charge = res[0].id
 
-        return {'domain': {'zy_charge': ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&',
-                                         ('state', '=', "approved"), '&',
-                                         (('start_datetime'), '<=', self.establish_datetime), '|',
-                                         ('stop_datetime', '>', self.establish_datetime),
-                                         ('stop_datetime', '=', False)]}}
+            return {'domain': {'zy_charge': ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&',
+                                             ('state', '=', "approved"), '&',
+                                             ('start_datetime', '<=', self.single_supplement_datetime), '|',
+                                             ('stop_datetime', '>', self.single_supplement_datetime),
+                                             ('stop_datetime', '=', False)]}}
+        else:
+            domain = ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&', ('state', '=', "approved"),
+                      '&',
+                      ('start_datetime', '<=', self.establish_datetime), '|',
+                      ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
+            res = Model_charge.search(domain, limit=1, order='id DESC')
+            _logger.info('运单组运价更新')
+
+            if len(res):
+                self.zy_charge = res[0].id
+
+            return {'domain': {'zy_charge': ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&',
+                                             ('state', '=', "approved"), '&',
+                                             ('start_datetime', '<=', self.establish_datetime), '|',
+                                             ('stop_datetime', '>', self.establish_datetime),
+                                             ('stop_datetime', '=', False)]}}
 
     """ 货物价格触发变更规则 """
 
@@ -642,21 +661,39 @@ class ZyYunDanUnit(models.Model):
     def _onchange_yundan_unit_zy_goods_price(self):
 
         Model_charge = self.env['zy.goods.price']
-        domain = ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&', ('state', '=', "approved"),
-                  '&', ('start_datetime', '<=', self.establish_datetime), '|',
-                  ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
-        res = Model_charge.search(domain, limit=1, order='id DESC')
-        _logger.info('运单组货物价格更新')
+        if self.single_supplement_datetime:
+            domain = ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&',
+                      ('state', '=', "approved"),
+                      '&', ('start_datetime', '<=', self.single_supplement_datetime), '|',
+                      ('stop_datetime', '>', self.single_supplement_datetime), ('stop_datetime', '=', False)]
+            res = Model_charge.search(domain, limit=1, order='id DESC')
+            _logger.info('运单组货物价格更新')
 
-        if len(res):
-            self.yundan_unit_zy_goods_price = res[0].id
+            if len(res):
+                self.yundan_unit_zy_goods_price = res[0].id
 
-        return {'domain': {
-            'yundan_unit_zy_goods_price': ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&',
-                                           ('state', '=', "approved"), '&',
-                                           ('start_datetime', '<=', self.establish_datetime), '|',
-                                           ('stop_datetime', '>', self.establish_datetime),
-                                           ('stop_datetime', '=', False)]}}
+            return {'domain': {
+                'yundan_unit_zy_goods_price': ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&',
+                                               ('state', '=', "approved"), '&',
+                                               ('start_datetime', '<=', self.single_supplement_datetime), '|',
+                                               ('stop_datetime', '>', self.single_supplement_datetime),
+                                               ('stop_datetime', '=', False)]}}
+        else:
+            domain = ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&', ('state', '=', "approved"),
+                      '&', ('start_datetime', '<=', self.establish_datetime), '|',
+                      ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
+            res = Model_charge.search(domain, limit=1, order='id DESC')
+            _logger.info('运单组货物价格更新')
+
+            if len(res):
+                self.yundan_unit_zy_goods_price = res[0].id
+
+            return {'domain': {
+                'yundan_unit_zy_goods_price': ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&',
+                                               ('state', '=', "approved"), '&',
+                                               ('start_datetime', '<=', self.establish_datetime), '|',
+                                               ('stop_datetime', '>', self.establish_datetime),
+                                               ('stop_datetime', '=', False)]}}
 
     yun_dan = fields.One2many(
         'zy.yundan',
@@ -773,7 +810,7 @@ class ZyYunDanUnit(models.Model):
         return {'data': {'id': form_id}}
 
 
-class ZyVehicle(models.Model):
+class ZyVehicleChild(models.Model):
     _inherit = 'zy.vehicle'
 
     yundan_ids = fields.One2many('zy.yundan', 'car_id', string="运单号")

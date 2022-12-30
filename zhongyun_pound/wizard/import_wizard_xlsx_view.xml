@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="import_xlsx_pound" model="ir.ui.view">
+            <field name="name">zy.pound.import.form</field>
+            <field name="model">zy.pound.import</field>
+            <field name="arch" type="xml">
+                <form string="数据导入" >
+                    <sheet>
+                        <group >
+                            <field name="data" filename="filename"/>
+                            <field name="filename" invisible="1"/>
+                            <field name="result" readonly='1'/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="import_pound" type="object" string="导入(数据)" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -5,3 +5,4 @@ access_pound_odoo_editor, ZhongYun pound Editor Access,model_zy_pound,zy_pound_g
 access_pound_unit_odoo_user, ZhongYun pound unit User Access,model_zy_pound_unit,zy_pound_unit_group_user,1,0,0,0
 access_pound_unit_odoo_manager, ZhongYun pound unit Manager Access,model_zy_pound_unit,zy_pound_unit_group_editor_user,1,1,1,1
 access_pound_unit_odoo_editor, ZhongYun pound unit Editor Access,model_zy_pound_unit,zy_pound_unit_group_manager,1,1,1,1
+access_import_xlsx_pound_user, ZhongYun pound unit import,model_zy_pound_import,base.group_system,1,1,1,1

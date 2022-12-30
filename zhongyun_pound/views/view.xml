@@ -5,7 +5,7 @@
     <field name="name">中运物流-磅单管理</field>
     <field name="model">zy.pound</field>
     <field name="arch" type="xml">
-      <form string="车辆信息">
+      <form string="磅单信息">
         <header>
             <button
                 name="action_matching_data"
@@ -24,13 +24,15 @@
             <sheet>
               <h1>
                 <p>磅单编号:</p>
-                <field name="name"/>
+                <field name="name" attrs="{'readonly': [('id','!=',False)]}"/>
+                <field name="id" invisible="1"/>
               </h1>
               <group>
-                <field name="pound_id" />
+                <field name="pound_id" attrs="{'readonly': [('id','!=',False)]}"/>
                 <field name="ZyPound_company_id" />
                 <field name="pound_id_percentage" />
-                <field name="yundan_id" />
+                <field name="yundan_id" invisible="1"/>
+                <field name="id" invisible="1"/>
 <!--                <field name="pound_id_percentage"  widget="percentage"  digits="[6, 4]"/>-->
               </group>
             </sheet>
@@ -39,18 +41,20 @@
                   <group>
                     <field name="pound_supplier"/>
                     <field name="transport_goods"/>
-                    <field name="car_id"/>
+                    <field name="car_id" attrs="{'readonly': [('id','!=',False)]}"/>
                     <field name="manufacture_date"/>
                     <field name="delivery_date"/>
                     <field name="car_number"/>
+                    <field name="id" invisible="1"/>
                   </group>
                   <group>
                     <field name="net_weight"/>
                     <field name="primary_weight"/>
-                    <field name="transport_company"/>
-                    <field name="delivery_location"/>
-                    <field name="car_id_other"/>
+                    <field name="transport_company" attrs="{'readonly': [('id','!=',False)]}"/>
+                    <field name="delivery_location" attrs="{'readonly': [('id','!=',False)]}"/>
+                    <field name="car_id_other" attrs="{'readonly': [('id','!=',False)]}"/>
                     <field name="tram_carrier_unit"/>
+                    <field name="id" invisible="1"/>
                   </group>
                 </group>
               </sheet>
@@ -64,23 +68,22 @@
     <field name="model">zy.pound</field>
     <field name="arch" type="xml">
       <tree>
-        <field name="name"/>
-        <field name="pound_id"/>
-        <field name="ZyPound_company_id"/>
-        <field name="pound_supplier"/>
-        <field name="transport_goods"/>
-        <field name="car_id"/>
-        <field name="manufacture_date"/>
-        <field name="delivery_date"/>
-        <field name="car_number"/>
-        <field name="net_weight"/>
-        <field name="primary_weight"/>
-        <field name="transport_company"/>
-        <field name="delivery_location"/>
-        <field name="car_id_other"/>
-        <field name="tram_carrier_unit"/>
-        <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
-
+        <field name="name" optional='show'/>
+        <field name="pound_supplier" optional='show'/>
+        <field name="transport_goods" optional='show'/>
+        <field name="car_id" optional='show'/>
+        <field name="manufacture_date" optional='show'/>
+        <field name="delivery_date" optional='show'/>
+        <field name="car_number" optional='show'/>
+        <field name="net_weight" optional='show'/>
+        <field name="primary_weight" optional='show'/>
+        <field name="transport_company" optional='show'/>
+        <field name="delivery_location" optional='show'/>
+        <field name="car_id_other" optional='show'/>
+        <field name="ZyPound_company_id" optional='show'/>
+        <field name="pound_id" optional='show'/>
+        <field name="tram_carrier_unit" optional='show'/>
+        <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" optional='show'/>
       </tree>
     </field>
   </record>
@@ -90,7 +93,23 @@
     <field name="name">中运物流-磅单组管理</field>
     <field name="model">zy.pound.unit</field>
     <field name="arch" type="xml">
-      <form string="车辆信息">
+      <form string="磅单组">
+        <header>
+            <button
+                name="action_import_zy_pound"
+                type="object"
+                string="导入"
+                class="oe_highlight"
+                attrs="{'invisible': [('id','=',False)]}"
+            />
+<!--            <button-->
+<!--                name="action_import_zy_pound"-->
+<!--                type="object"-->
+<!--                string="导入"-->
+<!--                class="oe_highlight"-->
+<!--            />-->
+            <field name="id" invisible="1"/>
+        </header>
         <sheet>
           <div class="oe_button_box" name="button_box">
             <button class="oe_stat_button" name="pound_line_ids"
@@ -123,12 +142,14 @@
               <group>
                 <field name="ZyPoundUint_establish_datetime"/>
                 <field name="ZyPoundUint_user_id"/>
-                <field name="ZyPoundUint_company_id"/>
+                <field name="ZyPoundUint_company_id" readonly="1"/>
+                <field name="id" invisible="1"/>
               </group>
               <group>
-                <field name="pound_uint_buckle_rules"/>
-                <field name="pound_establish_datetime"/>
-                <field name="pound_unit_zy_buckle"/>
+                <field name="pound_uint_buckle_rules" attrs="{'readonly': [('id','!=',False)]}"/>
+                <field name="pound_establish_datetime" attrs="{'readonly': [('id','!=',False)]}"/>
+                <field name="pound_unit_zy_buckle" attrs="{'readonly': [('id','!=',False)]}"/>
+                <field name="id" invisible="1"/>
               </group>
             </group>
           </sheet>

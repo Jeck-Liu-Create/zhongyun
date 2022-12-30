@@ -147,24 +147,26 @@
     <field name="model">zy.yundan</field>
     <field name="arch" type="xml">
       <tree default_order="establish_datetime desc" js_class="yundan_dashboard_list">
-        <field name="name"/>
-        <field name="car_id"/>
-        <field name="yundan_unit"/>
-        <field name="single_supplement" readonly="1"/>
-        <field name="establish_datetime"/>
-        <field name="establish_date" />
-        <field name="yundan_zy_charge_rules"/>
+        <field name="name"  optional="show"/>
+        <field name="car_id"  optional="show"/>
+        <field name="yundan_unit"  optional="show"/>
+        <field name="single_supplement" readonly="1"  optional="show"/>
+        <field name="establish_datetime"  optional="hide"/>
+        <field name="establish_date"  optional="show"/>
+        <field name="yundan_zy_charge_rules"  optional="show"/>
         <field
               name="single_supplement_datetime"
               attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
+              optional="hide"
         />
         <field
               name="single_supplement_date"
+              optional="show"
         />
-        <field name="pound_id" />
-        <field name="transport_price"/>
-        <field name="zy_yundan_company_id" invisible="1"/>
-        <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'" />
+        <field name="pound_id"  optional="show"/>
+        <field name="transport_price"  optional="hide"/>
+        <field name="zy_yundan_company_id" invisible="1"  optional="show"/>
+        <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'"  optional="show"  />
       </tree>
     </field>
   </record>

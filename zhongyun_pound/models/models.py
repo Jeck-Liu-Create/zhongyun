@@ -95,6 +95,7 @@ class ZyPound(models.Model):
         return result
 
     """ 匹配运单 """
+
     def action_matching_data(self):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
@@ -120,9 +121,8 @@ class ZyPound(models.Model):
             else:
                 raise UserError(" 在'%s'状态下无法匹配运单." % rec.state)
 
-
-
     """ 通知付款 """
+
     def action_notice_of_payment(self):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
@@ -132,7 +132,6 @@ class ZyPound(models.Model):
                     [yudna_data.id],
                     {})
             rec.write({"state": "to_payment"})
-
 
 
 class ZyPoundUint(models.Model):
@@ -226,6 +225,7 @@ class ZyPoundUint(models.Model):
     )
 
     """" 全部磅单列表按钮 """
+
     def pound_line_ids(self):
         return {
             'name': '全部磅单',
@@ -239,6 +239,7 @@ class ZyPoundUint(models.Model):
         }
 
     """" 匹配成功磅单列表按钮 """
+
     def pound_line_match_ids(self):
         return {
             'name': '匹配成功磅单',
@@ -321,8 +322,6 @@ class ZyPoundUint(models.Model):
             'context': {'create': False},
         }
 
-
-
     @api.onchange('pound_uint_buckle_rules')
     def _onchange_pound_unit_zy_buckle(self):
         Model_buckle = self.env['zy.buckle']
@@ -353,3 +352,14 @@ class ZyPoundUint(models.Model):
         vals['name'] = seq
         new_record = super(ZyPoundUint, self).create(vals)
         return new_record
+
+    def action_import_zy_pound(self):
+        ctx = dict(self.env.context, default_unit_id=self.id)
+        return {
+            'name': self.name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'zy.pound.import',
+            'target': 'new',
+            'context': ctx,
+        }

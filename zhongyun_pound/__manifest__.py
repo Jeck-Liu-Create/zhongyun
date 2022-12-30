@@ -18,6 +18,7 @@
         'data/action_data.xml',
         'views/menu.xml',
         'views/view.xml',
+        'wizard/import_wizard_xlsx_view.xml',
     ],
     'installable': True,
     'auto_install': False,

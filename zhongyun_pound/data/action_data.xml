@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_action_matching_data" model="ir.actions.server">
+            <field name="name">运单匹配</field>
+            <field name="model_id" ref="model_zy_pound"/>
+            <field name="binding_model_id" ref="zhongyun_pound.model_zy_pound"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_matching_data()
+            </field>
+        </record>
+<!--        磅单调用运单方法-->
+        <record id="action_notice_of_payment" model="ir.actions.server">
+            <field name="name">通知付款</field>
+            <field name="model_id" ref="model_zy_pound"/>
+            <field name="binding_model_id" ref="zhongyun_pound.model_zy_pound"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_notice_of_payment()
+            </field>
+        </record>
+    </data>
+</odoo>

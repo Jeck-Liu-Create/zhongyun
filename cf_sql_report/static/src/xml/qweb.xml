@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# **********************
+# 盛哲康虎信息技术（厦门）有限公司
+# http://www.khcloud.net
+# QQ: 360026606
+# wechat: 360026606
+# **********************
+-->
+<template id="template" xml:spacer="preserve">
+    <t t-extend="FormView.buttons">
+        <t t-jquery="div.o_form_buttons_edit" t-operation="after">
+            <t t-if="widget.modelName == 'cf.report.define'">
+                <div class="o_form_buttons_add_sql_model"
+                     role="toolbar" aria-label="Main actions">
+                    <button class="btn btn-secondary o_cf_report_add_sql_model_button"
+                            type="button" id="create_sql_model_button">Create SQL Model</button>
+                </div>
+            </t>
+        </t>
+
+        <t t-jquery=".o_form_buttons_view" t-operation="attributes">
+            <attribute name="style" value="float: left;"/>
+        </t>
+        <t t-jquery=".o_form_buttons_edit" t-operation="attributes">
+            <attribute name="style" value="float: left;"/>
+        </t>
+<!--
+        <xpath expr="//div[hasclass('o_form_buttons_view')]" position="attributes">
+            <attribute name="style" value="float: left;"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_form_buttons_edit')]" position="attributes">
+            <attribute name="style" value="float: left;"/>
+        </xpath>
+-->
+    </t>
+</template>

@@ -1,0 +1,52 @@
+
+
+.o_searchview {
+    border-width: 1px;
+    border-radius: 50px;
+    padding-left: 10px;
+    height: 34px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    margin: 5px 0px;
+    border: 1px solid #dcdfe6 !important;
+
+    &.pb-1 {
+        padding-bottom: 0px !important;
+    }
+}
+
+.o_searchview .o_searchview_icon {
+    position: absolute;
+    top: 10px;
+    left: auto;
+    bottom: auto;
+    right: 10px;
+}
+
+// first button
+.btn-group > .btn:first-child:not(.dropdown-toggle), .btn-group > .btn-group:first-child > .btn {
+    border-top-left-radius: 50px !important;
+    border-bottom-left-radius: 50px !important;
+}
+
+// last button
+.btn-group > .btn:last-child:not(.dropdown-toggle), .btn-group > .btn-group:last-child > .btn {
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 50px !important;
+}
+
+.o_pager {
+    .btn {
+        min-width: 30px;
+    }
+}
+
+.btn-light, .o_form_view .o_statusbar_status .o_arrow_button:not(.disabled) {
+    border-color: #dcdfe6;
+}
+
+.btn-secondary {
+    border-color: #dcdfe6;
+}

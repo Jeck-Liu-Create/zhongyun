@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--# 康虎软件工作室-->
+<!--# http://www.khcloud.net-->
+<!--# QQ: 360026606-->
+<!--# wechat: 360026606-->
+<!--# #######################-->
+<odoo>
+    <template id="assets_backend" name="car_store assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/cf_sql_report/static/src/css/cf_add_sql_model.css"/>
+            <script type="text/javascript" src="/cf_sql_report/static/src/js/cf_sql_add_sql_model.js"></script>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,797 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* cf_sql_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e-20200721\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-01 15:06+0000\n"
+"PO-Revision-Date: 2021-04-01 15:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid ""
+"<b>如何实现 many2one 关联：</b><br/>\n"
+"                                        在SQL语句中，查询关联模型的id字段并重命名为 x_m2o_model_id 格式即可 （其中，x_是前缀，model是关联模型名称或简称，_id是后缀）。<br/>\n"
+"                                        例如：<br/>\n"
+"                                        res_country.id AS <b><i>x_m2o_country_id</i></b>"
+msgstr ""
+"<b>如何实现 many2one 关联：</b><br/>\n"
+"                                        在SQL语句中，查询关联模型的id字段并重命名为 x_m2o_model_id 格式即可 （其中，x_是前缀，model是关联模型名称或简称，_id是后缀）。<br/>\n"
+"                                        例如：<br/>\n"
+"                                        res_country.id AS <b><i>x_m2o_country_id</i></b>"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid ""
+"<b>如何实现 one2many 关联：</b><br/>\n"
+"                                        1、在SQL语句中，按下列格式查询关联表数据：<br/>\n"
+"                                        '{\"model\":\"sale.order\", \"relation_field\": \"partner_id\"}' AS x_o2m_sale_orders"
+msgstr ""
+"<b>如何实现 one2many 关联：</b><br/>\n"
+"                                        1、在SQL语句中，按下列格式查询关联表数据：<br/>\n"
+"                                        '{\"model\":\"sale.order\", \"relation_field\": \"partner_id\"}' AS x_o2m_sale_orders"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__action_context
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Action Context"
+msgstr "Action Context"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Action Settings"
+msgstr "Action设置"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__group_ids
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__group_ids
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Allowed Groups"
+msgstr "允许访问的用户组"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__user_ids
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__user_ids
+msgid "Allowed Users"
+msgstr "允许访问的用户用户"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid ""
+"Are you sure you want to set to draft this SQL View. It will delete the "
+"materialized view, and all the previous mapping realized with the columns"
+msgstr "真的要把当前SQL视图置为草稿状态吗？该操作将删除物化视图和之前实现的列映射。"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__tree_visibility__available
+msgid "Available"
+msgstr "可用"
+
+#. module: cf_sql_report
+#: model:ir.model,name:cf_sql_report.model_cf_sql_model
+msgid "CF SQL Model"
+msgstr "康虎SQL模型"
+
+#. module: cf_sql_report
+#: model:ir.model,name:cf_sql_report.model_cf_sql_model_field
+msgid "CF SQL Model Field"
+msgstr "康虎SQL模型字段"
+
+#. module: cf_sql_report
+#: model:ir.module.category,name:cf_sql_report.category_cf_sql_report
+msgid "CF SQL Report"
+msgstr "康虎SQL报表"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__is_group_by
+msgid ""
+"Check this box if you want to create a 'group by' option in the search view"
+msgstr "如果要在搜索视图中创建'group by'选择请勾选此项。"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__is_index
+msgid ""
+"Check this box if you want to create an index on that field. This is "
+"recommended for searchable and groupable fields, to reduce duration"
+msgstr "如果要在此字段上创建索引请勾选此项。建议在可搜索和可分组字段使用此选项，以减少创建时间 。"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model__state__sql_valid
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__sql_base_mixin__state__sql_valid
+msgid "Checked"
+msgstr "已校验"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__graph_type__col
+msgid "Column"
+msgstr "列"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__view_order
+msgid "Comma-separated text. Possible values: \"graph\", \"pivot\" or \"tree\""
+msgstr "逗号分隔文本。可选值： \"graph\", \"pivot\" 或 \"tree\""
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.cf_report_define_form
+msgid "Create SQL Model"
+msgstr "根据SQL创建模型"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Create SQL View, Indexes and Models"
+msgstr "创建SQL视图、索引和模型"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Create UI"
+msgstr "创建odoo功能界面"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Created Model"
+msgstr "创建模型"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Created User Interface"
+msgstr "创建模型相关视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__create_uid
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__create_date
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__cron_id
+msgid "Cron Task that use to refresh the materialized view"
+msgstr "刷新物化视图的定时任务"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Data Access Rule"
+msgstr "数据访问规则"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__size
+msgid "Database Size"
+msgstr "数据库大小"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__action_context
+msgid "Define a default context for creating the action."
+msgstr "定义创建action时的默认上下文"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__domain_force
+msgid ""
+"Define access right of data.\n"
+" Note that the field name must start with 'x_'. A global 'ir.rule' will be created. A typical Multi Company rule is for exemple \n"
+" ['|', ('x_company_id','child_of', [user.company_id.id]),('x_company_id','=',False)]."
+msgstr ""
+"定义数据访问权限。\n"
+" 注意，字段名称必须以‘x_’开头。将会创建一个全局'ir.rule'记录。一个典型的多公司规则如下： \n"
+" ['|', ('x_company_id','child_of', [user.company_id.id]),('x_company_id','=',False)]."
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__display_name
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__display_name
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model__state__draft
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__sql_base_mixin__state__draft
+msgid "Draft"
+msgstr "草稿"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__relation_expression
+msgid "Expression for Relation field"
+msgstr "关联字段的表达式"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__domain_force
+msgid "Extra Rule Definition"
+msgstr "额外规则定义"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__field_description
+msgid "Field Description"
+msgstr "字段说明"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__ttype
+msgid "Field Type"
+msgstr "字段类型"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__relation_model_id
+msgid ""
+"For 'Many2one' or 'One2many' Odoo field.\n"
+"Comodel of the field."
+msgstr "'Many2one'或'One2many'字段的关联Model."
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__selection
+msgid ""
+"For 'Selection' Odoo field.\n"
+" List of options, specified as a Python expression defining a list of (key, label) pairs. For example:[('cfreport','CFReport'), ('qweb','QWeb'), ('docx','MS Word')]"
+msgstr ""
+"用以 'Selection' 字段的下拉选择项，以Python的键值对（字典）格式定义。例如：[('cfreport','康虎云报表'), "
+"('qweb','QWeb报表'), ('docx','MS Word报表')]"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__model_name
+msgid "Full Name of the transient model that will be created."
+msgstr "将创建的瞬态模型全名。"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__view_name
+msgid "Full name of the SQL view"
+msgstr "SQL视图的全名"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__graph_type
+msgid "Graph Type"
+msgstr "图表类型"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__has_group_changed
+msgid "Has Group Changed"
+msgstr "用户组有改变"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Helps"
+msgstr "帮助"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__tree_visibility__hidden
+msgid "Hidden"
+msgstr "隐藏"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__id
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__id
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__id
+msgid "ID"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__index_name
+msgid "Index Name"
+msgstr "索引名称"
+
+#. module: cf_sql_report
+#: model:cf.sql.model,name:cf_sql_report.invalid_sql_view
+msgid "Invalid SQL View"
+msgstr "无效的SQL视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__is_group_by
+msgid "Is Group by"
+msgstr "是分组字段?"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__is_index
+msgid "Is Index"
+msgstr "是索引字段?"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__is_materialized
+msgid "Is Materialized View"
+msgstr "是物化视图?"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model____last_update
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field____last_update
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin____last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__write_uid
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__write_date
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: cf_sql_report
+#: model:res.groups,name:cf_sql_report.group_sql_report_manager
+msgid "Manager"
+msgstr "管理员"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__materialized_text
+msgid "Materialized Text"
+msgstr "物化视图内容"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__graph_type__measure
+msgid "Measure"
+msgstr "维度值"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__relation_model_id
+msgid "Model"
+msgstr "模型"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__model_name
+msgid "Model Name"
+msgstr "模型名称"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__name
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__name
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__name
+msgid "Name"
+msgstr "名称"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__notes
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Notes"
+msgstr "备注"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__action_id
+msgid "Odoo Action"
+msgstr "Odoo动作"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__cron_id
+msgid "Odoo Cron"
+msgstr "Odoo定时任务"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__graph_view_id
+msgid "Odoo Graph View"
+msgstr "Odoo图表视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__menu_id
+msgid "Odoo Menu"
+msgstr "Odoo菜单"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__model_id
+msgid "Odoo Model"
+msgstr "Odoo模型"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__pivot_view_id
+msgid "Odoo Pivot View"
+msgstr "Odoo透视表视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__rule_id
+msgid "Odoo Rule"
+msgstr "Odoo规则"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__search_view_id
+msgid "Odoo Search View"
+msgstr "Odoo搜索视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__tree_view_id
+msgid "Odoo Tree View"
+msgstr "Odoo列表视图"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Odoo UI"
+msgstr "Odoo功能界面"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Open View"
+msgstr "打开视图"
+
+#. module: cf_sql_report
+#: model:cf.sql.model,name:cf_sql_report.country_state_sql_view
+msgid "Partner count"
+msgstr "合作伙伴统计"
+
+#. module: cf_sql_report
+#: model:cf.sql.model,name:cf_sql_report.partner_sql_view
+msgid "Partners Simple View"
+msgstr "合作伙伴简要视图"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Please enter SQL Query to be create SQL view"
+msgstr "请输入要创建SQL视图的SQL语句"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Please enter the name of SQL view"
+msgstr "请输入SQL视图的名称"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Please enter the order of odoo views for this model."
+msgstr "请输入根据该模型创建的odoo视图的顺序"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid ""
+"Please enter the technical name of SQL view. This name will be a part of "
+"view full name."
+msgstr "请输入SQL视图的技术名称。该名称是SQL视图全名的一部分。"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Please select the menu that the created UI to attach.."
+msgstr "请选择要生成菜单的上级菜单"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Preview SQL Query"
+msgstr "预览SQL查询结果"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__query
+msgid "Query"
+msgstr "查询"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__query
+msgid "Query Content"
+msgstr "查询内容"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Refresh Materialized View"
+msgstr "刷新物化视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__relation_field
+msgid "Relation Field"
+msgstr "关联字段"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__relation_expression
+msgid "Relation Field Expression"
+msgstr "关联字段表达式"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__relation_field
+msgid "Relation field name for 'One2many' Odoo field"
+msgstr "'One2many'字段的关联字段名"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__graph_type__row
+msgid "Row"
+msgstr "行"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__cf_sql_model_field_ids
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "SQL Fields"
+msgstr "SQL字段"
+
+#. module: cf_sql_report
+#: model:ir.ui.menu,name:cf_sql_report.menu_cf_sql_model
+msgid "SQL Model"
+msgstr "SQL模型"
+
+#. module: cf_sql_report
+#: model:ir.ui.menu,name:cf_sql_report.menu_cf_sql_report_ui
+msgid "SQL Model UI"
+msgstr "SQL模型用户界面"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "SQL Query"
+msgstr "SQL查询"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__query
+msgid ""
+"SQL Query that will be inserted as the view. Please note that :\n"
+" * Set a name for each field, specially the use of SQL function fields (like EXTRACT, ...);\n"
+" * Do not use 'SELECT *' or 'SELECT table.*' to fetch all fields;\n"
+" * Selectable fields must start with 'x_';"
+msgstr ""
+"SQL查询语句将作为视图创建在数据库。请注意 :\n"
+" * 每个字段必须分别命名，特别是SQL函数字段 (例如 EXTRACT, ...);\n"
+" * 不要使用 'SELECT *' 或 'SELECT table.*' 来获取所有字段;\n"
+" * 可使用的字段必须以 'x_'开头;"
+
+#. module: cf_sql_report
+#: model:ir.ui.menu,name:cf_sql_report.menu_cf_sql_report
+msgid "SQL Report"
+msgstr "SQL报表"
+
+#. module: cf_sql_report
+#: model:ir.model,name:cf_sql_report.model_sql_base_mixin
+msgid "SQL Request Base Mixin"
+msgstr "SQL基础类"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__sql_type
+msgid "SQL Type"
+msgstr "SQL类型"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__sql_type
+msgid "SQL Type in the database"
+msgstr "数据库中的SQL类型"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__cf_sql_model_id
+msgid "SQL View"
+msgstr "SQL视图"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model__state__model_valid
+msgid "SQL View and Model Created"
+msgstr "已创建SQL视图和模型"
+
+#. module: cf_sql_report
+#: model:ir.actions.act_window,name:cf_sql_report.action_cf_sql_model
+msgid "SQL Views"
+msgstr "SQL视图"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Security"
+msgstr "安全设置"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__selection
+msgid "Selection Options"
+msgstr "选项"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Set to Draft"
+msgstr "置为草稿"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__size
+msgid "Size of the materialized view and its indexes"
+msgstr "物化视图及索引大小"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__state
+#: model:ir.model.fields,field_description:cf_sql_report.field_sql_base_mixin__state
+msgid "State"
+msgstr "状态"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__state
+#: model:ir.model.fields,help:cf_sql_report.field_sql_base_mixin__state
+msgid ""
+"State of the SQL Query:\n"
+" * 'Draft': Not tested\n"
+" * 'Checked': SQL Query has been checked and is valid"
+msgstr ""
+"SQL语句状态:\n"
+" * '草稿': 未校验\n"
+" * '已校验': SQL语句已校验有效"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__tech_name
+msgid ""
+"Suffix of the SQL view. SQL full name will be start with 'x_cfsv_'. Syntax "
+"should follow: https://www.postgresql.org/docs/current/static/sql-syntax-"
+"lexical.html#SQL-SYNTAX-IDENTIFIERS"
+msgstr ""
+"SQL视图名称前缀。SQL全名将以'x_cfsv_'开头。SQL语法请参考： "
+"https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-"
+"SYNTAX-IDENTIFIERS"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__tech_name
+msgid "Technical Name"
+msgstr "技术名称"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__is_materialized
+msgid "This SQL view is Materialized?"
+msgstr "SQL视图是物化视图？"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__field_description
+msgid "This will be used as the name of the Odoo field, displayed for users"
+msgstr "该名称将作为Odoo字段的名称显示给用户"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "This will create Odoo View, Action and Menu"
+msgstr "将创建Odoo视图、动作和菜单"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid ""
+"This will try to create an SQL View, based on the SQL request and the "
+"according Transient Model and fields, based on settings"
+msgstr "这将尝试基于SQL语句以及相应的瞬态模型和字段(基于设置)创建一个SQL视图"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Tips of useage"
+msgstr "使用说明"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__tree_visibility
+msgid "Tree Visibility"
+msgstr "列表视图可见性"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model_field__ttype
+msgid ""
+"Type of the Odoo field that will be created. Keep empty if you don't want to"
+" create a new field. If empty, this field will not be displayed neither "
+"available for search or group by function"
+msgstr "将创建字段的类型。如果不需要创建新字段则留空，若留空则该字段不会显示也不能被搜索及分组。"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__parent_menu_id
+msgid "UI Parent Menu"
+msgstr "Odoo功能菜单的上级菜单"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__tree_visibility__unavailable
+msgid "Unavailable"
+msgstr "不可用"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Update Model Access"
+msgstr "更新模型访问权限"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid ""
+"Update Model Access. Required if you changed groups list after having "
+"created the model"
+msgstr "更新模型访问权限。如果在模型创建后修改了访问组则需要更新访问权限。"
+
+#. module: cf_sql_report
+#: model:res.groups,name:cf_sql_report.group_sql_report_user
+msgid "User"
+msgstr "用户"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "Validate SQL Expression"
+msgstr "校验SQL语句"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__view_name
+msgid "View Name"
+msgstr "视图名称"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__view_order
+msgid "View Order"
+msgstr "视图顺序"
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model__state__ui_valid
+msgid "Views, Action and Menu Created"
+msgstr "已创建视图、动作和菜单"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_cf_sql_model__parent_menu_id
+msgid "Which menu that the created Odoo UI menu to attach"
+msgstr "生成的Odoo功能的上级菜单"
+
+#. module: cf_sql_report
+#: model:ir.model.fields,help:cf_sql_report.field_sql_base_mixin__query
+msgid ""
+"You can't use the following words: DELETE, DROP, CREATE, INSERT, ALTER, "
+"TRUNCATE, EXECUTE, UPDATE."
+msgstr ""
+"不允许使用下列关键词:  DELETE, DROP, CREATE, INSERT, ALTER, TRUNCATE, EXECUTE, UPDATE."
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__boolean
+msgid "boolean"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__char
+msgid "char"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__date
+msgid "date"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__datetime
+msgid "datetime"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__float
+msgid "float"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__integer
+msgid "integer"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__many2one
+msgid "many2one"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__one2many
+msgid "one2many"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields.selection,name:cf_sql_report.selection__cf_sql_model_field__ttype__selection
+msgid "selection"
+msgstr ""
+
+#. module: cf_sql_report
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model__sequence
+#: model:ir.model.fields,field_description:cf_sql_report.field_cf_sql_model_field__sequence
+msgid "sequence"
+msgstr ""
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "this will refresh the materialized view"
+msgstr "这将刷新物化视图"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "例如：['|', ('x_partner_id','child_of', [user.partner.id])]"
+msgstr "例如：['|', ('x_partner_id','child_of', [user.partner.id])]"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "在上面输入框中定义创建action时默认使用的上下文参数。"
+msgstr "在上面输入框中定义创建action时默认使用的上下文参数。"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "在上面输入框中定义数据访问权限.<br/>"
+msgstr "在上面输入框中定义数据访问权限.<br/>"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "定义的规则会生成一个全局'ir.rule'规则记录"
+msgstr "定义的规则会生成一个全局'ir.rule'规则记录"
+
+#. module: cf_sql_report
+#: model:ir.model,name:cf_sql_report.model_cf_report_define
+msgid "报表定义"
+msgstr "报表定义"
+
+#. module: cf_sql_report
+#: model_terms:ir.ui.view,arch_db:cf_sql_report.view_cf_sql_model_form
+msgid "注意字段必须以'x_'开头"
+msgstr "注意字段必须以'x_'开头"

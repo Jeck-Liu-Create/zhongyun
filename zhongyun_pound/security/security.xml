@@ -39,6 +39,7 @@
   <record model="ir.rule" id="zy_pound_request_editor_global">
       <field name="name">编辑人规则</field>
       <field name="model_id" ref="module_zy_pound" />
+      <field name="global" eval="True" />
       <field name="domain_force" >['&amp;','|',('ZyPound_company_id','=',False),('ZyPound_company_id', 'in', company_ids),('ZyPound_user_id','=',user.id)]</field>
       <field name="groups" eval="[(4, ref('zy_pound_group_editor_user'))]" />
   </record>
@@ -46,6 +47,7 @@
   <record model="ir.rule" id="zy_pound_request_user_global">
       <field name="name">普通用户规则</field>
       <field name="model_id" ref="module_zy_pound" />
+      <field name="global" eval="True" />
       <field name="domain_force" >['|',('ZyPound_company_id','=',False),('ZyPound_company_id', 'in', company_ids)]</field>
       <field name="groups" eval="[(4, ref('zy_pound_group_user'))]" />
   </record>
@@ -85,6 +87,7 @@
   <record model="ir.rule" id="zy_pound_unit_request_editor_global">
       <field name="name">编辑人规则</field>
       <field name="model_id" ref="module_zy_pound_unit" />
+      <field name="global" eval="True" />
       <field name="domain_force" >['&amp;','|',('ZyPoundUint_company_id','=',False),('ZyPoundUint_company_id', 'in', company_ids),('ZyPoundUint_user_id','=',user.id)]</field>
       <field name="groups" eval="[(4, ref('zy_pound_unit_group_editor_user'))]" />
   </record>
@@ -92,6 +95,7 @@
   <record model="ir.rule" id="zy_pound_unit_request_user_global">
       <field name="name">普通用户规则</field>
       <field name="model_id" ref="module_zy_pound_unit" />
+      <field name="global" eval="True" />
       <field name="domain_force" >['|',('ZyPoundUint_company_id','=',False),('ZyPoundUint_company_id', 'in', company_ids)]</field>
       <field name="groups" eval="[(4, ref('zy_pound_unit_group_user'))]" />
   </record>

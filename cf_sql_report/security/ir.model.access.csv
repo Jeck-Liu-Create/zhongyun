@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cf_sql_model_all,access_cf_sql_model_all,model_cf_sql_model,,0,0,0,0
-access_cf_sql_model_manager,access_cf_sql_model_manager,model_cf_sql_model,sql_request_abstract.group_sql_request_manager,1,1,1,1
-,,,,,,,
-access_cf_sql_model_field_all,access_cf_sql_model_field_all,model_cf_sql_model_field,,0,0,0,0
-access_cf_sql_model_field_manager,access_cf_sql_model_field_manager,model_cf_sql_model_field,sql_request_abstract.group_sql_request_manager,1,1,1,1

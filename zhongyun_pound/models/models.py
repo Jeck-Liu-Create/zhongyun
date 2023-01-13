@@ -34,7 +34,7 @@ class ZyPound(models.Model):
         'res.company',
         string="所属公司",
         related='pound_id.ZyPoundUint_company_id',
-        readonly=True,
+        readonly=True
     )
 
     yundan_id = fields.Char('运单')

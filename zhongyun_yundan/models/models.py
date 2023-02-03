@@ -548,6 +548,28 @@ class ZyYundan(models.Model):
 
         return result
 
+    """ 删除记录设定 """
+
+    # @api.multi
+    def unlink(self):
+        """判断用户是否有权删除"""
+        for rec in self:
+            if self.unlink_approve(self.env.user, rec):
+                return super(ZyYundan, self).unlink()
+            else:
+                raise UserError(" 你的权限不够 .")
+
+    def unlink_approve(self, user, rec):
+        """检查用户是否可以批准此运价单."""
+
+        # 如果用户属于“管理员”，则可以删除该条记录
+        if user.has_group("zhongyun_yundan.zy_yundan_group_manager"):
+            return True
+        print(rec.create_uid)
+        if rec.create_uid == user:
+            return True
+        return False
+
 
 class ZyYunDanUnit(models.Model):
     _name = 'zy.yundan.unit'
@@ -679,7 +701,8 @@ class ZyYunDanUnit(models.Model):
                                                ('stop_datetime', '>', self.single_supplement_datetime),
                                                ('stop_datetime', '=', False)]}}
         else:
-            domain = ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&', ('state', '=', "approved"),
+            domain = ['&', ('goods_rules', '=', self.yundan_unit_charge_goods_rules.id), '&',
+                      ('state', '=', "approved"),
                       '&', ('start_datetime', '<=', self.establish_datetime), '|',
                       ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
             res = Model_charge.search(domain, limit=1, order='id DESC')

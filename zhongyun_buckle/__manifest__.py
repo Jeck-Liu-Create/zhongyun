@@ -17,7 +17,6 @@
         'security/groups.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
-        # 'views/web_assets.xml',
         'views/menu.xml',
         'views/view.xml',
         

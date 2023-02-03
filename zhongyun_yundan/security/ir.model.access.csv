@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 zy.yundan.user, ZhongYun.YunDan.User,model_zy_yundan,zy_yundan_group_user,1,0,0,0
-zy.yundan.business.user, ZhongYun.YunDan.Business.User,model_zy_yundan,zy_yundan_group_business_user,1,1,1,0
+zy.yundan.business.user, ZhongYun.YunDan.Business.User,model_zy_yundan,zy_yundan_group_business_user,1,1,1,1
 zy.yundan.account.cashier, ZhongYun.YunDan.Ccashier.Access,model_zy_yundan,zy_yundan_group_account_cashier,1,1,0,0
 zy.yundan.manager, ZhongYun YunDan Manager,model_zy_yundan,zy_yundan_group_manager,1,1,1,1
 zy.yundan.unit.user, ZhongYun.YunDan.Unit.User,model_zy_yundan_unit,zy_yundan_unit_group_user,1,0,0,0

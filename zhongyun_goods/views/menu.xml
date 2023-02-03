@@ -27,7 +27,7 @@
 
     <!-- Menu item to open the zy_goods -->
     <menuitem id="menu_zy_goods"
-              name="中运物流-货物价格管理"
+              name="中运物流-货物管理"
 	          action="action_zy_goods"
               parent="zy_goods_price_menu" 
               sequence="100"/>

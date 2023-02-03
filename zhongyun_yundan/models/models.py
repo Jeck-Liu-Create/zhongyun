@@ -557,7 +557,9 @@ class ZyYundan(models.Model):
             if self.unlink_approve(self.env.user, rec):
                 return super(ZyYundan, self).unlink()
             else:
-                raise UserError(" 你的权限不够 .")
+                raise UserError(
+                    _('你的权限不够或【%s】状态下无法修改数据 ') % (
+                        rec.state,))
 
     def unlink_approve(self, user, rec):
         """检查用户是否可以批准此运价单."""
@@ -566,9 +568,11 @@ class ZyYundan(models.Model):
         if user.has_group("zhongyun_yundan.zy_yundan_group_manager"):
             return True
         print(rec.create_uid)
-        if rec.create_uid == user:
+        print(rec.state)
+        if rec.create_uid == user and rec.state not in ['match', 'to_payment', 'payment', 'rejected', 'confirm_rejected']:
             return True
         return False
+
 
 
 class ZyYunDanUnit(models.Model):

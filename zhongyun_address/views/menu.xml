@@ -6,7 +6,7 @@
 
     <!-- Action to open the zy_address -->
     <record id="action_zy_address" model="ir.actions.act_window">
-        <field name="name"> 中运物流-地址管理 </field>
+        <field name="name"> 中运物流-地址管理</field>
         <field name="res_model">zy.address</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -14,11 +14,10 @@
     <!-- Menu item to open the zy_address -->
     <menuitem 
             id="menu_zy_address"
-            name="中运物流-地址管理"
+            name="地址管理"
             action="action_zy_address"
             parent="zy_address_menu" 
             sequence="1"/>
-    
 </odoo>
 
 

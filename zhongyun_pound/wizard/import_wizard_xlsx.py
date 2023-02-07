@@ -242,7 +242,7 @@ class ImportXlsxPound(models.TransientModel):
         self.env['zy.pound.import'].clear_caches()
         # 判断油车车号栏
         carotherID = self._getModelId((row[11].value, 'zy.vehicle'))
-        if not carotherID:
+        if not (carotherID or vehicleId):
             self.env["zy.vehicle"].sudo().create(
                 {"name": row[11].value})
 

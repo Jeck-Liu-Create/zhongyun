@@ -8,7 +8,6 @@
     </t>
 
      <t t-name="yundan.SingleSupplementButton" owl="1">
-        <!-- No record is available so rely on the action context to contain the default_move_type -->
         <SingleSupplementButton>
             <t t-set-slot="toggler">
                 <button type="button" class="btn btn-secondary create_by_add_button">
@@ -18,19 +17,5 @@
         </SingleSupplementButton>
     </t>
 
-<!--     <t t-name="child.template" t-inherit="web.FormView" t-inherit-mode="extension" owl="1">-->
-<!--        <xpath expr="//button[@class='o_form_button_create']" position="after">-->
-<!--            <button type="button" class="btn btn-secondary create_by_add_button">-->
-<!--                    补单组-->
-<!--            </button>-->
-<!--        </xpath>-->
-<!--     </t>-->
-<!--        <t t-jquery=".o_list_buttons" t-operation="append">-->
-<!--            <t t-if="widget and widget.modelName == 'zy.yundan.unit'">-->
-<!--                <button type="button" class="btn btn-secondary create_by_add_button">-->
-<!--                补单组-->
-<!--                </button>-->
-<!--            </t>-->
-<!--        </t>-->
 
 </template>

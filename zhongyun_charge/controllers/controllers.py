@@ -1,6 +1,7 @@
 from odoo import http
 from odoo.http import request
 
+
 class BatchProcessing(http.Controller):
 
     @http.route('/data/map', type='json', auth='user')
@@ -13,5 +14,3 @@ class BatchProcessing(http.Controller):
         data['province_data'] = province_data
         data['history_data'] = history_data
         return data
-
-    

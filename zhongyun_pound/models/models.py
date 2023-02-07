@@ -48,6 +48,7 @@ class ZyPound(models.Model):
     pound_supplier = fields.Char('发货人（供应商）')
 
     transport_goods = fields.Char('运输货物名称', required=True)
+    transport_goods_specification = fields.Char('规格型号', required=True)
 
     car_id = fields.Many2one('zy.vehicle', '车辆编号', required=True)
 

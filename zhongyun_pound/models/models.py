@@ -128,7 +128,7 @@ class ZyPound(models.Model):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
-            call_kw(self.env['zy.yundan'],
+            call_kw(self.env['zy.yundan'].sudo(),
                     'action_notice_of_payment',
                     [yudna_data.id],
                     {})

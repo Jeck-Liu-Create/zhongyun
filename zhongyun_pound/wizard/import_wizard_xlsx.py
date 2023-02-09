@@ -207,7 +207,7 @@ class ImportXlsxPound(models.TransientModel):
         # 运输单位
         if not (self._getModelId((row[10].value, 'res.company'))):
             result = result + "<div><span class='text-danger fa fa-close'></span>运输单位所在列<kbd>{}</kbd>不存在</div>".format(
-                row[9].value)
+                row[10].value)
 
         # 判断出厂日期栏
         if row[5].ctype != 3 and row[5].ctype != 1:

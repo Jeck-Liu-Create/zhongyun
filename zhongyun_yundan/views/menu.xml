@@ -38,10 +38,14 @@
 
         <menuitem id="menu_zy_yundan_not_match_all"
                 name="匹配失败运单" sequence="2" parent="menu_zy_yundan_match"
-                action="action_zy_yundan_not_match_all"/>
+                action="action_zy_yundan_not_match_all"/>、
+
+        <menuitem id="menu_zy_yundan_confirm_rejected_all"
+                name="确认退回运单" sequence="3" parent="menu_zy_yundan_match"
+                action="action_zy_yundan_confirm_rejected_all"/>
 
         <menuitem id="menu_zy_yundan_match_all"
-                name="匹配完成运单" sequence="3" parent="menu_zy_yundan_match"
+                name="匹配完成运单" sequence="4" parent="menu_zy_yundan_match"
                 action="action_zy_yundan_match_all"/>
 
 

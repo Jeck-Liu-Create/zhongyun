@@ -236,16 +236,17 @@ class ZyYundan(models.Model):
             raise UserError(" 运单组信息有变化，无法创建新运单 ")
         seq = self.env['ir.sequence'].next_by_code('zy.yundan') or '/'
         vals['name'] = seq
+        self.with_context(tracking_disable=True)
         new_record = super(ZyYundan, self).create(vals)
         return new_record
 
-    def write(self, vals):
-        if (self.state in ['match', 'to_payment', 'payment', 'rejected']) and ('state' not in vals):
-            raise UserError(
-                _('【%s】状态下无法修改数据 ') % (
-                    self.state,))
-
-        return super(ZyYundan, self).write(vals)
+    # def write(self, vals):
+    #     if (self.state in ['match', 'to_payment', 'payment', 'rejected']) and ('state' in vals):
+    #         raise UserError(
+    #             _('【%s】状态下无法修改数据 ') % (
+    #                 self.state,))
+    #     self.with_context(tracking_disable=True)
+    #     return super(ZyYundan, self).write(vals)
 
     @api.depends('establish_datetime')
     def _get_field_compute_establish_date(self):
@@ -283,11 +284,11 @@ class ZyYundan(models.Model):
                     res = Model_charge.search(domain, limit=1, order='id DESC')
                     if len(res) == 1:
                         rec.pound_id = res[0].id
-                        rec.state = 'match'
                         res_write = Model_charge.search([('id', '=', res[0].id)]).write(
                             {'yundan_id': rec.id, 'state': 'match'})
                         print(res_write)
                         self._amount_all()
+                        rec.state = 'match'
 
                     else:
                         rec.state = 'not_match'
@@ -301,11 +302,11 @@ class ZyYundan(models.Model):
                     res = Model_charge.search(domain, limit=1, order='id DESC')
                     if len(res) == 1:
                         rec.pound_id = res[0].id
-                        rec.state = 'match'
                         res_write = Model_charge.search([('id', '=', res[0].id)]).write(
                             {'yundan_id': rec.id, 'state': 'match'})
                         print(res_write)
                         self._amount_all()
+                        rec.state = 'match'
                     else:
                         rec.state = 'not_match'
 
@@ -446,7 +447,7 @@ class ZyYundan(models.Model):
                 _logger.info("通知付款")
 
                 for u in users:
-                    self.activity_schedule(
+                    rec.activity_schedule(
                         'zhongyun_yundan.mail_zhongyun_notice_of_payment',
                         user_id=u.id
                     )
@@ -469,27 +470,30 @@ class ZyYundan(models.Model):
                 Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "payment"})
 
                 # 更新 activity
-                self.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
+                rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
 
     """ 运单退回 """
 
     def action_rejected(self):
         _logger.warning('=== 运单退回 ===')
         Model_pound = self.env['zy.pound'].sudo()
-        group_user_gid = self.env.ref(
-            "zhongyun_yundan.zy_yundan_group_user"
-        )
+
         for rec in self:
             rec.write({"state": "rejected"})
             Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "rejected"})
 
-            users = self.env["res.users"].search(
-                [("groups_id", "in", group_user_gid.id)]
+            Pound_create_user = Model_pound.search_read([('id', '=', rec.pound_id.id)], ["create_uid"])
+
+            Pound_user = self.env["res.users"].search(
+                [("id", "=", (Pound_create_user[0])['id'])]
             )
+            users = [Pound_user, rec.create_uid]
             _logger.info("运单退回")
+            rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
 
             for u in users:
-                self.activity_schedule(
+                _logger.info(u)
+                rec.activity_schedule(
                     'zhongyun_yundan.mail_zhongyun_rejected',
                     user_id=u.id
                 )
@@ -503,7 +507,7 @@ class ZyYundan(models.Model):
             rec.write({"state": "confirm_rejected"})
             Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "confirm_rejected"})
             # 更新 activity
-            self.activity_feedback(['zhongyun_yundan.mail_zhongyun_rejected'])
+            rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_rejected'])
 
     """ 自定义仪表盘数据 """
 

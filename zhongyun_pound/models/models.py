@@ -48,7 +48,7 @@ class ZyPound(models.Model):
     pound_supplier = fields.Char('发货人（供应商）')
 
     transport_goods = fields.Char('运输货物名称', required=True)
-    transport_goods_specification = fields.Char('规格型号', required=True)
+    transport_goods_specification = fields.Char('规格型号')
 
     car_id = fields.Many2one('zy.vehicle', '车辆编号', required=True)
 
@@ -103,12 +103,12 @@ class ZyPound(models.Model):
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
                 domain = ['|', '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
-                          ('establish_date', '>=', rec.delivery_date),
-                          ('establish_date', '<=', rec.manufacture_date),
+                          ('establish_datetime', '>=', rec.delivery_date),
+                          ('establish_datetime', '<=', rec.manufacture_date),
                           '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
-                          ('single_supplement_date', '>=', rec.delivery_date),
-                          ('single_supplement_date', '<=', rec.manufacture_date)]
+                          ('single_supplement_datetime', '>=', rec.delivery_date),
+                          ('single_supplement_datetime', '<=', rec.manufacture_date)]
                 res = Model_yundan.search(domain, limit=1, order='id DESC')
                 if len(res) == 1:
                     rec.yundan_id = res[0].id

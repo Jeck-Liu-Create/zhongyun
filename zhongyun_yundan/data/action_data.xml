@@ -55,5 +55,16 @@
                 records.action_confirm_rejected()
             </field>
         </record>
+
+        <record id="action_confirm_rejected" model="ir.actions.server">
+            <field name="name">批量付款退回</field>
+            <field name="model_id" ref="model_zy_yundan"/>
+            <field name="binding_model_id" ref="zhongyun_yundan.model_zy_yundan"/>
+            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_payment_rollback()
+            </field>
+        </record>
     </data>
 </odoo>

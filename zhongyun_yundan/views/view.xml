@@ -164,8 +164,11 @@
               optional="show"
         />
         <field name="pound_id"  optional="show"/>
+        <field name="pound_id_transport_goods"  optional="show"/>
         <field name="pound_id_primary_weight"  sum="Total Tax Included" optional="show"/>
         <field name="pound_id_net_weight"  sum="Total Tax Included" optional="show"/>
+        <field name="pound_id_delivery_date"  optional="hide"/>
+        <field name="pound_id_manufacture_date"  optional="hide"/>
         <field name="transport_price"  optional="hide"/>
         <field name="zy_yundan_company_id" invisible="1"  optional="show"/>
 <!--        <field name="amount_total" sum="Total Tax Included"  widget="monetary" decoration-bf="1" optional="show"/>-->

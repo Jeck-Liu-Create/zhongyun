@@ -28,7 +28,7 @@ class ZyYundan(models.Model):
 
     name = fields.Char('运单编号', index=True, default='新建运单', readonly=True)
 
-    car_id = fields.Many2one('zy.vehicle', '车辆编号', required=True)
+    car_id = fields.Many2one('zy.vehicle', '运单车辆编号', required=True)
 
     single_supplement = fields.Boolean('是否补单', default=False, help="是否补单")
 
@@ -84,6 +84,8 @@ class ZyYundan(models.Model):
     pound_id_supplier = fields.Char('发货人（供应商）', related='pound_id.pound_supplier', store=True, readonly=True)
 
     pound_id_transport_goods = fields.Char('运输货物名称', related='pound_id.transport_goods', store=True, readonly=True)
+
+    pound_is_transport_goods_specification = fields.Char('规格型号', related='pound_id.transport_goods_specification', store=True, readonly=True)
 
     pound_id_car_id = fields.Many2one('zy.vehicle', '车辆编号', related='pound_id.car_id', store=True, readonly=True)
 
@@ -269,15 +271,18 @@ class ZyYundan(models.Model):
             result.append((rec.id, name))
         return result
 
+    """ 批量匹配磅单 """
+
     def action_matching(self):
         _logger.warning('=== 批量匹配磅单 ===')
         Model_charge = self.env['zy.pound']
         for rec in self:
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
                 if not rec.single_supplement:
-                    domain = ['&', '|', ('car_id', '=', rec.car_id.id), ('car_id_other', '=', rec.car_id.id), '&', (
-                        'delivery_date', '<=',
-                        datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d')), (
+                    domain = ['&', ('state', 'in', ['to_match', 'not_match','confirm_rejected']), '&', '|', ('car_id', '=', rec.car_id.id),
+                              ('car_id_other', '=', rec.car_id.id), '&', (
+                                  'delivery_date', '<=',
+                                  datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d')), (
                                   'manufacture_date', '>=',
                                   datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d'))]
                     _logger.info(domain)
@@ -309,6 +314,8 @@ class ZyYundan(models.Model):
                         rec.state = 'match'
                     else:
                         rec.state = 'not_match'
+
+    """ 匹配磅单 """
 
     def action_matching_data(self):
         _logger.warning('=== 匹配磅单 ===')
@@ -509,6 +516,21 @@ class ZyYundan(models.Model):
             # 更新 activity
             rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_rejected'])
 
+
+    """ 批量付款退回 """
+
+    def action_payment_rollback(self):
+        _logger.warning('=== 付款退回 ===')
+        Model_pound = self.env['zy.pound'].sudo()
+        for rec in self:
+            if rec.state == 'payment':
+                rec.write({"state": "confirm_rejected"})
+                Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "confirm_rejected"})
+
+                # 更新 activity
+                # rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
+
+
     """ 自定义仪表盘数据 """
 
     @api.model
@@ -573,10 +595,10 @@ class ZyYundan(models.Model):
             return True
         print(rec.create_uid)
         print(rec.state)
-        if rec.create_uid == user and rec.state not in ['match', 'to_payment', 'payment', 'rejected', 'confirm_rejected']:
+        if rec.create_uid == user and rec.state not in ['match', 'to_payment', 'payment', 'rejected',
+                                                        'confirm_rejected']:
             return True
         return False
-
 
 
 class ZyYunDanUnit(models.Model):

@@ -362,7 +362,7 @@ class ZyGoods(models.Model):
     # Approved
     # --------------------------------------------  
     def _domain_goods_now_id(self):
-        domain = ['&', ('state', '=', "approved"), '&', (('start_datetime'), '<=', datetime.datetime.now()), '|',
+        domain = ['&', ('state', '=', "approved"), '&', ('start_datetime', '<=', datetime.datetime.now()), '|',
                   ('stop_datetime', '>', datetime.datetime.now()), ('stop_datetime', '=', False)]
         return domain
 

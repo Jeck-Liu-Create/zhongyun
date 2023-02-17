@@ -101,22 +101,23 @@ class ZyPound(models.Model):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
-                domain = ['|', '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
+                domain = ['|', '&', '&', ('single_supplement', '=', False),
+                          ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
                           ('establish_datetime', '>=', rec.delivery_date),
                           ('establish_datetime', '<=', rec.manufacture_date),
-                          '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
+                          '&', '&', ('single_supplement', '=', True),
+                          ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
                           ('single_supplement_datetime', '>=', rec.delivery_date),
                           ('single_supplement_datetime', '<=', rec.manufacture_date)]
                 res = Model_yundan.search(domain, limit=1, order='id DESC')
                 if len(res) == 1:
                     rec.yundan_id = res[0].id
-                    # self._amount_all()
                     rec.state = 'match'
-                    res_write = Model_yundan.search([('id', '=', res[0].id)]).write(
+                    Model_yundan.search([('id', '=', res[0].id)]).write(
                         {'pound_id': rec.id, 'state': 'match'})
-                    print(res_write)
+
                 else:
                     rec.state = 'not_match'
             else:

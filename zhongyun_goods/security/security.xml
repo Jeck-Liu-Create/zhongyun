@@ -12,6 +12,17 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
+    <record model="ir.rule" id="zy_goods_request_global_editor_rule">
+        <field name="name">编辑人用户运价可见性</field>
+        <field name="model_id" ref="model_zy_goods_price" />
+        <field name="domain_force" >['&amp;',('create_uid','=',user.id),'|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="False" />
+        <field name="perm_create" eval="True" />
+        <field name="groups" eval="[(4,ref('group_goods_price_editor'))]" />
+    </record>
+
     <!-- <record model="ir.rule" id="zy_goods_price_rule">
         <field name="name">zy_goods_price multi-company</field>
         <field name="model_id" ref="model_zy_goods_price" />

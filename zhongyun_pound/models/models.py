@@ -4,6 +4,9 @@ from odoo import models, fields, api
 from odoo.api import call_kw
 from odoo.exceptions import UserError, ValidationError
 import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ZyPound(models.Model):
@@ -128,12 +131,23 @@ class ZyPound(models.Model):
     def action_notice_of_payment(self):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
-            yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
-            call_kw(self.env['zy.yundan'].sudo(),
-                    'action_notice_of_payment',
-                    [yudna_data.id],
-                    {})
-            rec.write({"state": "to_payment"})
+            if rec.state == 'match':
+                yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
+                call_kw(self.env['zy.yundan'].sudo(),
+                        'action_notice_of_payment',
+                        [yudna_data.id],
+                        {})
+                rec.write({"state": "to_payment"})
+
+    """ 批量付款退回 """
+
+    def action_payment_rollback(self):
+        _logger.warning('=== 付款退回 ===')
+        Model_yundan = self.env['zy.yundan'].sudo()
+        for rec in self:
+            if rec.state == 'to_payment':
+                rec.write({"state": "confirm_rejected"})
+                Model_yundan.search([('id', '=', rec.yundan_id)]).write({"state": "confirm_rejected"})
 
 
 class ZyPoundUint(models.Model):

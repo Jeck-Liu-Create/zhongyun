@@ -85,7 +85,8 @@ class ZyYundan(models.Model):
 
     pound_id_transport_goods = fields.Char('运输货物名称', related='pound_id.transport_goods', store=True, readonly=True)
 
-    pound_is_transport_goods_specification = fields.Char('规格型号', related='pound_id.transport_goods_specification', store=True, readonly=True)
+    pound_is_transport_goods_specification = fields.Char('规格型号', related='pound_id.transport_goods_specification',
+                                                         store=True, readonly=True)
 
     pound_id_car_id = fields.Many2one('zy.vehicle', '车辆编号', related='pound_id.car_id', store=True, readonly=True)
 
@@ -279,7 +280,8 @@ class ZyYundan(models.Model):
         for rec in self:
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
                 if not rec.single_supplement:
-                    domain = ['&', ('state', 'in', ['to_match', 'not_match','confirm_rejected']), '&', '|', ('car_id', '=', rec.car_id.id),
+                    domain = ['&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
+                              ('car_id', '=', rec.car_id.id),
                               ('car_id_other', '=', rec.car_id.id), '&', (
                                   'delivery_date', '<=',
                                   datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d')), (
@@ -486,24 +488,25 @@ class ZyYundan(models.Model):
         Model_pound = self.env['zy.pound'].sudo()
 
         for rec in self:
-            rec.write({"state": "rejected"})
-            Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "rejected"})
+            if rec == 'to_payment':
+                rec.write({"state": "rejected"})
+                Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "rejected"})
 
-            Pound_create_user = Model_pound.search_read([('id', '=', rec.pound_id.id)], ["create_uid"])
+                Pound_create_user = Model_pound.search_read([('id', '=', rec.pound_id.id)], ["create_uid"])
 
-            Pound_user = self.env["res.users"].search(
-                [("id", "=", (Pound_create_user[0])['id'])]
-            )
-            users = [Pound_user, rec.create_uid]
-            _logger.info("运单退回")
-            rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
-
-            for u in users:
-                _logger.info(u)
-                rec.activity_schedule(
-                    'zhongyun_yundan.mail_zhongyun_rejected',
-                    user_id=u.id
+                Pound_user = self.env["res.users"].search(
+                    [("id", "=", (Pound_create_user[0])['id'])]
                 )
+                users = [Pound_user, rec.create_uid]
+                _logger.info("运单退回")
+                rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
+
+                for u in users:
+                    _logger.info(u)
+                    rec.activity_schedule(
+                        'zhongyun_yundan.mail_zhongyun_rejected',
+                        user_id=u.id
+                    )
 
     """ 确认退回 """
 
@@ -511,11 +514,11 @@ class ZyYundan(models.Model):
         _logger.warning('=== 确认退回 ===')
         Model_pound = self.env['zy.pound'].sudo()
         for rec in self:
-            rec.write({"state": "confirm_rejected"})
-            Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "confirm_rejected"})
-            # 更新 activity
-            rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_rejected'])
-
+            if rec.state == 'rejected':
+                rec.write({"state": "confirm_rejected"})
+                Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "confirm_rejected"})
+                # 更新 activity
+                rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_rejected'])
 
     """ 批量付款退回 """
 
@@ -526,10 +529,6 @@ class ZyYundan(models.Model):
             if rec.state == 'payment':
                 rec.write({"state": "confirm_rejected"})
                 Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "confirm_rejected"})
-
-                # 更新 activity
-                # rec.activity_feedback(['zhongyun_yundan.mail_zhongyun_notice_of_payment'])
-
 
     """ 自定义仪表盘数据 """
 
@@ -576,7 +575,6 @@ class ZyYundan(models.Model):
 
     """ 删除记录设定 """
 
-    # @api.multi
     def unlink(self):
         """判断用户是否有权删除"""
         for rec in self:

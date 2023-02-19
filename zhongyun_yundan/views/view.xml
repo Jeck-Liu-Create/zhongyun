@@ -251,7 +251,7 @@
         <separator/>
         <filter string="待匹配" name="to_match" domain="[('state', '=', 'to_match')]"/>
         <filter string="正在处理" name="to_matching" domain="[('state', 'in', ['not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected'])]"/>
-        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match'),'|',('establish_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d')),('single_supplement_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
+        <filter string="迟到" name="to_late" domain="['&amp;',('state', 'in', ['to_match','confirm_rejected']),'|',('establish_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d')),('single_supplement_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
 <!--        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match'),'|',('establish_datetime', '&lt;', (datetime.now() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S)),('single_supplement_datetime', '&lt;', (datetime.now() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S))]"/>-->
 <!--        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match')],('establish_datetime', '&lt;', (context_today() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S)))"/>-->
         <separator/>

@@ -42,6 +42,7 @@ class ZyPound(models.Model):
 
     yundan_id = fields.Char('运单')
     # yundan_id = fields.One2many("zy.yundan", "pound_id", string="Tests")
+    active = fields.Boolean(default=True, help="Set active.")
 
     pound_id_percentage = fields.Many2one('zy.buckle', string='计量信息', related="pound_id.pound_unit_zy_buckle",
                                           readonly=True)
@@ -161,6 +162,7 @@ class ZyPoundUint(models.Model):
         help="如果设置，页面只能从该公司访问",
         default=lambda self: self.env.company,
     )
+    active = fields.Boolean(default=True, help="Set active.")
 
     name = fields.Char('磅单组编号', index=True, default='新建磅单组', readonly=True)
 

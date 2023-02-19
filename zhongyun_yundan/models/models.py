@@ -28,7 +28,9 @@ class ZyYundan(models.Model):
 
     name = fields.Char('运单编号', index=True, default='新建运单', readonly=True)
 
-    car_id = fields.Many2one('zy.vehicle', '运单车辆编号', required=True)
+    active = fields.Boolean(default=True, help="Set active.")
+
+    car_id = fields.Many2one('zy.vehicle', '运单车辆编号', required=True, index=True)
 
     single_supplement = fields.Boolean('是否补单', default=False, help="是否补单")
 
@@ -562,16 +564,29 @@ class ZyYundan(models.Model):
             [('state', 'in', ['not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected']),
              ('create_uid', '=', self.env.uid)])
         result['all_late'] = zy.search_count(
-            ['&', ('state', '=', 'to_match'), '|',
+            ['&', ('state', 'in', ['confirm_rejected', 'to_match']), '|',
              ('establish_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3)),
              ('single_supplement_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3))])
         result['my_late'] = zy.search_count(
-            ['&', '&', ('state', '=', 'to_match'), '|',
+            ['&', '&', ('state', 'in', ['confirm_rejected', 'to_match']), '|',
              ('establish_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3)),
              ('single_supplement_datetime', '<', fields.Date.context_today(self) - relativedelta(days=3)),
              ('create_uid', '=', self.env.uid)])
 
         return result
+
+    def unlink_approve(user, rec):
+        """检查用户是否可以批准此运价单."""
+
+        # 如果用户属于“管理员”，则可以删除该条记录
+        if user.has_group("zhongyun_yundan.zy_yundan_group_manager"):
+            return True
+        print(rec.create_uid)
+        print(rec.state)
+        if rec.create_uid == user and rec.state not in ['match', 'to_payment', 'payment', 'rejected',
+                                                        'confirm_rejected']:
+            return True
+        return False
 
     """ 删除记录设定 """
 
@@ -585,19 +600,6 @@ class ZyYundan(models.Model):
                     _('你的权限不够或【%s】状态下无法修改数据 ') % (
                         rec.state,))
 
-    def unlink_approve(self, user, rec):
-        """检查用户是否可以批准此运价单."""
-
-        # 如果用户属于“管理员”，则可以删除该条记录
-        if user.has_group("zhongyun_yundan.zy_yundan_group_manager"):
-            return True
-        print(rec.create_uid)
-        print(rec.state)
-        if rec.create_uid == user and rec.state not in ['match', 'to_payment', 'payment', 'rejected',
-                                                        'confirm_rejected']:
-            return True
-        return False
-
 
 class ZyYunDanUnit(models.Model):
     _name = 'zy.yundan.unit'
@@ -606,6 +608,8 @@ class ZyYunDanUnit(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char('运单组编号', index=True, default='新建运单组', readonly=True)
+
+    active = fields.Boolean(default=True, help="Set active.")
 
     edit_function = fields.Boolean(string='可编辑', compute="_compute_edit_function")
 

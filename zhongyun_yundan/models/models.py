@@ -575,30 +575,24 @@ class ZyYundan(models.Model):
 
         return result
 
-    def unlink_approve(user, rec):
-        """检查用户是否可以批准此运价单."""
-
-        # 如果用户属于“管理员”，则可以删除该条记录
-        if user.has_group("zhongyun_yundan.zy_yundan_group_manager"):
-            return True
-        print(rec.create_uid)
-        print(rec.state)
-        if rec.create_uid == user and rec.state not in ['match', 'to_payment', 'payment', 'rejected',
-                                                        'confirm_rejected']:
-            return True
-        return False
-
-    """ 删除记录设定 """
-
     def unlink(self):
         """判断用户是否有权删除"""
         for rec in self:
             if self.unlink_approve(self.env.user, rec):
                 return super(ZyYundan, self).unlink()
             else:
-                raise UserError(
-                    _('你的权限不够或【%s】状态下无法修改数据 ') % (
-                        rec.state,))
+                raise UserError(" 你的权限不够 .")
+
+    def unlink_approve(self, user, rec):
+        """检查用户是否可以批准此运价单."""
+
+        # 如果用户属于“管理员”，则可以删除该条记录
+        if user.has_group("zhongyun_yundan.zy_yundan_group_manager"):
+            return True
+        print(rec.create_uid)
+        if rec.create_uid == user:
+            return True
+        return False
 
 
 class ZyYunDanUnit(models.Model):

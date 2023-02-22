@@ -24,6 +24,7 @@ class ZyYundan(models.Model):
         index=True,
         ondelete="cascade",
         default=lambda self: self.env.company,
+        readonly=True
     )
 
     name = fields.Char('运单编号', index=True, default='新建运单', readonly=True)
@@ -426,7 +427,8 @@ class ZyYundan(models.Model):
             res_goods_price_now_list.append(val['id'])
 
         """ 运单组满足当前可用限制 """
-        domain = ['&', ("replenish_state", '=', False), '&', ("zy_charge", 'in', res_chrage_new_list),
+        domain = ['&', ('yundan_unit_company_id', '=', self.env.company.id), '&', ("replenish_state", '=', False), '&',
+                  ("zy_charge", 'in', res_chrage_new_list),
                   ("yundan_unit_zy_goods_price", 'in', res_goods_price_now_list)]
 
         return domain
@@ -611,7 +613,9 @@ class ZyYunDanUnit(models.Model):
                                          readonly=True)
 
     """ 运价相关字段 """
-    yundan_unit_zy_charge_rules = fields.Many2one('zy.charge.rules', string='运价规则', required=True, copy=True)
+    yundan_unit_zy_charge_rules = fields.Many2one('zy.charge.rules',
+                                                  domain=lambda self: self._zy_charge_rule_function(),
+                                                  string='运价规则', required=True, copy=True)
 
     yundan_unit_company_id = fields.Many2one(
         "res.company",
@@ -802,6 +806,12 @@ class ZyYunDanUnit(models.Model):
         domain = ['&', ('charge_rules', '=', self.yundan_unit_zy_charge_rules.id), '&', ('state', '=', "approved"), '&',
                   ('start_datetime', '<=', self.establish_datetime), '|',
                   ('stop_datetime', '>', self.establish_datetime), ('stop_datetime', '=', False)]
+        return domain
+
+    """ 运规则domain """
+
+    def _zy_charge_rule_function(self):
+        domain = [('company_id', '=', self.env.company.id)]
         return domain
 
     """ 货物价格domain """

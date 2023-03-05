@@ -8,7 +8,18 @@
             <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
             <field name="state">code</field>
             <field name="code">
-                records.action_matching()
+                records.action_matching_data()
+            </field>
+        </record>
+
+        <record id="action_notice_of_payment" model="ir.actions.server">
+            <field name="name">批量通知付款</field>
+            <field name="model_id" ref="model_zy_yundan"/>
+            <field name="binding_model_id" ref="zhongyun_yundan.model_zy_yundan"/>
+            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_notice_of_payment()
             </field>
         </record>
 
@@ -16,10 +27,43 @@
             <field name="name">批量付款</field>
             <field name="model_id" ref="model_zy_yundan"/>
             <field name="binding_model_id" ref="zhongyun_yundan.model_zy_yundan"/>
-            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
+            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager')),(4, ref('zy_yundan_group_account_cashier'))]"/>
             <field name="state">code</field>
             <field name="code">
                 records.action_payment()
+            </field>
+        </record>
+
+        <record id="action_rejected" model="ir.actions.server">
+            <field name="name">批量退回</field>
+            <field name="model_id" ref="model_zy_yundan"/>
+            <field name="binding_model_id" ref="zhongyun_yundan.model_zy_yundan"/>
+            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_rejected()
+            </field>
+        </record>
+
+        <record id="action_confirm_rejected" model="ir.actions.server">
+            <field name="name">批量确认退回</field>
+            <field name="model_id" ref="model_zy_yundan"/>
+            <field name="binding_model_id" ref="zhongyun_yundan.model_zy_yundan"/>
+            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_confirm_rejected()
+            </field>
+        </record>
+
+        <record id="action_payment_rollback" model="ir.actions.server">
+            <field name="name">批量付款退回</field>
+            <field name="model_id" ref="model_zy_yundan"/>
+            <field name="binding_model_id" ref="zhongyun_yundan.model_zy_yundan"/>
+            <field name="groups_id" eval="[(4, ref('zy_yundan_group_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_payment_rollback()
             </field>
         </record>
     </data>

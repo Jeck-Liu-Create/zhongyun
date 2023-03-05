@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.Many2XAutocomplete.input" t-inherit="web.Many2XAutocomplete" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='o_input_dropdown']" position="replace">
+            <AutoComplete
+                value="props.value"
+                id="props.id"
+                placeholder="props.placeholder"
+                sources="sources"
+                autoSelect="props.autoSelect"
+                onSelect.bind="onSelect"
+                onInput.bind="onInput"
+                onChange.bind="onChange"
+            />
+            <a role="button" class="o_dropdown_button" draggable="false" />
+        </xpath>
+    </t>
+</templates>

@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="group_goods_price_user" model="res.groups">
-        <field name="name">普通用户</field>
-        <field name="category_id" ref="module_category_goods_price" />
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
-        <field name="users" eval="[(4, ref('base.user_root'))]" />
+    <record model="ir.module.category" id="module_category_goods">
+        <field name="name">中运物流-货物</field>
     </record>
-<!--    <record id="group_ir_goods_attachment_user" model="res.groups">-->
-<!--        <field name="name">货物集中查看分组</field>-->
-<!--        <field name="category_id" ref="base.module_category_hidden" />-->
-<!--        <field name="implied_ids" eval="[(4, ref('group_goods_price_user'))]" />-->
+
+    <record model="ir.module.category" id="module_category_goods_price">
+        <field name="name">货物价格</field>
+        <field name="parent_id" ref="module_category_goods"/>
+    </record>
+
+    <record model="ir.module.category" id="module_category_goods_name">
+        <field name="name">货物名称</field>
+        <field name="parent_id" ref="module_category_goods"/>
+    </record>
+
+<!--    <record id="group_goods_price_user" model="res.groups">-->
+<!--        <field name="name">普通用户</field>-->
+<!--        <field name="category_id" ref="module_category_goods_price" />-->
+<!--        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />-->
+<!--        <field name="users" eval="[(4, ref('base.user_root'))]" />-->
+<!--    </record>-->
+
+<!--    <record id="group_goods_name_user" model="res.groups">-->
+<!--        <field name="name">普通用户</field>-->
+<!--        <field name="category_id" ref="module_category_goods_name" />-->
+<!--        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />-->
+<!--        <field name="users" eval="[(4, ref('base.user_root'))]" />-->
 <!--    </record>-->
 </odoo>

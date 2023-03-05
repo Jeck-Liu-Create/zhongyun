@@ -49,6 +49,13 @@
                      (4, ref('base.user_admin'))]"/>
        </record>
 
+       <record model="ir.rule" id="zy_yudnan_request_global_user_rule">
+              <field name="name">出纳业务用户运单可见性</field>
+              <field name="model_id" ref="model_zy_yundan" />
+              <field name="domain_force" >[('create_uid','=',user.id)]</field>
+              <field name="groups" eval="[(4,ref('zy_yundan_group_business_user'))]" />
+       </record>
+
        <record model="ir.rule" id="zy_yudnan_company_rule">
               <field name="name">运单-公司查看权限</field>
               <field name="model_id" ref="model_zy_yundan" />
@@ -98,6 +105,13 @@
               <field name="users"
                      eval="[(4, ref('base.user_root')),
                      (4, ref('base.user_admin'))]"/>
+       </record>
+
+       <record model="ir.rule" id="zy_yundan_unit_request_global_user_rule">
+              <field name="name">出纳业务用户运单可见性</field>
+              <field name="model_id" ref="model_zy_yundan_unit" />
+              <field name="domain_force" >[('create_uid','=',user.id)]</field>
+              <field name="groups" eval="[(4,ref('zy_yundan_unit_group_business'))]" />
        </record>
 
 

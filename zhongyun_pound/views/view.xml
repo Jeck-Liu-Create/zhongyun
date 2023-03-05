@@ -41,6 +41,7 @@
                   <group>
                     <field name="pound_supplier"/>
                     <field name="transport_goods"/>
+                    <field name="transport_goods_specification"/>
                     <field name="car_id" attrs="{'readonly': [('id','!=',False)]}"/>
                     <field name="manufacture_date"/>
                     <field name="delivery_date"/>
@@ -71,6 +72,7 @@
         <field name="name" optional='show'/>
         <field name="pound_supplier" optional='show'/>
         <field name="transport_goods" optional='show'/>
+        <field name="transport_goods_specification" optional='show'/>
         <field name="car_id" optional='show'/>
         <field name="manufacture_date" optional='show'/>
         <field name="delivery_date" optional='show'/>

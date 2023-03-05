@@ -32,7 +32,7 @@
 
     <record id="mail_zhongyun_rejected" model="mail.activity.type">
       <field name="name">运单退回</field>
-      <field name="icon">fa-dollar</field>
+      <field name="icon">fa-solid fa-circle-down</field>
       <field name="res_model">zy.yundan</field>
       <!-- <field name="res_model_id" ref="zhongyun_yundan.model_zy_yundan"/> -->
     </record>

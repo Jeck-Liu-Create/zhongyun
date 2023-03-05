@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-  <!-- 货物价格视图 -->
+  <!-- 货物价格form视图 -->
   <record id="view_form_zy_goods_price" model="ir.ui.view">
     <field name="name">货物价格</field>
     <field name="model">zy.goods.price</field>
@@ -28,7 +28,7 @@
           <!-- approve if it's not required and i am owner -->
           <!-- 满足需要批准的运价规则,属于当前用户,属于待提交或等待批准状态 -->
           <button
-              name="action_approve"
+              name="user_action_approve"
               type="object"
               string="批准"
               class="oe_highlight"
@@ -78,6 +78,7 @@
               <field name="goods_rules" attrs="{'readonly': [('state', 'not in', ['draft'])]}" options="{'no_create_edit ': True,'no_create': True}"/>
             </group>
             <group>
+              <field name="company_id"/>
               <field name="start_datetime" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
               <field name="stop_datetime" attrs="{'readonly': [('am_i_approver','=',False)]}"/>
             </group>
@@ -114,7 +115,7 @@
     </field>
   </record>
 
-  <!-- 货物价格列表 -->
+  <!-- 货物价格tree列表 -->
   <record id="view_tree_zy_goods_price" model="ir.ui.view">
     <field name="name">货物价格列表</field>
     <field name="model">zy.goods.price</field>
@@ -128,12 +129,13 @@
         <field name="start_datetime"/>
         <field name="stop_datetime"/>
         <field name="create_uid" string="创建人" />
+        <field name="company_id"/>
         <field name="state"  widget="badge" decoration-success="state == 'approved'"  decoration-warning="state == 'to approve'"  decoration-info="state == 'draft'" />
       </tree>
     </field>
   </record>
 
-  <!-- 运价规则视图 -->
+  <!-- 货物名称form视图 -->
   <record id="view_form_zy_goods" model="ir.ui.view">
     <field name="name">货物管理</field>
     <field name="model">zy.goods</field>
@@ -154,11 +156,12 @@
             <sheet>
               <group string = "发货地信息">
                 <field name="address_name" options="{'no_create_edit ': True,'no_create': True}"/>
+                <field name="is_approval_required"/>
                 <field
                     name="company_id"
-                    groups="base.group_multi_company"
                     options="{'no_create_edit ': True,'no_create': True}"
                 />
+                <field name="available_uid"/>
               </group>
             </sheet>
             <sheet>
@@ -170,9 +173,6 @@
           <notebook>
               <page string="当前可用货物价格">
                 <field name="goods_line_now_ids" >
-                  <!-- <tree editable="top" default_order="create_date desc"> -->
-                  <!-- <tree editable="top"> -->   <!-- <<<<<<<<<<<< -->
-                  <!-- <tree editable="bottom"> --> <!-- <<<<<<<<<<<< -->
                   <tree editable="top">
                     <field name="name"/>
                     <field name="currency_id" invisible="1"/>
@@ -201,7 +201,7 @@
     </field>
   </record>
 
-  <!-- 货物列表 -->
+  <!-- 货物名称tree列表 -->
   <record id="view_tree_zy_goods" model="ir.ui.view">
     <field name="name">货物列表</field>
     <field name="model">zy.goods</field>
@@ -210,7 +210,8 @@
         <field name="name"/>
         <field name="goods_line_now_ids"/>
         <field name="goods_line_all_ids"/>
-        <field name="company_id" groups="base.group_multi_company" />
+<!--        <field name="company_id" groups="base.group_multi_company" />-->
+        <field name="company_id" />
       </tree>
     </field>
   </record>

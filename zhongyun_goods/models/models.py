@@ -40,7 +40,8 @@ class ZyGoodsPrice(models.Model):
 
     name = fields.Char('货物价格编号', index=True, default='货物价格', readonly=True)
 
-    goods_rules = fields.Many2one('zy.goods', string="货物名称", required=True)
+    goods_rules = fields.Many2one('zy.goods', string="货物名称", domain=lambda self: self.goods_rules_available_uid(),
+                                  required=True)
 
     currency_id = fields.Many2one('res.currency', "货币", readonly=True, default=7)
 
@@ -59,8 +60,8 @@ class ZyGoodsPrice(models.Model):
     # 启用日期不能小于创建日期
     @api.constrains('start_datetime', 'create_date')
     def _check_date(self):
-        for data in self:
-            if data.start_datetime < data.create_date:
+        if not self.env.user.has_group("zhongyun_goods.group_goods_price_manager"):
+            if self.start_datetime < self.create_date:
                 raise ValidationError(
                     "启用日期不能小于创建日期"
                 )
@@ -107,7 +108,7 @@ class ZyGoodsPrice(models.Model):
         """ 货物价格增加请求设置为待提交 """
         for rec in self:
             if not rec.state == "cancelled":
-                raise UserError(("你需要在重新打开前取消"))
+                raise UserError("你需要在重新打开前取消")
             if not (rec.am_i_owner or rec.am_i_approver):
                 raise UserError(
                     (
@@ -128,7 +129,7 @@ class ZyGoodsPrice(models.Model):
         )
         for rec in self:
             if rec.state != "draft":
-                raise UserError(_(" 在'%s'状态下无法进入审批界面 .") % rec.state)
+                raise UserError(" 在'%s'状态下无法进入审批界面 ." % rec.state)
             if not (rec.am_i_owner or rec.am_i_approver):
                 raise UserError(
                     (
@@ -139,12 +140,12 @@ class ZyGoodsPrice(models.Model):
             # 进入请求批准状态 request approval 
             if rec.is_approval_required:
                 rec.write({"state": "to approve"})
-                _logger.info(rec.goods_rules.approver_group_ids.id)
+                print(rec.goods_rules.approver_group_ids.id)
 
                 users = self.env["res.users"].search(
                     [("groups_id", "in", approver_gid.id)]
                 )
-                _logger.info("设置待批准")
+                print("设置待批准")
 
                 for u in users:
                     self.activity_schedule(
@@ -152,12 +153,12 @@ class ZyGoodsPrice(models.Model):
                         user_id=u.id
                     )
 
-                _logger.info([u.id for u in users])
+                print([u.id for u in users])
 
                 rec.message_subscribe([u.id for u in users])
-                _logger.info('message_subscribe')
+                print('message_subscribe')
                 rec.message_post_with_template(template.id)
-                _logger.info('message_post_with_template')
+                print('message_post_with_template')
             else:
                 # 如果不需要批准，则自动批准
                 # rec.action_approve()
@@ -166,8 +167,9 @@ class ZyGoodsPrice(models.Model):
     def action_approve(self):
         """ 将货物价格设置为已批准 """
         for rec in self:
-            if rec.state not in ["draft", "to approve"]:
-                raise UserError(("在'%s'状态下无法被批准.") % rec.state)
+            if rec.state not in ["draft", "to approve"] and not self.env.user.has_group(
+                    "zhongyun_goods.group_goods_price_manager"):
+                raise UserError("在'%s'状态下无法被批准." % rec.state)
             if not rec.am_i_approver:
                 raise UserError(
                     (
@@ -182,7 +184,7 @@ class ZyGoodsPrice(models.Model):
             self.change_after_stopdatetime()
 
             # 更新状态
-            rec.write(
+            rec.sudo().write(
                 {
                     "state": "approved",
                     "approved_date": datetime.datetime.now(),
@@ -194,28 +196,62 @@ class ZyGoodsPrice(models.Model):
             # 通知状态变化
             rec.message_post(
                 subtype_xmlid="mail.mt_comment",
-                body=("货物价格已经被%s批准.")
-                     % (self.env.user.name)
+                body="货物价格已经被%s批准."
+                     % self.env.user.name
             )
             # 通知关注者货物价格可用
             rec.goods_rules.message_post(
                 subtype_xmlid="mail.mt_comment",
-                body=("新的货物价格在%s货物中生效 .") % (rec.goods_rules.name),
+                body="新的货物价格在%s货物中生效 ." % rec.goods_rules.name,
             )
             # 更新 activity
             self.activity_feedback(['zhongyun_goods.mail_zhongyun_goods_approval'])
+
+    def user_action_approve(self):
+        """ 编辑用户将货物价格设置为已批准 """
+        for rec in self:
+            if rec.state not in ["draft", "to approve"] and not self.env.user.has_group(
+                    "zhongyun_goods.group_goods_price_manager"):
+                raise UserError("在'%s'状态下无法被批准." % rec.state)
+            if not rec.am_i_approver:
+                raise UserError(
+                    (
+                        "你无权这样做.\r\n"
+                        "只有具有这些组的审批者才能批准此操作: "
+                    )
+                    % ", ".join(
+                        [g.display_name for g in rec.goods_rules.approver_group_ids]
+                    )
+                )
+            # 修改之前货物价格的截止时间为新货物价格的启用时间
+            self.change_after_stopdatetime()
+
+            # 更新状态
+            rec.sudo().write(
+                {
+                    "state": "approved",
+                    "approved_date": datetime.datetime.now(),
+                    "approved_uid": self.env.uid,
+                }
+            )
+
+            rec.message_post(
+                subtype_xmlid="mail.mt_comment",
+                body="货物价格单已经被%s批准."
+                     % self.env.user.name
+            )
 
     def action_cancel(self):
         """ 将更改请求设置为取消 """
         for rec in self:
             if rec.state in ["approved"] and not rec.am_i_approver:
-                raise UserError(("在'%s'状态下无法取消.") % rec.state)
+                raise UserError("在'%s'状态下无法取消." % rec.state)
             else:
                 self.write({"state": "cancelled"})
 
                 rec.message_post(
                     subtype_xmlid="mail.mt_comment",
-                    body=("变更请求 <b>%s</b> 已被取消 %s.")
+                    body="变更请求 <b>%s</b> 已被取消 %s."
                          % (rec.display_name, self.env.user.name))
 
                 self.activity_unlink(['zhongyun_goods.mail_zhongyun_goods_approval'])
@@ -233,35 +269,37 @@ class ZyGoodsPrice(models.Model):
     def change_after_stopdatetime(self):
         """ 当最新的货物价格审批通过后,上一笔货物价格截止日期修改为,该笔货物价格的启用日期 """
         for rec in self:
-            _logger.info(rec.goods_rules)
-            if ((rec.start_datetime > datetime.datetime.now()) or (rec.start_datetime == datetime.datetime.now())):
+            print(rec.goods_rules)
+            if (rec.start_datetime > datetime.datetime.now()) or (
+                    rec.start_datetime == datetime.datetime.now()) or self.env.user.has_group(
+                "zhongyun_goods.group_goods_price_manager"):
                 data_goods_price = self.env['zy.goods.price'].search_read(
                     ['&', ('goods_rules', '=', rec.goods_rules.id), ('state', '=', 'approved')], limit=1,
                     order='id DESC')
-                _logger.info("上一笔审批通过的运单：\n")
-                _logger.info(data_goods_price)
+                print("上一笔审批通过的运单：\n")
+                print(data_goods_price)
                 if len(data_goods_price) > 0:
                     if data_goods_price[0]['start_datetime'] <= rec.start_datetime:
-                        _logger.info("上一笔货物价格启用时间小于等于当前启用时间\n")
+                        print("上一笔货物价格启用时间小于等于当前启用时间\n")
                         data_id = data_goods_price[0]['id']
-                        _logger.info(type(data_id))
+                        print(type(data_id))
                         data_info = self.env['zy.goods.price'].search([('id', '=', str(data_id))])
-                        _logger.info(type(data_info))
+                        print(type(data_info))
 
                         info = {
                             'stop_datetime': rec['start_datetime']
                         }
 
                         data_info.write(info)
-                        _logger.info('成功修改上一笔货物价格的停止时间')
+                        print('成功修改上一笔货物价格的停止时间')
 
                     elif data_goods_price[0]['start_datetime'] > rec.start_datetime:
-                        _logger.info("上一笔货物价格启用时间大于当前启用时间\n")
+                        print("上一笔货物价格启用时间大于当前启用时间\n")
                         """ 是否使用当前货物价格替换上一笔货物价格 """
                         data_id = data_goods_price[0]['id']
-                        _logger.info(type(data_id))
+                        print(type(data_id))
                         data_info = self.env['zy.goods.price'].search([('id', '=', str(data_id))])
-                        _logger.info(type(data_info))
+                        print(type(data_info))
 
                         info = {
                             'state': 'cancelled'
@@ -272,10 +310,14 @@ class ZyGoodsPrice(models.Model):
                         self.change_after_stopdatetime()
 
                 else:
-                    _logger.info('之前没有货物价格')
+                    print('之前没有货物价格')
             else:
-                _logger.info("启用时间小于当前时间\n")
+                print("启用时间小于当前时间\n")
                 raise ValidationError("启用时间不应该小于当前日期.")
+
+    def goods_rules_available_uid(self):
+        domain = [('available_uid', 'in', self.env.user.id)]
+        return domain
 
 
 class ZyGoods(models.Model):
@@ -339,6 +381,9 @@ class ZyGoods(models.Model):
         help="可以批准添加货物价格的组",
     )
 
+    # 可选用户
+    available_uid = fields.Many2many("res.users", string='可选用户')
+
     # 列表按钮
     def button_line_ids(self):
         return {
@@ -362,7 +407,7 @@ class ZyGoods(models.Model):
     # Approved
     # --------------------------------------------  
     def _domain_goods_now_id(self):
-        domain = ['&', ('state', '=', "approved"), '&', (('start_datetime'), '<=', datetime.datetime.now()), '|',
+        domain = ['&', ('state', '=', "approved"), '&', ('start_datetime', '<=', datetime.datetime.now()), '|',
                   ('stop_datetime', '>', datetime.datetime.now()), ('stop_datetime', '=', False)]
         return domain
 

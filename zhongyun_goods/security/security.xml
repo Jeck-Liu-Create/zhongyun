@@ -1,10 +1,19 @@
 <?xml version="1.0" ?>
 <odoo>
-  <record id="group_goods_price_editor" model="res.groups">
+<!--    货物价格角色-->
+    <record id="group_goods_price_user" model="res.groups">
+        <field name="name">普通用户</field>
+        <field name="category_id" ref="module_category_goods_price" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+    <record id="group_goods_price_editor" model="res.groups">
         <field name="name">编辑者</field>
         <field name="category_id" ref="module_category_goods_price" />
         <field name="implied_ids" eval="[(4, ref('group_goods_price_user'))]" />
     </record>
+
     <record id="group_goods_price_manager" model="res.groups">
         <field name="name">管理员</field>
         <field name="category_id" ref="module_category_goods_price" />
@@ -12,33 +21,70 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
-    <!-- <record model="ir.rule" id="zy_goods_price_rule">
-        <field name="name">zy_goods_price multi-company</field>
-        <field name="model_id" ref="model_zy_goods_price" />
-        <field name="global" eval="True" />
-        <field
-            name="domain_force"
-        >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record model="ir.rule" id="zy_goods_rule">
-        <field name="name">zy_goods multi-company</field>
-        <field name="model_id" ref="model_zy_goods" />
-        <field name="global" eval="True" />
-        <field
-            name="domain_force"
-        >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-    </record> -->
-
     <record id="group_goods_price_approver_user" model="res.groups">
         <field name="name">审批人</field>
-        <field name="category_id" ref="zhongyun_goods.module_category_goods_price" />
+        <field name="category_id" ref="module_category_goods_price" />
         <field
             name="implied_ids"
-            eval="[(4, ref('zhongyun_goods.group_goods_price_editor'))]"
+            eval="[(4, ref('group_goods_price_editor'))]"
         />
     </record>
-    <record id="zhongyun_goods.group_goods_price_manager" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('group_goods_price_approver_user'))]" />
+
+<!--    货物价格审批-->
+    <record model="ir.rule" id="zy_goods_request_global_editor_rule">
+        <field name="name">编辑人用户货物价格可见性</field>
+        <field name="model_id" ref="model_zy_goods_price" />
+        <field name="domain_force" >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="False" />
+        <field name="perm_create" eval="True" />
+        <field name="groups" eval="[(4,ref('group_goods_price_user')),(4,ref('group_goods_price_editor'))]" />
     </record>
+
+
+
+<!--    货物名称角色-->
+
+    <record id="group_goods_name_user" model="res.groups">
+        <field name="name">普通用户</field>
+        <field name="category_id" ref="module_category_goods_name" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+    <record id="group_goods_name_editor" model="res.groups">
+        <field name="name">编辑者</field>
+        <field name="category_id" ref="module_category_goods_name" />
+        <field name="implied_ids" eval="[(4, ref('group_goods_name_user'))]" />
+    </record>
+
+    <record id="group_goods_name_manager" model="res.groups">
+        <field name="name">管理员</field>
+        <field name="category_id" ref="module_category_goods_name" />
+        <field name="implied_ids" eval="[(4, ref('group_goods_name_editor'))]" />
+        <field name="users" eval="[(4, ref('base.user_admin'))]" />
+    </record>
+
+    <record id="group_goods_name_approver_user" model="res.groups">
+        <field name="name">审批人</field>
+        <field name="category_id" ref="module_category_goods_name" />
+        <field
+            name="implied_ids"
+            eval="[(4, ref('group_goods_name_editor'))]"
+        />
+    </record>
+
+    <record model="ir.rule" id="zy_goods_request_goods_name_user">
+        <field name="name">普通用户和编辑者货物名称可见性</field>
+        <field name="model_id" ref="model_zy_goods" />
+        <field name="domain_force" >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="False" />
+        <field name="perm_create" eval="True" />
+        <field name="groups" eval="[(4,ref('group_goods_name_user')),(4,ref('group_goods_name_editor'))]" />
+    </record>
+
+
 </odoo>

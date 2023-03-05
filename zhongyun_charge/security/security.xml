@@ -58,7 +58,7 @@
     </record>
 
 
-    <!--运价组管理-->
+    <!--运价规则管理-->
     <record id="group_charge_rule_editor" model="res.groups">
         <field name="name">编辑者</field>
         <field name="category_id" ref="module_category_charge_rule" />
@@ -77,7 +77,7 @@
         <field name="model_id" ref="model_zy_charge_rules" />
         <field name="domain_force" >['&amp;','|',('company_id','=',False),('company_id', 'in', company_ids),('available_uid','in',user.id)]</field>
         <field name="perm_read" eval="True" />
-        <field name="perm_write" eval="False" />
+        <field name="perm_write" eval="True" />
         <field name="perm_unlink" eval="False" />
         <field name="perm_create" eval="False" />
         <field name="groups" eval="[(4, ref('group_charge_rule_user'))]" />

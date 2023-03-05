@@ -29,6 +29,7 @@
             'zhongyun_yundan/static/src/kanban_button/kanban_button.xml',
             'zhongyun_yundan/static/src/kanban_button/kanban_button.js',
             'zhongyun_yundan/static/src/mixins/add_kanban.js',
+            'zhongyun_yundan/static/src/fields/input_dropdown.xml',
 
             'zhongyun_yundan/static/src/views/yundan_dashboard.js',
             'zhongyun_yundan/static/src/views/yundan_dashboard.xml',
@@ -37,6 +38,8 @@
             'zhongyun_yundan/static/src/views/yundan_listview.xml',
             'zhongyun_yundan/static/src/views/yundan_kanbanview.xml',
             'zhongyun_yundan/static/src/views/yundan_kanbanview.js',
+
+
         ],
     },
     'installable': True,

@@ -52,6 +52,10 @@
             <field
                 name="am_i_admin" invisible="1"
           />
+            <field name="id" invisible="1"/>
+<!--              </h1>-->
+<!--              <group>-->
+<!--                <field name="pound_id" attrs="{'readonly': [('id','!=',False)]}"/>-->
         </header>
         <sheet>
             <div class="oe_title">
@@ -62,8 +66,8 @@
             <sheet>
               <group string = "运单信息">
                 <group>
-                  <field name="car_id"/>
-                  <field name="yundan_unit" options="{'no_create_edit ': True,'no_create': True}" />
+                  <field name="car_id" attrs="{'readonly': [('id','!=',False)]}"/>
+                  <field name="yundan_unit" options="{'no_create_edit ': True,'no_create': True}" attrs="{'readonly': [('id','!=',False)]}" />
                   <field name="single_supplement" readonly="1"/>
                   <field name="establish_date" readonly="1"/>
                   <field name="establish_datetime" readonly="1"/>
@@ -79,6 +83,7 @@
                   <field name="pound_id_bool" invisible="1"/>
                 </group>
                 <group>
+                  <field name="zy_yundan_company_id" />
                   <field name="currency_id" invisible="1"/>
                   <field name="transport_price" widget="monetary"  options = "{'currency_field': 'currency_id'}"/>
 <!--                  <field-->
@@ -115,7 +120,7 @@
                     <field
                     name="pound_id_percentage_data"
                     widget="percentage"  digits="[6, 4]"
-                    attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+                    attrs="{'invisible':[('pound_id_bool','!=', True)]}"
                     />
                   </group>
                 </group>
@@ -147,6 +152,7 @@
     <field name="model">zy.yundan</field>
     <field name="arch" type="xml">
       <tree default_order="establish_datetime desc" js_class="yundan_dashboard_list">
+<!--      <tree default_order="establish_datetime desc">-->
         <field name="name"  optional="show"/>
         <field name="car_id"  optional="show"/>
         <field name="yundan_unit"  optional="show"/>
@@ -164,12 +170,32 @@
               optional="show"
         />
         <field name="pound_id"  optional="show"/>
+        <field name="pound_id_transport_goods"  optional="show"/>
+        <field name="pound_id_primary_weight"  sum="Total Tax Included" optional="show"/>
+        <field name="pound_id_net_weight"  sum="Total Tax Included" optional="show"/>
+        <field name="pound_id_delivery_date"  optional="hide"/>
+        <field name="pound_id_manufacture_date"  optional="hide"/>
         <field name="transport_price"  optional="hide"/>
         <field name="zy_yundan_company_id" invisible="1"  optional="show"/>
+<!--        <field name="amount_total" sum="Total Tax Included"  widget="monetary" decoration-bf="1" optional="show"/>-->
+        <field name="amount_total" sum="Total Tax Included" optional="show"/>
         <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'"  optional="show"  />
       </tree>
     </field>
   </record>
+
+  <record model="ir.ui.view" id="zy_yundan_graph_view">
+        <field name="name">zy.yundan.graph</field>
+        <field name="model">zy.yundan</field>
+        <field name="arch" type="xml">
+            <graph string="结算金额" sample="1">
+                <field name="establish_date" interval="month"/>
+                <field name="amount_total" type="measure"/>
+                <field name="yundan_zy_charge_rules" type="row"/>
+            </graph>
+        </field>
+  </record>
+
 
     <!--zy.yundan kanban视图 -->
   <record id="view_zy_yundan_kanban" model="ir.ui.view">
@@ -231,7 +257,7 @@
         <separator/>
         <filter string="待匹配" name="to_match" domain="[('state', '=', 'to_match')]"/>
         <filter string="正在处理" name="to_matching" domain="[('state', 'in', ['not_match', 'match', 'to_payment', 'rejected', 'confirm_rejected'])]"/>
-        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match'),'|',('establish_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d')),('single_supplement_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
+        <filter string="迟到" name="to_late" domain="['&amp;',('state', 'in', ['to_match','confirm_rejected']),'|',('establish_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d')),('single_supplement_datetime', '&lt;', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
 <!--        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match'),'|',('establish_datetime', '&lt;', (datetime.now() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S)),('single_supplement_datetime', '&lt;', (datetime.now() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S))]"/>-->
 <!--        <filter string="迟到" name="to_late" domain="['&amp;',('state', '=', 'to_match')],('establish_datetime', '&lt;', (context_today() - relativedelta(days=-3)).strftime('%Y-%m-%d %H:%M:%S)))"/>-->
         <separator/>
@@ -239,6 +265,7 @@
         <filter string="匹配完成" name="match" domain="[('state', '=', 'match')]"/>
         <filter string="待付款" name="to_payment" domain="[('state', '=', 'to_payment')]"/>
         <filter string="退回" name="rejected" domain="[('state', '=', 'rejected')]"/>
+        <filter string="确认退回" name="confirm_rejected" domain="[('state', '=', 'confirm_rejected')]"/>
         <filter string="付款完成" name="payment" domain="[('state', '=', 'payment')]"/>
         <separator/>
         <filter string="近三天" name="filter_last_3_days" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
@@ -253,15 +280,15 @@
 
         <searchpanel>
             <field name="create_uid" select="multi" icon="fa-users" enable_counters="1"/>
-            <field name="yundan_unit" icon="fa-bars" enable_counters="1" color="#d10202"/>
-            <field name="state" string="状态" select="multi" enable_counters="1"/>
+<!--            <field name="yundan_unit" icon="fa-bars" enable_counters="1" color="#d10202"/>-->
+<!--            <field name="state" string="状态" select="multi" enable_counters="1"/>-->
             <field name="yundan_zy_charge_rules"  icon=" fa-sliders" string="运价规则" select="multi" enable_counters="1"/>
         </searchpanel>
       </search>
     </field>
   </record>
 
-  <!-- 运单组视图 -->
+  <!--zy.yundan.unit form视图 -->
   <record id="view_form_zy_yundan_unit" model="ir.ui.view">
     <field name="name">运单组</field>
     <field name="model">zy.yundan.unit</field>
@@ -277,14 +304,18 @@
             <div class="oe_title">
               <h1>
                 <field name="name" />
+                <field name="id" invisible="1"/>
+<!--              </h1>-->
+<!--              <group>-->
+<!--                <field name="pound_id" attrs="{'readonly': [('id','!=',False)]}"/>-->
               </h1>
             </div>
             <sheet>
               <group string = "运单组信息">
                 <group>
                     <field name="establish_datetime"/>
-                    <field name="single_supplement_datetime" attrs="{'invisible':[('replenish_state','=', False)]}" />
-                    <field name="yundan_unit_zy_charge_rules"/>
+                    <field name="single_supplement_datetime" attrs="{'invisible':[('replenish_state','=', False)],'readonly': [('id','!=',False)]}" />
+                    <field name="yundan_unit_zy_charge_rules" attrs="{'readonly': [('id','!=',False)]}"/>
                     <field name="zy_charge" options="{'no_create_edit ': True,'no_create': True}"/>
                     <field
                     name="edit_function"
@@ -296,6 +327,7 @@
 <!--                  <field name="yundan_unit_charge_buckle_rules"/>-->
 <!--                  <field name="yundan_unit_zy_buckle" options="{'no_create_edit ': True,'no_create': True}"/>-->
                   <field name="yundan_unit_charge_goods_rules"/>
+                  <field name="yundan_unit_company_id" readonly="1"/>
                   <field name="yundan_unit_zy_goods_price" options="{'no_create_edit ': True,'no_create': True}"/>
                   <field name="replenish_state" attrs="{'invisible':[('replenish_state','=', False)]}" readonly="1"/>
                 </group>
@@ -386,7 +418,7 @@
     </field>
   </record>
 
-  <!-- 运单组tree -->
+  <!-- zy.yundan.unit tree视图 -->
   <record id="view_tree_zy_yundan_unit" model="ir.ui.view">
     <field name="name">运单组</field>
     <field name="model">zy.yundan.unit</field>
@@ -469,6 +501,12 @@
     <field name="model">zy.yundan.unit</field>
     <field name="arch" type="xml">
       <search string="Expense">
+        <field name="establish_datetime"/>
+        <filter string="近三天" name="filter_last_3_days" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(days=3)).strftime('%Y-%m-%d'))]"/>
+        <filter string="近一个月" name="filter_last_30_days" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+        <filter string="近三个月" name="filter_last_3_months" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
+        <filter string="近一年" name="filter_last_12_months" domain="[('establish_datetime','&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+
         <group expand="0" string="Group By">
             <filter string="补单状态" name="group_by_replenish_state" context="{'group_by':'replenish_state'}"/>
         </group>
@@ -483,6 +521,7 @@
   <record id="action_zy_yundan" model="ir.actions.act_window">
       <field name="name"> 中运物流-运单管理 </field>
       <field name="res_model">zy.yundan</field>
+      <field name="context">{'search_default_filter_last_3_days': True}</field>
       <field name="view_mode">tree,kanban,form</field>
   </record>
   
@@ -492,7 +531,7 @@
       <field name="name">中运物流-运价组</field>
       <field name="res_model">zy.yundan.unit</field>
       <field name="view_mode">tree,kanban,form</field>
-      <field name="context">{'search_default_group_by_replenish_state': 1}</field>
+      <field name="context">{'search_default_group_by_replenish_state': 1, 'search_default_filter_last_3_days':1}</field>
       <field name="view_ids" eval="[(5,0,0),
                                       (0,0,{'view_mode': 'tree','view_id': ref('view_tree_zy_yundan_unit')}),
                                       (0,0,{'view_mode': 'form','view_id': ref('view_form_zy_yundan_unit')}),]"/>
@@ -545,6 +584,23 @@
           没有匹配失败的运单
           </p><p>
           很好继续努力！！
+          </p>
+      </field>
+  </record>
+
+  <!-- 确认退回运单 act_window-->
+  <record id="action_zy_yundan_confirm_rejected_all" model="ir.actions.act_window">
+      <field name="name">确认退回运单</field>
+      <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_confirm_rejected': 1,'create': False}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到新的运单确认退回
+          </p><p>
+          请对待匹配运单进行匹配操作
           </p>
       </field>
   </record>

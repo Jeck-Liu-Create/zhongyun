@@ -172,7 +172,7 @@ class ZyCharge(models.Model):
                 _logger.info('message_post_with_template')
             else:
                 # 如果不需要批准，则自动批准
-                # rec.action_approve()
+                rec.user_action_approve()
                 print("自动批准")
 
     def action_approve(self):
@@ -194,7 +194,7 @@ class ZyCharge(models.Model):
             self.change_after_stopdatetime()
 
             # 更新状态
-            rec.write(
+            rec.sudo().write(
                 {
                     "state": "approved",
                     "approved_date": fields.Datetime.now(),
@@ -212,10 +212,51 @@ class ZyCharge(models.Model):
             # 通知关注者运价单可用
             rec.charge_rules.message_post(
                 subtype_xmlid="mail.mt_comment",
-                body="新的运价单在%s规则中生效 ." % (rec.charge_rules.name),
+                body="新的运价单在%s规则中生效 ." % rec.charge_rules.name,
             )
             # 更新 activity
             self.activity_feedback(['zhongyun_charge.mail_zhongyun_approval'])
+
+    # def user_action_approve(self):
+    #     Model_change = self.env['zy.charge'].sudo()
+    #     for rec in self:
+    #         change_data = Model_change.search([('id', '=', rec.name)])
+    #         print(change_data)
+    def user_action_approve(self):
+        """ 编辑用户将运价单设置为已批准 """
+        for rec in self:
+            if rec.state not in ["draft", "to approve"]:
+                raise UserError("在'%s'状态下无法被批准." % rec.state)
+            if not rec.am_i_approver:
+                raise UserError(
+                    (
+                        "你无权这样做.\r\n"
+                        "只有具有这些组的审批者才能批准此操作: "
+                    )
+                    % ", ".join(
+                        [g.display_name for g in rec.charge_rules.approver_group_ids]
+                    )
+                )
+            # 修改之前运价单的截止时间为新运价单的启用时间
+            self.change_after_stopdatetime()
+
+            # 更新状态
+            rec.sudo().write(
+                {
+                    "state": "approved",
+                    "approved_date": fields.Datetime.now(),
+                    "approved_uid": self.env.uid,
+                }
+            )
+            # 触发计算字段更新
+            # rec.charge_rules._compute_history_head()
+            # 通知状态变化
+            rec.message_post(
+                subtype_xmlid="mail.mt_comment",
+                body="运价单已经被%s批准."
+                     % self.env.user.name
+            )
+
 
     def action_cancel(self):
         """ 将更改请求设置为取消 """
@@ -296,6 +337,7 @@ class ZyChargeRules(models.Model):
     _inherit = ["mail.thread"]
 
     name = fields.Char('运价规则', required=True)
+    active = fields.Boolean(default=True, help="Set active.")
 
     company_id = fields.Many2one(
         "res.company",

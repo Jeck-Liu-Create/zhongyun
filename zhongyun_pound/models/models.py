@@ -4,6 +4,9 @@ from odoo import models, fields, api
 from odoo.api import call_kw
 from odoo.exceptions import UserError, ValidationError
 import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ZyPound(models.Model):
@@ -39,6 +42,7 @@ class ZyPound(models.Model):
 
     yundan_id = fields.Char('运单')
     # yundan_id = fields.One2many("zy.yundan", "pound_id", string="Tests")
+    active = fields.Boolean(default=True, help="Set active.")
 
     pound_id_percentage = fields.Many2one('zy.buckle', string='计量信息', related="pound_id.pound_unit_zy_buckle",
                                           readonly=True)
@@ -48,6 +52,7 @@ class ZyPound(models.Model):
     pound_supplier = fields.Char('发货人（供应商）')
 
     transport_goods = fields.Char('运输货物名称', required=True)
+    transport_goods_specification = fields.Char('规格型号')
 
     car_id = fields.Many2one('zy.vehicle', '车辆编号', required=True)
 
@@ -100,22 +105,24 @@ class ZyPound(models.Model):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
-                domain = ['|', '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
+                domain = ['&', ('zy_yundan_company_id', '=', rec.ZyPound_company_id.id), '|', '&', '&',
+                          ('single_supplement', '=', False),
+                          ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
-                          ('establish_date', '>=', rec.delivery_date),
-                          ('establish_date', '<=', rec.manufacture_date),
-                          '&', ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
+                          ('establish_datetime', '>=', rec.delivery_date),
+                          ('establish_datetime', '<=', rec.manufacture_date),
+                          '&', '&', ('single_supplement', '=', True),
+                          ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
-                          ('single_supplement_date', '>=', rec.delivery_date),
-                          ('single_supplement_date', '<=', rec.manufacture_date)]
+                          ('single_supplement_datetime', '>=', rec.delivery_date),
+                          ('single_supplement_datetime', '<=', rec.manufacture_date)]
                 res = Model_yundan.search(domain, limit=1, order='id DESC')
                 if len(res) == 1:
                     rec.yundan_id = res[0].id
-                    # self._amount_all()
                     rec.state = 'match'
-                    res_write = Model_yundan.search([('id', '=', res[0].id)]).write(
+                    Model_yundan.search([('id', '=', res[0].id)]).write(
                         {'pound_id': rec.id, 'state': 'match'})
-                    print(res_write)
+
                 else:
                     rec.state = 'not_match'
             else:
@@ -126,12 +133,23 @@ class ZyPound(models.Model):
     def action_notice_of_payment(self):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
-            yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
-            call_kw(self.env['zy.yundan'],
-                    'action_notice_of_payment',
-                    [yudna_data.id],
-                    {})
-            rec.write({"state": "to_payment"})
+            if rec.state == 'match':
+                yudna_data = Model_yundan.search([('id', '=', rec.yundan_id)])
+                call_kw(self.env['zy.yundan'].sudo(),
+                        'action_notice_of_payment',
+                        [yudna_data.id],
+                        {})
+                rec.write({"state": "to_payment"})
+
+    """ 批量付款退回 """
+
+    def action_payment_rollback(self):
+        _logger.warning('=== 付款退回 ===')
+        Model_yundan = self.env['zy.yundan'].sudo()
+        for rec in self:
+            if rec.state == 'to_payment':
+                rec.write({"state": "confirm_rejected"})
+                Model_yundan.search([('id', '=', rec.yundan_id)]).write({"state": "confirm_rejected"})
 
 
 class ZyPoundUint(models.Model):
@@ -145,6 +163,7 @@ class ZyPoundUint(models.Model):
         help="如果设置，页面只能从该公司访问",
         default=lambda self: self.env.company,
     )
+    active = fields.Boolean(default=True, help="Set active.")
 
     name = fields.Char('磅单组编号', index=True, default='新建磅单组', readonly=True)
 

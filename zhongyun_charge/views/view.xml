@@ -28,7 +28,7 @@
           <!-- approve if it's not required and i am owner -->
           <!-- 满足需要批准的运价规则,属于当前用户,属于待提交或等待批准状态 -->
           <button
-              name="action_approve"
+              name="user_action_approve"
               type="object"
               string="批准"
               class="oe_highlight"
@@ -200,6 +200,7 @@
                     groups="base.group_multi_company"
                     options="{'no_create_edit ': True,'no_create': True}"
                   />
+                  <field name="is_approval_required"/>
                   <field name="charge_goods_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>
 <!--                  <field name="charge_buckle_rules" attrs="{'readonly': [('id','>','0')]}" options="{'no_create_edit ': True,'no_create': True}"/>-->
                   <field name="available_uid"/>

@@ -223,7 +223,7 @@ class ZyCharge(models.Model):
     #         change_data = Model_change.search([('id', '=', rec.name)])
     #         print(change_data)
     def user_action_approve(self):
-        """ 将运价单设置为已批准 """
+        """ 编辑用户将运价单设置为已批准 """
         for rec in self:
             if rec.state not in ["draft", "to approve"]:
                 raise UserError("在'%s'状态下无法被批准." % rec.state)

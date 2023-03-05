@@ -1,7 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-zy_goods_price_user,zy.goods.price user,model_zy_goods_price,zhongyun_goods.group_goods_price_user,1,0,0,0
-zy_goods_user,zy.goods user,model_zy_goods,zhongyun_goods.group_goods_price_user,1,0,0,0
-zy_goods_price_editor,zy.goods.price editor,model_zy_goods_price,group_goods_price_editor,1,1,1,0
-zy_goods_editor,zy.goods editor,model_zy_goods,group_goods_price_editor,1,1,1,0
-zy_goods_price_manager,zy.goods.price manager,model_zy_goods_price,group_goods_price_manager,1,1,1,1
-zy_goods_manager,zy.goods manager,model_zy_goods,group_goods_price_manager,1,1,1,1
+zy_goods_price_user,zy.goods price user,model_zy_goods_price,group_goods_price_user,1,0,0,0
+zy_goods_name_user,zy.goods name user,model_zy_goods,group_goods_name_user,1,0,0,0
+zy_goods_price_editor,zy.goods price editor,model_zy_goods_price,group_goods_price_editor,1,1,1,0
+zy_goods_name_editor,zy.goods name editor,model_zy_goods,group_goods_name_editor,1,1,1,0
+zy_goods_price_manager,zy.goods price manager,model_zy_goods_price,group_goods_price_manager,1,1,1,1
+zy_goods_name_manager,zy.goods name manager,model_zy_goods,group_goods_price_manager,1,1,1,1
+zy_goods_price_approver_use,zy.goods price approver,model_zy_goods_price,group_goods_price_approver_user,1,1,1,1
+zy_goods_name_approver_use,zy.goods name approver,model_zy_goods,group_goods_name_approver_user,1,1,1,1

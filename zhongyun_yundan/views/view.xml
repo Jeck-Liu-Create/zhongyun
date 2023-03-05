@@ -52,6 +52,10 @@
             <field
                 name="am_i_admin" invisible="1"
           />
+            <field name="id" invisible="1"/>
+<!--              </h1>-->
+<!--              <group>-->
+<!--                <field name="pound_id" attrs="{'readonly': [('id','!=',False)]}"/>-->
         </header>
         <sheet>
             <div class="oe_title">
@@ -62,8 +66,8 @@
             <sheet>
               <group string = "运单信息">
                 <group>
-                  <field name="car_id"/>
-                  <field name="yundan_unit" options="{'no_create_edit ': True,'no_create': True}" />
+                  <field name="car_id" attrs="{'readonly': [('id','!=',False)]}"/>
+                  <field name="yundan_unit" options="{'no_create_edit ': True,'no_create': True}" attrs="{'readonly': [('id','!=',False)]}" />
                   <field name="single_supplement" readonly="1"/>
                   <field name="establish_date" readonly="1"/>
                   <field name="establish_datetime" readonly="1"/>
@@ -300,14 +304,18 @@
             <div class="oe_title">
               <h1>
                 <field name="name" />
+                <field name="id" invisible="1"/>
+<!--              </h1>-->
+<!--              <group>-->
+<!--                <field name="pound_id" attrs="{'readonly': [('id','!=',False)]}"/>-->
               </h1>
             </div>
             <sheet>
               <group string = "运单组信息">
                 <group>
                     <field name="establish_datetime"/>
-                    <field name="single_supplement_datetime" attrs="{'invisible':[('replenish_state','=', False)]}" />
-                    <field name="yundan_unit_zy_charge_rules"/>
+                    <field name="single_supplement_datetime" attrs="{'invisible':[('replenish_state','=', False)],'readonly': [('id','!=',False)]}" />
+                    <field name="yundan_unit_zy_charge_rules" attrs="{'readonly': [('id','!=',False)]}"/>
                     <field name="zy_charge" options="{'no_create_edit ': True,'no_create': True}"/>
                     <field
                     name="edit_function"

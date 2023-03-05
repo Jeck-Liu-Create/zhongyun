@@ -23,7 +23,8 @@ class ZyYundan(models.Model):
         help="如果设置，页面只能从该公司访问",
         index=True,
         ondelete="cascade",
-        default=lambda self: self.env.company,
+        # default=lambda self: self.env.company,
+        related='yundan_unit.yundan_unit_company_id',
         readonly=True
     )
 
@@ -492,7 +493,7 @@ class ZyYundan(models.Model):
         Model_pound = self.env['zy.pound'].sudo()
 
         for rec in self:
-            if rec == 'to_payment':
+            if rec.state == 'to_payment':
                 rec.write({"state": "rejected"})
                 Model_pound.search([('id', '=', rec.pound_id.id)]).write({"state": "rejected"})
 
@@ -667,6 +668,10 @@ class ZyYunDanUnit(models.Model):
         for rec in self:
             rec.single_supplement_date = datetime.datetime.strftime((rec.single_supplement_datetime.date()),
                                                                     '%Y-%m-%d')
+
+    @api.onchange('single_supplement_datetime')
+    def _get_field_onchange_single_supplement_date(self):
+        self._get_field_compute_single_supplement_date()
 
     """ 运价单触发变更规则 """
 

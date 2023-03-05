@@ -105,7 +105,8 @@ class ZyPound(models.Model):
         Model_yundan = self.env['zy.yundan'].sudo()
         for rec in self:
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
-                domain = ['|', '&', '&', ('single_supplement', '=', False),
+                domain = ['&', ('zy_yundan_company_id', '=', rec.ZyPound_company_id.id), '|', '&', '&',
+                          ('single_supplement', '=', False),
                           ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
                           ('establish_datetime', '>=', rec.delivery_date),

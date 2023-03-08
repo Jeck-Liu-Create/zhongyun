@@ -77,7 +77,7 @@ class ImportXlsxPound(models.TransientModel):
 
         transport_company_data = self._getModelId((row[10].value, 'res.company'))
 
-        delivery_location_data = self._getModelId((row[11].value, 'zy.address'))
+        delivery_location_data = self._getAddressId(row[11].value, row[1].value)
 
         car_id_other_data = self._getModelId((row[12].value, 'zy.vehicle'))
 
@@ -102,7 +102,6 @@ class ImportXlsxPound(models.TransientModel):
         }
 
         self.env['zy.pound'].sudo().create(create_data)
-
 
     def import_pound(self):
         action = {
@@ -175,7 +174,6 @@ class ImportXlsxPound(models.TransientModel):
                   ' (Valid formats are .xlsx)\n\nTechnical Details:\n%s') % \
                 (this.filename, tools.ustr(e))
             )
-
 
     def _checkheader(self, row):
         """检查导入的excel的表头格式"""
@@ -278,6 +276,16 @@ class ImportXlsxPound(models.TransientModel):
             return False
         record = self.env[name_model[1]].sudo().search(
             [('name', '=', name_model[0])], limit=1)
+        if record.exists():
+            return record.id
+        return False
+
+    def _getAddressId(self, name_address, pound_supplier):
+        """ 根据地址名称和供货商名查询 """
+        if name_address or pound_supplier:
+            return False
+        record = self.env['zy.address'].sudo().search(
+            ['&', ('name', '=', name_address), ('supplier', '=', pound_supplier)], limit=1)
         if record.exists():
             return record.id
         return False

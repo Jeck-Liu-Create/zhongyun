@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DateRange" owl="1">
+        <input class="o_input" style="width:100% !important" t-att-value="inputvalue"  t-ref="root" type="text" />
+    </t>
+
+</templates>

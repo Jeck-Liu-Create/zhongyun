@@ -6,16 +6,53 @@
     </t>
 
     <t t-name="Yundan.PurchaseListView" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
-        <xpath expr="//t[@t-call='web.ActionHelper']" position="replace">
-            <YundanDashBoard />
-            <t t-if="showNoContentHelper">
-                <t t-if="!showTable" t-call="Yundan.RfqNoContent">
-                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
-                </t>
-                <t t-else="" t-call="web.ActionHelper">
-                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
-                </t>
+        <xpath  expr="//t[@t-call='web.ActionHelper']" position="before">
+            <div>
+                <YundanDashBoard/>
+            </div>
+        </xpath>
+        <xpath  expr="//table[@t-ref='table']" position="before">
+            <t t-if="!env.isSmall">
+                <div style="position: sticky !important;width: 100%; height:50px; top:0;z-index: 1; background-color: #e9ecef">
+                    <div class="search-view-container">
+                       <div class="search-components">
+                            <div class="row" style="margin-left:15px">
+                                <div class="col-md-4">
+                                    <div class="o-search-field-box">
+                                        <div class="search-field-label">
+                                            <span>时间段：</span>
+                                            <div class="o-search-field-char">
+                                                <DateRange/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
+                      <div class="search-view-buttons">
+                        <div class="right">
+<!--                            <button t-on-click="onClickClear" class="btn m-1">重置</button>-->
+                            <button class="btn m-1">重置</button>
+<!--                            <div class="m-1 d-inline-block">-->
+<!--                                <button  t-on-click="onClickSearch"-->
+<!--                                        class="btn btn-primary mx-1">搜索</button>-->
+<!--                            </div>                            -->
+                            <div class="m-1 d-inline-block">
+                                <button
+                                        class="btn btn-primary mx-1">搜索</button>
+                            </div>
+                         </div>
+                       </div>
+                  </div>
+                </div>
             </t>
+        </xpath>
+        <xpath expr="//th[@t-att-data-name='column.name']" position="attributes">
+            <attribute name="style" add="top:50px !important" t-if="!env.isSmall"/>
+        </xpath>
+        <xpath expr="//th[@t-if='hasSelectors']" position="attributes">
+            <attribute name="style" add="top:50px !important" t-if="!env.isSmall"/>
         </xpath>
     </t>
 </templates>
+

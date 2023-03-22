@@ -1,3 +1,41 @@
 .o_yundan_no_content {
     position: relative;
 }
+
+.o_div_input {
+    flex: 1 1 auto;
+    overflow: auto;
+    position: relative;
+}
+
+.search-view-container{
+    display:flex;
+}
+.search-view-container .search-components{
+    flex:  1 auto;
+    .col-md-4{
+        padding: 3px 0;
+    }
+
+}
+.search-view-buttons{
+    width: 200px;
+
+}
+.o_cp_search_field_label{
+    line-height:30px;
+    padding-right:0;
+    text-align:right;
+}
+.o-search-field-box{
+    display:flex;
+    align-items: center;
+    justify-content: flex-start
+}
+.o-search-field-box > .search-field-label{
+    margin-right: 5px;
+    width: 100px;
+}
+//.o-search-field-box > .search-field-label:after{
+//    content: ':';
+//}

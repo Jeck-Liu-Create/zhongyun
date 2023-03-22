@@ -39,6 +39,9 @@
             'zhongyun_yundan/static/src/views/yundan_kanbanview.xml',
             'zhongyun_yundan/static/src/views/yundan_kanbanview.js',
 
+            'zhongyun_yundan/static/src/daterange/daterange/daterange_field.js',
+            'zhongyun_yundan/static/src/daterange/daterange/daterange_field.xml',
+
 
         ],
     },

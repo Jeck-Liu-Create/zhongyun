@@ -9,7 +9,10 @@
 }
 
 .search-view-container{
+    height:50px;
     display:flex;
+    align-items: center;
+    justify-content: center;
 }
 .search-view-container .search-components{
     flex:  1 auto;
@@ -39,3 +42,19 @@
 //.o-search-field-box > .search-field-label:after{
 //    content: ':';
 //}
+
+.o_input_border{
+    background-color: white;
+    height: 30px;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    box-shadow: 0 3px 5px #0000000b;
+    border-radius: 0.5rem;
+    align-items: center;
+}
+
+.o_span_center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

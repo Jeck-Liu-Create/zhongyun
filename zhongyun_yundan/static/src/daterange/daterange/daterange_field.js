@@ -1,15 +1,10 @@
 /** @odoo-module **/
-
-import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
-import { luxonToMoment, momentToLuxon } from "@web/core/l10n/dates";
+import { luxonToMoment } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
-
 const { DateTime } = luxon;
 
 import { Component, onWillStart, useExternalListener, useRef, useEffect} from "@odoo/owl";
-const formatters = registry.category("formatters");
-const parsers = registry.category("parsers");
 
 export class DateRange extends Component {
     setup() {
@@ -19,16 +14,15 @@ export class DateRange extends Component {
         this.isPickerShown = false;
         this.pickerContainer;
 
-        const jsDatestartDate = new Date('2022-03-21T08:00:00.000Z');
+        const jsDatestartDate = new Date('2023-03-21T08:00:00.000Z');
         this.myDateTimestartDate = DateTime.fromJSDate(jsDatestartDate);
         console.log(this.myDateTimestartDate.toISO());
 
-        const jsDateendDate = new Date('2022-03-25T08:00:00.000Z');
+        const jsDateendDate = new Date('2023-03-25T08:00:00.000Z');
         this.myDateTimeendDate = DateTime.fromJSDate(jsDateendDate);
         console.log(this.myDateTimeendDate.toISO());
 
         this.value="";
-
 
         useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
         onWillStart(() => loadJS("/web/static/lib/daterangepicker/daterangepicker.js"));
@@ -43,8 +37,18 @@ export class DateRange extends Component {
                         locale: {
                             applyLabel: this.env._t("Apply"),
                             cancelLabel: this.env._t("Cancel"),
-                            format: 'YYYY/MM/DD'
+                            customRangeLabel: '自定义',
+                            format: 'YYYY-MM-DD'
                         },
+                        ranges: {
+                           "今天": [window.moment(), window.moment()],
+                           "昨天": [window.moment().subtract(1, 'days'), window.moment().subtract(1, 'days')],
+                           "过去7天": [window.moment().subtract(6, 'days'), window.moment()],
+                           '过去30天': [window.moment().subtract(29, 'days'), window.moment()],
+                           '当月': [window.moment().startOf('month'), window.moment().endOf('month')],
+                           '上月': [window.moment().subtract(1, 'month').startOf('month'), window.moment().subtract(1, 'month').endOf('month')]
+                        },
+
                         startDate: this.startDate ? luxonToMoment(this.startDate) : window.moment(),
                         endDate: this.endDate ? luxonToMoment(this.endDate) : window.moment(),
                         drops: "auto",
@@ -71,31 +75,17 @@ export class DateRange extends Component {
     get isDateTime() {
         return this.props.formatType === "datetime";
     }
-    get formattedValue() {
-        return this.formatValue(this.props.formatType, this.myDateTimestartDate);
-    }
+
     get startDate() {
         return this.myDateTimestartDate
     }
+
     get endDate() {
         return this.myDateTimeendDate
     }
-    formatValue(format, value) {
-        const formatter = formatters.get(format);
-        let formattedValue;
-        try {
-            formattedValue = formatter(value);
-        } catch {
-            console.log("this.props.record.setInvalidField(this.props.name);")
-        }
-        return formattedValue;
-    }
+
     get inputvalue(){
         return this.value
-    }
-
-    updateRange(start, end) {
-        console.log("updateRange")
     }
 
     onWindowScroll(ev) {
@@ -109,17 +99,35 @@ export class DateRange extends Component {
         }
     }
 
+    onChangeInput(ev) {
+        this.value = ev.target.value;
+        this.render();
+    }
+
     onPickerApply(ev, picker) {
+        debugger;
         const start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
         const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
-        this.value = start.format('YYYY/MM/DD') + ' - ' + end.format('YYYY/MM/DD');
+        this.value = start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD');
         this.root.el.value = this.value;
+        this.render();
     }
     onPickerShow() {
         this.isPickerShown = true;
     }
     onPickerHide() {
         this.isPickerShown = false;
+    }
+
+    onApply() {
+        this.env.searchModel.query = [];
+        const value = this.value
+        const valueArray = value.split(' ')
+        const preFilters = [{
+            description:'建单时间介于'+ valueArray[0] + ' 00:00:00' + '和' + valueArray[2]  + ' 00:00:00' +'之间',
+            domain:'["&",("establish_datetime", ">=", "' + valueArray[0] + ' 00:00:00' + '"),("establish_datetime", "<=", "' + valueArray[2] + ' 00:00:00' + '")]',
+            type:'filter'}]
+        this.env.searchModel.createNewFilters(preFilters);
     }
 }
 

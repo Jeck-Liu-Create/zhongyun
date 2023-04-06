@@ -2,7 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DateRange" owl="1">
-        <input class="o_input" style="width:100% !important" t-att-value="inputvalue"  t-ref="root" type="text" />
+        <input class="o_input_date"
+               style="width:100% !important"
+               t-att-value="inputvalue"
+               t-ref="root"
+               t-att-data-tooltip="this.value"
+               t-on-change="onChangeInput"
+               data-tooltip-delay="100"
+               type="text" />
+        <button
+                t-on-click="onApply"
+                class="btn btn-primary mx-1">搜索</button>
     </t>
 
 </templates>

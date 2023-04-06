@@ -15,34 +15,21 @@
             <t t-if="!env.isSmall">
                 <div style="position: sticky !important;width: 100%; height:50px; top:0;z-index: 1; background-color: #e9ecef">
                     <div class="search-view-container">
-                       <div class="search-components">
+                        <div class="search-components">
                             <div class="row" style="margin-left:15px">
-                                <div class="col-md-4">
-                                    <div class="o-search-field-box">
+                                <div class="col col-md-3 col-sm-12">
+                                    <div class="d-flex">
+                                        <span class="o_span_center">创建日期</span>
                                         <div class="search-field-label">
-                                            <span>时间段：</span>
-                                            <div class="o-search-field-char">
+                                            <div class="o_input_border x2x_widget ml-1 d-flex">
+                                                <svg id="ihshy" data-gjs-type="svg"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 z-10 absolute my-auto inset-y-0 ml-2 left-0"><rect id="i7flj"  x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line id="i7wck"  x1="16" y1="2" x2="16" y2="6"></line><line id="ifdel"  x1="8" y1="2" x2="8" y2="6"></line><line id="i5gaj"  x1="3" y1="10" x2="21" y2="10"></line></svg>
                                                 <DateRange/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                       </div>
-                      <div class="search-view-buttons">
-                        <div class="right">
-<!--                            <button t-on-click="onClickClear" class="btn m-1">重置</button>-->
-                            <button class="btn m-1">重置</button>
-<!--                            <div class="m-1 d-inline-block">-->
-<!--                                <button  t-on-click="onClickSearch"-->
-<!--                                        class="btn btn-primary mx-1">搜索</button>-->
-<!--                            </div>                            -->
-                            <div class="m-1 d-inline-block">
-                                <button
-                                        class="btn btn-primary mx-1">搜索</button>
-                            </div>
-                         </div>
-                       </div>
+                        </div>
                   </div>
                 </div>
             </t>

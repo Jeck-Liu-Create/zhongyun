@@ -3,6 +3,7 @@ from modulefinder import Module
 import string
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from decimal import Decimal
 import math
 import datetime
 import logging
@@ -165,21 +166,21 @@ class ZyYundan(models.Model):
         """
         for rec in self:
             # 付车总额
-            amount_untaxed = rec.pound_id_net_weight * rec.transport_price
+            amount_untaxed = Decimal(str(rec.pound_id_net_weight)) * Decimal(str(rec.transport_price))
 
             # 亏吨量 亏吨量=净重-原发重x（1-运损率)
-            kui_tons = rec.pound_id_net_weight - rec.pound_id_primary_weight * (1 - rec.pound_id_percentage_data)
+            kui_tons = Decimal(str(rec.pound_id_net_weight)) - Decimal(str(rec.pound_id_primary_weight)) * Decimal(str(1 - rec.pound_id_percentage_data))
 
             # 亏吨款
             kui_tools = lambda x: x if x < 0 else 0
-            kui_tons_price = kui_tools(kui_tons) * rec.goods_price
+            kui_tons_price = Decimal(str(kui_tools(float(kui_tons)))) * Decimal(str(rec.goods_price))
 
             # 扣减亏吨款
             deduct_tools = lambda x: -x if x < 0 else 0
-            deduct_price = deduct_tools(kui_tons_price)
+            deduct_price = deduct_tools(float(kui_tons_price))
 
             # 实际付车
-            amount_tax = amount_untaxed + kui_tons_price
+            amount_tax =float(str(amount_untaxed + kui_tons_price))
 
             # 结算金额
             if amount_tax % 10 < 9:

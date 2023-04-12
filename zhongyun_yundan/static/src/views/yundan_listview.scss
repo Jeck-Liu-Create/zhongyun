@@ -58,3 +58,14 @@
   align-items: center;
   justify-content: center;
 }
+$odd-row-bg: #f2f2f2;
+$even-row-bg: #ffffff;
+.table_odd_odd{
+
+  @for $i from 1 through 80 {
+    tr:nth-child(#{$i}) {
+      background-color: if($i % 2 == 0, $even-row-bg, $odd-row-bg);
+    }
+  }
+
+}

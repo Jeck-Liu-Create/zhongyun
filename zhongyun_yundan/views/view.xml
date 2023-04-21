@@ -157,17 +157,16 @@
         <field name="car_id"  optional="show"/>
         <field name="yundan_unit"  optional="show"/>
         <field name="single_supplement" readonly="1"  optional="show"/>
-        <field name="establish_datetime"  optional="hide"/>
-        <field name="establish_date"  optional="show"/>
+        <field name="establish_datetime"  optional="show"/>
+        <field name="establish_date"  optional="hide"/>
         <field name="yundan_zy_charge_rules"  optional="show"/>
         <field
               name="single_supplement_datetime"
-              attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
-              optional="hide"
+              optional="show"
         />
         <field
               name="single_supplement_date"
-              optional="show"
+              optional="hide"
         />
         <field name="pound_id"  optional="show"/>
         <field name="pound_id_transport_goods"  optional="show"/>
@@ -244,6 +243,7 @@
     <field name="arch" type="xml">
       <search string="Expense">
         <field name="name"/>
+        <field name="pound_id"/>
         <field name="car_id"/>
         <field name="single_supplement"/>
         <field name="establish_date" />

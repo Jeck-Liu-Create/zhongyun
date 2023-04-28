@@ -7,41 +7,83 @@
 
     <t t-name="Yundan.PurchaseListView" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
         <xpath  expr="//t[@t-call='web.ActionHelper']" position="before">
-            <div>
+            <div class="listRow_ch">
                 <YundanDashBoard/>
             </div>
         </xpath>
         <xpath  expr="//table[@t-ref='table']" position="before">
             <t t-if="!env.isSmall">
-                <div style="position: sticky !important;width: 100%; height:50px; top:0;z-index: 2;">
-                    <div class="search-view-container">
-                        <div class="search-components">
-                            <div class="row" style="margin-left:15px">
-                                <div class="col col-md-3 col-sm-12">
-                                    <div class="d-flex">
-                                        <span class="o_span_center">创建日期</span>
-                                        <div class="search-field-label">
-                                            <div class="o_input_border x2x_widget ml-1 d-flex">
-                                                <svg id="ihshy" data-gjs-type="svg"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 z-10 absolute my-auto inset-y-0 ml-2 left-0"><rect id="i7flj"  x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line id="i7wck"  x1="16" y1="2" x2="16" y2="6"></line><line id="ifdel"  x1="8" y1="2" x2="8" y2="6"></line><line id="i5gaj"  x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                                <DateRange/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div style="position: sticky !important;width: 100%; height:50px; top:0;z-index: 3; left:0">
+                    <div class="row" style="margin-left:15px">
+                        <div class="col col-md-4 col-sm-12"  style="border-top: 10px solid transparent;">
+                            <DateRange
+                                searchBus="this.envBus"
+                            />
                         </div>
-                  </div>
+                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
+                            <button
+                            t-on-click="onClickSearch"
+                            class="btn btn-primary o_list_button_add"
+                            type="button">搜索</button>
+                        </div>
+                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
+                            <button
+                            t-on-click="onClickSearch"
+                            class="btn btn-primary o_list_button_add"
+                            type="button">搜索</button>
+                        </div>
+                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
+                            <button
+                            t-on-click="onClickSearch"
+                            class="btn btn-primary o_list_button_add"
+                            type="button">搜索</button>
+                        </div>
+                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
+                            <button
+                            t-on-click="onClickSearch"
+                            class="btn btn-primary o_list_button_add"
+                            type="button">搜索</button>
+                        </div>
+                    </div>
                 </div>
             </t>
         </xpath>
         <xpath expr="//th[@t-att-data-name='column.name']" position="attributes">
             <attribute name="style" add="top:50px !important" t-if="!env.isSmall"/>
         </xpath>
+        <xpath expr="//table/thead/tr/t/th[2]" position="attributes">
+            <attribute name="style" add="top:50px !important" t-if="!env.isSmall"/>
+        </xpath>
         <xpath expr="//th[@t-if='displayOptionalFields or activeActions.onDelete']" position="attributes">
             <attribute name="style">width: 32px; min-width: 32px ;top:50px !important</attribute>
         </xpath>
+        <xpath expr="//th[@t-if='displayOptionalFields or activeActions.onDelete']" position="attributes">
+            <attribute name="class" add="listTh_controller" separator=" " t-if="!env.isSmall"/>
+        </xpath>
         <xpath expr="//th[@t-if='hasSelectors']" position="attributes">
             <attribute name="style" add="top:50px !important" t-if="!env.isSmall"/>
+        </xpath>
+        <xpath expr="//th[@t-if='hasSelectors']" position="attributes">
+            <attribute name="class" add="listTh_ch" separator=" " t-if="!env.isSmall"/>
+        </xpath>
+        <xpath expr="//thead" position="attributes">
+            <attribute name="style" t-if="!env.isSmall">z-index: 2</attribute>
+        </xpath>
+        <xpath expr="//tfoot" position="attributes">
+            <attribute name="style" t-if="!env.isSmall">z-index: 2</attribute>
+        </xpath>
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_list_table_layout" separator=" " t-if="!env.isSmall"/>
+        </xpath>
+    </t>
+
+    <t t-name="Yundan.ListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary" owl="1">
+        <xpath expr="//td[@t-if='hasSelectors']" position="attributes">
+            <attribute name="class" add="listRow_ch" separator=" " t-if="!env.isSmall"/>
+        </xpath>
+
+        <xpath expr="//tr/t/td" position="attributes">
+            <attribute name="class" position="add" separator=" " t-if="!env.isSmall">listRow_controller</attribute>
         </xpath>
     </t>
 </templates>

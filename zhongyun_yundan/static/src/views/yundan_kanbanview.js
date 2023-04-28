@@ -6,7 +6,7 @@ import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { YundanDashBoard } from './yundan_dashboard';
 
 
-export class YundanDashBoardKanbanRenderer extends KanbanRenderer {};
+export class YundanDashBoardKanbanRenderer extends KanbanRenderer {}
 
 YundanDashBoardKanbanRenderer.template = 'yundan.PurchaseKanbanView';
 YundanDashBoardKanbanRenderer.components= Object.assign({}, KanbanRenderer.components, {YundanDashBoard})

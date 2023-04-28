@@ -11,7 +11,14 @@
 .o_input_date{
     padding: 0.5rem 0.75rem;
     height: 24px;
-    border: none;
+    //border: none;
+    border-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+}
+.ivu-input-suffix {
+    left: auto;
+    right: 0;
 }
 
 .o_form_control {

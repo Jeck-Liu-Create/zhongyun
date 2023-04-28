@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { loadJS } from "@web/core/assets";
-import { luxonToMoment } from "@web/core/l10n/dates";
+import { luxonToMoment,serializeDateTime } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 const { DateTime } = luxon;
 
@@ -11,7 +11,7 @@ export class DateRange extends Component {
         debugger
         this.root = useRef("root");
         this.isPickerShown = false;
-        this.searchBus = this.props.searchBus
+        this.props.searchBus.trigger('searchList', {field: this.field, filters});
 
         const jsDate = new Date();
         const luxonDate = DateTime.fromJSDate(jsDate, { zone: 'local' });
@@ -32,15 +32,14 @@ export class DateRange extends Component {
                     window.$(el).daterangepicker({
                         timePicker: this.isDateTime,
                         timePicker24Hour: true,
-                        timePickerIncrement: 5,
-                        autoUpdateInput: false,
+                        autoUpdateInput: true,
+                        timePickerSeconds: true,
                         locale: {
                             applyLabel: this.env._t("Apply"),
                             cancelLabel: this.env._t("Cancel"),
                             customRangeLabel: '自定义',
                             format: 'YYYY-MM-DD HH:mm:ss'
                         },
-
                         ranges:{
                           "今天": [defaultStartTime, defaultEndTime],
                           "昨天": [window.moment().subtract(1, 'days').startOf('day'), window.moment().subtract(1, 'days').endOf('day')],
@@ -121,16 +120,16 @@ export class DateRange extends Component {
         this.isPickerShown = false;
     }
 
-    onApply() {
-        this.env.searchModel.query = [];
-        const value = this.value
-        const valueArray = value.split(' ')
-        const preFilters = [{
-            description:'建单时间介于'+ valueArray[0] + ' ' + valueArray[1] + '和' + valueArray[3] + ' ' + valueArray[4] +'之间',
-            domain:'["&",("establish_datetime", ">=", "' + valueArray[0] + ' ' + valueArray[1] +'"),("establish_datetime", "<=", "' + valueArray[3] + ' ' + valueArray[4] + '")]',
-            type:'filter'}]
-        this.env.searchModel.createNewFilters(preFilters);
-    }
+    // onApply() {
+    //     this.env.searchModel.query = [];
+    //     const value = this.value
+    //     const valueArray = value.split(' ')
+    //     const preFilters = [{
+    //         description:'建单时间介于'+ valueArray[0] + ' ' + valueArray[1] + '和' + valueArray[3] + ' ' + valueArray[4] +'之间',
+    //         domain:'["&",("establish_datetime", ">=", "' + valueArray[0] + ' ' + valueArray[1] +'"),("establish_datetime", "<=", "' + valueArray[3] + ' ' + valueArray[4] + '")]',
+    //         type:'filter'}]
+    //     this.env.searchModel.createNewFilters(preFilters);
+    // }
 }
 
 DateRange.props = {

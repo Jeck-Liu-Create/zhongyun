@@ -3,17 +3,17 @@
 
     <t t-name="web.DateRange" owl="1">
         <div class="d-flex">
-            <select class="o_input_border x2x_widget ml-1 d-flex" style="width: 50%; left:0; text-align: center; text-align-last: center;">
+            <select class="o_input_border " style="width: 35%; text-align: center; text-align-last: center;">
                     <option value="empty">建单时间</option>
                     <option value="volvo">Volvo</option>
                     <option value="saab">Saab</option>
                     <option value="mercedes">Mercedes</option>
                     <option value="audi">Audi</option>
             </select>
-            <div class="o_input_border x2x_widget ml-1 d-flex" style="width: 50%; right:0">
+            <div class="o_input_border d-flex" style="width: 45%;">
                 <input class="o_input_date"
                        style="width:100% !important"
-                       t-att-value="inputvalue"
+                       t-att-value="this.value"
                        t-ref="root"
                        t-att-data-tooltip="this.value"
                        t-on-change="onChangeInput"

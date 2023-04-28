@@ -21,12 +21,25 @@ export class YundanDashBoardRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.envBus = new EventBus();
-        this.envBus.on('SearchList', this, this.searchChange);
+        this.envBus.on('SearchList', this, this.searchList);
         this.query = {};
     }
 
-    searchChange({field, filters}) {
+    searchList({field, filters}) {
         this.query[field.id] = {field, filters};
+    }
+
+    onClickSearch() {
+        let conditions = []
+        _.each(Object.values(this.query), (q) => {
+            if (q && q.filters.length > 0) {
+                conditions = conditions.concat(q.filters.map((filters) => {
+                    let {operator, value} = filters;
+                    return [q.field.id, {label: value, operator, value}]
+                }))
+            }
+        });
+        this.searchModel.addMutilAutoCompletionValues(conditions)
     }
 
     getColumnClass(column) {

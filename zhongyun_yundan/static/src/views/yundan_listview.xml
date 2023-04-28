@@ -15,30 +15,13 @@
             <t t-if="!env.isSmall">
                 <div style="position: sticky !important;width: 100%; height:50px; top:0;z-index: 3; left:0">
                     <div class="row" style="margin-left:15px">
-                        <div class="col col-md-4 col-sm-12"  style="border-top: 10px solid transparent;">
+                        <div class="col col-md-3 col-sm-12"  style="border-top: 10px solid transparent;">
                             <DateRange
                                 searchBus="this.envBus"
                             />
                         </div>
                         <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
-                            <button
-                            t-on-click="onClickSearch"
-                            class="btn btn-primary o_list_button_add"
-                            type="button">搜索</button>
-                        </div>
-                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
-                            <button
-                            t-on-click="onClickSearch"
-                            class="btn btn-primary o_list_button_add"
-                            type="button">搜索</button>
-                        </div>
-                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
-                            <button
-                            t-on-click="onClickSearch"
-                            class="btn btn-primary o_list_button_add"
-                            type="button">搜索</button>
-                        </div>
-                        <div class="col col-md-2 col-sm-12"  style="border-top: 10px solid transparent;">
+                            <button t-on-click="onClickClear" class="btn m-1">重置</button>
                             <button
                             t-on-click="onClickSearch"
                             class="btn btn-primary o_list_button_add"

@@ -151,10 +151,15 @@
     <field name="name">运单表</field>
     <field name="model">zy.yundan</field>
     <field name="arch" type="xml">
-      <tree default_order="establish_datetime desc" js_class="yundan_dashboard_list" sample="1">
+      <tree default_order="id desc" js_class="yundan_dashboard_list" sample="1">
+<!--      <tree js_class="yundan_dashboard_list" sample="1">-->
 <!--      <tree default_order="establish_datetime desc">-->
         <field name="name"  optional="show"/>
         <field name="car_id"  optional="show"/>
+        <button name="action_matching_data"
+                string="匹配磅单"
+                type="object"
+                icon="fa-pencil"/>
         <field name="yundan_unit"  optional="show"/>
         <field name="single_supplement" readonly="1"  optional="show"/>
         <field name="establish_datetime"  optional="show"/>
@@ -178,6 +183,7 @@
         <field name="zy_yundan_company_id" invisible="1"  optional="show"/>
 <!--        <field name="amount_total" sum="Total Tax Included"  widget="monetary" decoration-bf="1" optional="show"/>-->
         <field name="amount_total" sum="Total Tax Included" optional="show"/>
+        <field name="id"  optional="hide"/>
         <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'"  optional="show"  />
       </tree>
     </field>

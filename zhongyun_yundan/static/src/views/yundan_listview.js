@@ -19,17 +19,21 @@ const FIELD_CLASSES = {
 
 export class YundanDashBoardRenderer extends ListRenderer {
     setup() {
-        super.setup();
-        this.envBus = new EventBus();
-        this.envBus.on('SearchList', this, this.searchList);
-        this.query = {};
+        super.setup()
+        this.envBus = new EventBus()
+        this.envBus.on('SearchList', this, this.searchList)
+        this.query = {}
     }
 
     searchList({field, filters}) {
-        this.query[field.id] = {field, filters};
+        debugger
+        console.log(filters)
+        this.query[field.id] = {field, filters}
+
     }
 
     onClickSearch() {
+        debugger
         let conditions = []
         _.each(Object.values(this.query), (q) => {
             if (q && q.filters.length > 0) {

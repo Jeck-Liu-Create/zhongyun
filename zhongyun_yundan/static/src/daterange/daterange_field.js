@@ -11,16 +11,13 @@ export class DateRange extends Component {
         debugger
         this.root = useRef("root");
         this.isPickerShown = false;
-        this.props.searchBus.trigger('searchList', {field: this.field, filters});
-
+        this.selectValue = 'establish_datetime';
         const jsDate = new Date();
         const luxonDate = DateTime.fromJSDate(jsDate, { zone: 'local' });
         this.zeroHour = luxonDate.startOf('day');
-        console.log(this.zeroHour.toISO());
         this.endOfDay = luxonDate.endOf('day');
-        console.log(this.endOfDay.toISO());
         this.value = this.zeroHour.toFormat('yyyy-MM-dd HH:mm:ss') + ' ~ ' + this.endOfDay.toFormat('yyyy-MM-dd HH:mm:ss');
-
+        this.evnShearch()
         useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
         onWillStart(() => loadJS("/web/static/lib/daterangepicker/daterangepicker.js"));
         useEffect(
@@ -69,6 +66,18 @@ export class DateRange extends Component {
             },
             () => [this.root.el, this.zeroHour]
         );
+    }
+
+    // 同步select值变化
+    changeParam(ev) {
+        this.selectValue = ev.target.value;
+        this.evnShearch()
+    }
+
+    // 同步input值变化
+    evnShearch(){
+        const envValue= this.value;
+        this.props.searchBus.trigger('searchList', {field: this.selectValue, envValue});
     }
 
     get isDateTime() {

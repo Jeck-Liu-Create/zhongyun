@@ -1,10 +1,10 @@
 /** @odoo-module **/
-import { loadJS } from "@web/core/assets";
-import { luxonToMoment,serializeDateTime } from "@web/core/l10n/dates";
-import { useService } from "@web/core/utils/hooks";
-const { DateTime } = luxon;
+import {loadJS} from "@web/core/assets";
+import {luxonToMoment, deserializeDate,serializeDateTime} from "@web/core/l10n/dates";
+import {Component, onWillStart, useEffect, useExternalListener, useRef} from "@odoo/owl";
 
-import { Component, onWillStart, useExternalListener, useRef, useEffect} from "@odoo/owl";
+
+const { DateTime } = luxon;
 
 export class DateRange extends Component {
     setup() {
@@ -12,6 +12,7 @@ export class DateRange extends Component {
         this.root = useRef("root");
         this.isPickerShown = false;
         this.selectValue = 'establish_datetime';
+        this.searchBus = this.props.searchBus;
         const jsDate = new Date();
         const luxonDate = DateTime.fromJSDate(jsDate, { zone: 'local' });
         this.zeroHour = luxonDate.startOf('day');
@@ -77,7 +78,10 @@ export class DateRange extends Component {
     // 同步input值变化
     evnShearch(){
         const envValue= this.value;
-        this.props.searchBus.trigger('searchList', {field: this.selectValue, envValue});
+        const name = '1';
+        console.log(envValue)
+        console.log(this.datetime)
+        this.searchBus.trigger('searchList', {field: this.selectValue, filters:this.datetime , id:name});
     }
 
     get isDateTime() {
@@ -120,7 +124,9 @@ export class DateRange extends Component {
         const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
         this.value = start.format('YYYY-MM-DD HH:mm:ss') + ' ~ ' + end.format('YYYY-MM-DD HH:mm:ss');
         this.root.el.value = this.value;
+        this.evnShearch()
         this.render();
+
     }
     onPickerShow() {
         this.isPickerShown = true;
@@ -129,16 +135,26 @@ export class DateRange extends Component {
         this.isPickerShown = false;
     }
 
-    // onApply() {
-    //     this.env.searchModel.query = [];
-    //     const value = this.value
-    //     const valueArray = value.split(' ')
-    //     const preFilters = [{
-    //         description:'建单时间介于'+ valueArray[0] + ' ' + valueArray[1] + '和' + valueArray[3] + ' ' + valueArray[4] +'之间',
-    //         domain:'["&",("establish_datetime", ">=", "' + valueArray[0] + ' ' + valueArray[1] +'"),("establish_datetime", "<=", "' + valueArray[3] + ' ' + valueArray[4] + '")]',
-    //         type:'filter'}]
-    //     this.env.searchModel.createNewFilters(preFilters);
-    // }
+    onApply() {
+        this.env.searchModel.query = [];
+        const value = this.value
+        const valueArray = value.split(' ')
+        const preFilters = [{
+            description:'建单时间介于'+ valueArray[0] + ' ' + valueArray[1] + '和' + valueArray[3] + ' ' + valueArray[4] +'之间',
+            domain:'["&",("establish_datetime", ">=", "' + valueArray[0] + ' ' + valueArray[1] +'"),("establish_datetime", "<=", "' + valueArray[3] + ' ' + valueArray[4] + '")]',
+            type:'filter'}]
+        this.env.searchModel.createNewFilters(preFilters);
+    }
+
+    get datetime(){
+        debugger
+        const envValue= this.value;
+        const valueArray = envValue.split(' ')
+        const startTime = deserializeDate(valueArray[0] + ' ' + valueArray[1])
+        const endTime = deserializeDate(valueArray[3] + ' ' + valueArray[4])
+        const domain = '"&",("establish_datetime", ">=", "' + startTime.setZone('utc').toFormat('yyyy-MM-dd HH:mm:ss') +'"),("establish_datetime", "<=", "' + endTime.setZone('utc').toFormat('yyyy-MM-dd HH:mm:ss') + '")'
+        return {valueArray,startTime,endTime,domain}
+    }
 }
 
 DateRange.props = {

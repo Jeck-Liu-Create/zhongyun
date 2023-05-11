@@ -43,6 +43,8 @@
             'zhongyun_yundan/static/src/daterange/daterange_field.js',
             'zhongyun_yundan/static/src/daterange/daterange_field.xml',
 
+            'zhongyun_yundan/static/src/OnboardingBanner/no_content_helpers2.xml',
+
 
 
         ],

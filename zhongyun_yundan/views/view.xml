@@ -189,17 +189,17 @@
     </field>
   </record>
 
-  <record model="ir.ui.view" id="zy_yundan_graph_view">
-        <field name="name">zy.yundan.graph</field>
-        <field name="model">zy.yundan</field>
-        <field name="arch" type="xml">
-            <graph string="结算金额" sample="1">
-                <field name="establish_date" interval="month"/>
-                <field name="amount_total" type="measure"/>
-                <field name="yundan_zy_charge_rules" type="row"/>
-            </graph>
-        </field>
-  </record>
+<!--  <record model="ir.ui.view" id="zy_yundan_graph_view">-->
+<!--        <field name="name">zy.yundan.graph</field>-->
+<!--        <field name="model">zy.yundan</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <graph string="结算金额" sample="1">-->
+<!--                <field name="establish_date" interval="month"/>-->
+<!--                <field name="amount_total" type="measure"/>-->
+<!--                <field name="yundan_zy_charge_rules" type="row"/>-->
+<!--            </graph>-->
+<!--        </field>-->
+<!--  </record>-->
 
 
     <!--zy.yundan kanban视图 -->
@@ -527,8 +527,17 @@
   <record id="action_zy_yundan" model="ir.actions.act_window">
       <field name="name"> 中运物流-运单管理 </field>
       <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
       <field name="context">{'search_default_filter_last_3_days': True}</field>
-      <field name="view_mode">tree,kanban,form</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到任何运单
+          </p><p>
+          请创建一些运单
+          </p>
+      </field>
   </record>
   
   <!-- Action to open the zy_yundan_unit -->

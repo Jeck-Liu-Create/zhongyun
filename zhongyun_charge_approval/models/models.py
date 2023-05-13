@@ -163,12 +163,14 @@ class ZyCharge(models.Model):
             # rec.charge_rules._compute_history_head()
             # 通知状态变化
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body=_("运价单已经被%s批准.")
                 % (self.env.user.name),
             )
             # 通知关注者运价单可用
             rec.charge_rules.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body=_("新的运价单在%s规则中生效 .") % (rec.charge_rules.name),
             )
@@ -178,6 +180,7 @@ class ZyCharge(models.Model):
         self.write({"state": "cancelled"})
         for rec in self:
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body=_("变更请求 <b>%s</b> 已被取消 %s.")
                 % (rec.display_name, self.env.user.name),

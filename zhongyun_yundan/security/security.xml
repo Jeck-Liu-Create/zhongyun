@@ -23,6 +23,18 @@
               <field name="parent_id" ref="module_category_zy_yundan"/>
        </record>
 
+<!--       <record id="module_zy_yundan_account_cashier_rejected_wizard" model="ir.module.category">-->
+<!--              <field name="name">运单退回与向导</field>-->
+<!--              <field name="parent_id" ref="module_category_zy_yundan"/>-->
+<!--       </record>-->
+       <record id="zy_yundan_group_account_cashier_rejected_wizard" model="res.groups">
+              <field name="name">运单退回向导</field>
+<!--              <field name="category_id"-->
+<!--                     ref="module_zy_yundan_account_cashier_rejected_wizard"/>-->
+              <field name="implied_ids"
+                     eval="[(4, ref('base.group_user'))]"/>
+       </record>
+
        <record id="zy_yundan_group_user" model="res.groups">
               <field name="name">普通用户</field>
               <field name="category_id"

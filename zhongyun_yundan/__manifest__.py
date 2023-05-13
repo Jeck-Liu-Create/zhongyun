@@ -19,6 +19,7 @@
         'views/view.xml',
         'views/menu.xml',
         'views/view_vehicle.xml',
+        'wizard/yundan_rejected_wizard.xml',
         # 'data/email_template.xml'
     ],
     # 'qweb': [

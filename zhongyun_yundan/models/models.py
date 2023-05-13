@@ -164,6 +164,9 @@ class ZyYundan(models.Model):
         readonly=True,
     )
 
+    """ 运单添加提示功能 """
+    alert_message = fields.Html(string='Alert Message')
+
     """ 运单总价计算 """
 
     @api.depends('zy_charge', 'pound_id')

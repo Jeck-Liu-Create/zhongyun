@@ -195,12 +195,14 @@ class ZyGoodsPrice(models.Model):
             # rec.goods_rules._compute_history_head()
             # 通知状态变化
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body="货物价格已经被%s批准."
                      % self.env.user.name
             )
             # 通知关注者货物价格可用
             rec.goods_rules.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body="新的货物价格在%s货物中生效 ." % rec.goods_rules.name,
             )
@@ -236,6 +238,7 @@ class ZyGoodsPrice(models.Model):
             )
 
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body="货物价格单已经被%s批准."
                      % self.env.user.name
@@ -250,6 +253,7 @@ class ZyGoodsPrice(models.Model):
                 self.write({"state": "cancelled"})
 
                 rec.message_post(
+                    otification=True, email=False,
                     subtype_xmlid="mail.mt_comment",
                     body="变更请求 <b>%s</b> 已被取消 %s."
                          % (rec.display_name, self.env.user.name))

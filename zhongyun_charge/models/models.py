@@ -66,10 +66,17 @@ class ZyCharge(models.Model):
         }
 
     # 启用日期不能小于创建日期
+    # @api.constrains('start_datetime', 'create_date')
+    # def _check_date(self):
+    #     for data in self:
+    #         if data.start_datetime < data.create_date:
+    #             raise ValidationError(
+    #                 "启用日期不能小于创建日期"
+    #             )
     @api.constrains('start_datetime', 'create_date')
     def _check_date(self):
-        for data in self:
-            if data.start_datetime < data.create_date:
+        if not self.env.user.has_group("zhongyun_charge.group_charge_manager"):
+            if self.start_datetime < self.create_date:
                 raise ValidationError(
                     "启用日期不能小于创建日期"
                 )
@@ -205,12 +212,14 @@ class ZyCharge(models.Model):
             # rec.charge_rules._compute_history_head()
             # 通知状态变化
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body="运价单已经被%s批准."
                      % self.env.user.name
             )
             # 通知关注者运价单可用
             rec.charge_rules.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body="新的运价单在%s规则中生效 ." % rec.charge_rules.name,
             )
@@ -252,6 +261,7 @@ class ZyCharge(models.Model):
             # rec.charge_rules._compute_history_head()
             # 通知状态变化
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body="运价单已经被%s批准."
                      % self.env.user.name
@@ -267,6 +277,7 @@ class ZyCharge(models.Model):
                 self.write({"state": "cancelled"})
 
                 rec.message_post(
+                    otification=True, email=False,
                     subtype_xmlid="mail.mt_comment",
                     body="变更请求 <b>%s</b> 已被取消 %s."
                          % (rec.display_name, self.env.user.name))
@@ -287,7 +298,8 @@ class ZyCharge(models.Model):
         """ 当最新的运价单审批通过后,上一笔运价单截止日期修改为,该笔运价单的启用日期 """
         for rec in self:
             _logger.info(rec.charge_rules)
-            if (rec.start_datetime > fields.Datetime.now()) or (rec.start_datetime == fields.Datetime.now()):
+            if (rec.start_datetime > fields.Datetime.now()) or (rec.start_datetime == fields.Datetime.now()) or self.env.user.has_group(
+                "zhongyun_charge.group_charge_manager"):
                 data_charge = self.env['zy.charge'].search_read(
                     ['&', ('charge_rules', '=', rec.charge_rules.id), ('state', '=', 'approved')], limit=1,
                     order='id DESC')

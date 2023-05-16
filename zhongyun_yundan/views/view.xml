@@ -28,10 +28,8 @@
               attrs="{'invisible':['|',('state', 'in', ['to_match','not_match','match','rejected','payment','confirm_rejected']),('am_i_cashier','=',False)]}"
           />
           <button
-              name="action_rejected"
-              type="object"
-              string="运单退回"
-              class="oe_highlight"
+              name="%(action_view_yundan_rejected)d" string="运单退回"
+              type="action"
               attrs="{'invisible':['|', ('state', 'in', ['to_match','not_match','match','rejected','payment','confirm_rejected']), ('am_i_cashier','=',False)]}"
           />
           <button
@@ -53,12 +51,10 @@
                 name="am_i_admin" invisible="1"
           />
             <field name="id" invisible="1"/>
-<!--              </h1>-->
-<!--              <group>-->
-<!--                <field name="pound_id" attrs="{'readonly': [('id','!=',False)]}"/>-->
         </header>
         <sheet>
             <div class="oe_title">
+                <field name="alert_message" attrs="{'invisible':['|', ('state', 'in', ['to_match','not_match','to_payment','match','payment','confirm_rejected']), ('am_i_cashier','=',False)],'readonly': [('id','!=',False)]}"/>
               <h1>
                 <field name="name" />
               </h1>
@@ -151,23 +147,27 @@
     <field name="name">运单表</field>
     <field name="model">zy.yundan</field>
     <field name="arch" type="xml">
-      <tree default_order="establish_datetime desc" js_class="yundan_dashboard_list">
+      <tree default_order="id desc" js_class="yundan_dashboard_list" sample="1">
+<!--      <tree js_class="yundan_dashboard_list" sample="1">-->
 <!--      <tree default_order="establish_datetime desc">-->
         <field name="name"  optional="show"/>
         <field name="car_id"  optional="show"/>
+        <button name="action_matching_data"
+                string="匹配磅单"
+                type="object"
+                icon="fa-pencil"/>
         <field name="yundan_unit"  optional="show"/>
         <field name="single_supplement" readonly="1"  optional="show"/>
-        <field name="establish_datetime"  optional="hide"/>
-        <field name="establish_date"  optional="show"/>
+        <field name="establish_datetime"  optional="show"/>
+        <field name="establish_date"  optional="hide"/>
         <field name="yundan_zy_charge_rules"  optional="show"/>
         <field
               name="single_supplement_datetime"
-              attrs="{'invisible':[('single_supplement','!=', True)], 'required':[('single_supplement','=', True)]}"
-              optional="hide"
+              optional="show"
         />
         <field
               name="single_supplement_date"
-              optional="show"
+              optional="hide"
         />
         <field name="pound_id"  optional="show"/>
         <field name="pound_id_transport_goods"  optional="show"/>
@@ -179,22 +179,23 @@
         <field name="zy_yundan_company_id" invisible="1"  optional="show"/>
 <!--        <field name="amount_total" sum="Total Tax Included"  widget="monetary" decoration-bf="1" optional="show"/>-->
         <field name="amount_total" sum="Total Tax Included" optional="show"/>
+        <field name="id"  optional="hide"/>
         <field name="state"  widget="badge" decoration-primary="state == 'to_match'"  decoration-danger="state == 'not_match'"  decoration-info="state == 'match'"  decoration-muted="state == 'to_payment'" decoration-warning="state == 'rejected'" decoration-success="state == 'payment'"  optional="show"  />
       </tree>
     </field>
   </record>
 
-  <record model="ir.ui.view" id="zy_yundan_graph_view">
-        <field name="name">zy.yundan.graph</field>
-        <field name="model">zy.yundan</field>
-        <field name="arch" type="xml">
-            <graph string="结算金额" sample="1">
-                <field name="establish_date" interval="month"/>
-                <field name="amount_total" type="measure"/>
-                <field name="yundan_zy_charge_rules" type="row"/>
-            </graph>
-        </field>
-  </record>
+<!--  <record model="ir.ui.view" id="zy_yundan_graph_view">-->
+<!--        <field name="name">zy.yundan.graph</field>-->
+<!--        <field name="model">zy.yundan</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <graph string="结算金额" sample="1">-->
+<!--                <field name="establish_date" interval="month"/>-->
+<!--                <field name="amount_total" type="measure"/>-->
+<!--                <field name="yundan_zy_charge_rules" type="row"/>-->
+<!--            </graph>-->
+<!--        </field>-->
+<!--  </record>-->
 
 
     <!--zy.yundan kanban视图 -->
@@ -244,9 +245,10 @@
     <field name="arch" type="xml">
       <search string="Expense">
         <field name="name"/>
+        <field name="pound_id"/>
         <field name="car_id"/>
         <field name="single_supplement"/>
-        <field name="establish_date"/>
+        <field name="establish_date" />
         <field name="single_supplement_date"/>
         <field name="state"/>
         <field name="create_date"/>
@@ -521,8 +523,17 @@
   <record id="action_zy_yundan" model="ir.actions.act_window">
       <field name="name"> 中运物流-运单管理 </field>
       <field name="res_model">zy.yundan</field>
+      <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
+      <field name="search_view_id" ref="zy_yundan_view_search"/>
+      <field name="domain">[]</field>
       <field name="context">{'search_default_filter_last_3_days': True}</field>
-      <field name="view_mode">tree,kanban,form</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+          没有找到任何运单
+          </p><p>
+          请创建一些运单
+          </p>
+      </field>
   </record>
   
   <!-- Action to open the zy_yundan_unit -->

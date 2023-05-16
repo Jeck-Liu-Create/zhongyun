@@ -5,6 +5,7 @@ from odoo.api import call_kw
 from odoo.exceptions import UserError, ValidationError
 import datetime
 import logging
+from .utils import LocalToUtc, LocalToUtcPlus
 
 _logger = logging.getLogger(__name__)
 
@@ -109,13 +110,13 @@ class ZyPound(models.Model):
                           ('single_supplement', '=', False),
                           ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
-                          ('establish_datetime', '>=', rec.delivery_date),
-                          ('establish_datetime', '<=', rec.manufacture_date),
+                          ('establish_datetime', '>=', LocalToUtc(rec.delivery_date)),
+                          ('establish_datetime', '<=', LocalToUtcPlus(rec.manufacture_date)),
                           '&', '&', ('single_supplement', '=', True),
                           ('state', 'in', ['to_match', 'not_match', 'confirm_rejected']), '&', '|',
                           ('car_id', '=', rec.car_id.id), ('car_id', '=', rec.car_id_other.id), '&',
-                          ('single_supplement_datetime', '>=', rec.delivery_date),
-                          ('single_supplement_datetime', '<=', rec.manufacture_date)]
+                          ('single_supplement_datetime', '>=', LocalToUtc(rec.delivery_date)),
+                          ('single_supplement_datetime', '<=', LocalToUtcPlus(rec.manufacture_date))]
                 res = Model_yundan.search(domain, limit=1, order='id DESC')
                 if len(res) == 1:
                     rec.yundan_id = res[0].id

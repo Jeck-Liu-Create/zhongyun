@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DateRange" owl="1">
+        <div class="d-flex">
+            <select class="o_input_border " style="width: 45%; text-align: center; text-align-last: center;"
+                    t-on-change="(ev) => this.changeParam(ev)">
+                    <option value="establish_datetime">建单时间</option>
+                    <option value="single_supplement_datetime">补单时间</option>
+            </select>
+            <div class="o_input_border d-flex" style="width: 50%;">
+                <input class="o_input_date"
+                       style="width:100% !important"
+                       t-att-value="this.value"
+                       t-ref="root"
+                       t-att-data-tooltip="this.value"
+                       t-on-change="onChangeInput"
+                       data-tooltip-delay="100"
+                       type="text" />
+                <span class="ivu-input-suffix">
+                    <i class="fa fa-calendar-o" aria-hidden="true"/>
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

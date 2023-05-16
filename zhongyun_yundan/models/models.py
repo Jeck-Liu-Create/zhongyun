@@ -3,10 +3,12 @@ from modulefinder import Module
 import string
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from decimal import Decimal
 import math
 import datetime
 import logging
 from dateutil.relativedelta import relativedelta
+from .utils import UtcToLocal
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +42,8 @@ class ZyYundan(models.Model):
 
     establish_date = fields.Date('建单日期', compute="_get_field_compute_establish_date")
 
-    single_supplement_datetime = fields.Datetime('补单目标时间', default=lambda self: fields.Datetime.now(), required=True)
+    single_supplement_datetime = fields.Datetime('补单目标时间', default=lambda self: fields.Datetime.now(),
+                                                 required=True)
 
     single_supplement_date = fields.Date('补单目标日期', compute="_get_field_compute_single_supplement_date")
 
@@ -65,10 +68,12 @@ class ZyYundan(models.Model):
     """"""""" """""""""
     " 货物价格相关信息 "
     """"""""" """""""""
-    yundan_zy_goods_price = fields.Many2one(string='货物信息', related='yundan_unit.yundan_unit_zy_goods_price', store=True,
+    yundan_zy_goods_price = fields.Many2one(string='货物信息', related='yundan_unit.yundan_unit_zy_goods_price',
+                                            store=True,
                                             readonly=True)
 
-    goods_price = fields.Monetary(string='货物价格', related='yundan_zy_goods_price.goods_price', store=True, readonly=True,
+    goods_price = fields.Monetary(string='货物价格', related='yundan_zy_goods_price.goods_price', store=True,
+                                  readonly=True,
                                   compute='_amount_all')
 
     """ 判断用户是否为所有者 """
@@ -87,7 +92,8 @@ class ZyYundan(models.Model):
     """"""""" """""""""
     pound_id_supplier = fields.Char('发货人（供应商）', related='pound_id.pound_supplier', store=True, readonly=True)
 
-    pound_id_transport_goods = fields.Char('运输货物名称', related='pound_id.transport_goods', store=True, readonly=True)
+    pound_id_transport_goods = fields.Char('运输货物名称', related='pound_id.transport_goods', store=True,
+                                           readonly=True)
 
     pound_is_transport_goods_specification = fields.Char('规格型号', related='pound_id.transport_goods_specification',
                                                          store=True, readonly=True)
@@ -113,7 +119,8 @@ class ZyYundan(models.Model):
     pound_id_Tdelivery_location = fields.Many2one(string='发货地址', related='pound_id.delivery_location', store=True,
                                                   readonly=True)
 
-    pound_id_car_id_other = fields.Many2one(string='油车车号', related='pound_id.car_id_other', store=True, readonly=True)
+    pound_id_car_id_other = fields.Many2one(string='油车车号', related='pound_id.car_id_other', store=True,
+                                            readonly=True)
 
     pound_id_tram_carrier_unit = fields.Char(string='电车承运单位', related='pound_id.tram_carrier_unit', store=True,
                                              readonly=True)
@@ -127,7 +134,8 @@ class ZyYundan(models.Model):
 
     """ 运单总价值相关字段 """
 
-    amount_untaxed = fields.Monetary(string='付车总额', digits=(10, 3), store=True, readonly=True, compute='_amount_all')
+    amount_untaxed = fields.Monetary(string='付车总额', digits=(10, 3), store=True, readonly=True,
+                                     compute='_amount_all')
 
     kui_tons = fields.Float('亏吨量', digits=(10, 4), compute='_amount_all')
 
@@ -156,6 +164,9 @@ class ZyYundan(models.Model):
         readonly=True,
     )
 
+    """ 运单添加提示功能 """
+    alert_message = fields.Html(string='Alert Message')
+
     """ 运单总价计算 """
 
     @api.depends('zy_charge', 'pound_id')
@@ -165,21 +176,22 @@ class ZyYundan(models.Model):
         """
         for rec in self:
             # 付车总额
-            amount_untaxed = rec.pound_id_net_weight * rec.transport_price
+            amount_untaxed = Decimal(str(rec.pound_id_net_weight)) * Decimal(str(rec.transport_price))
 
             # 亏吨量 亏吨量=净重-原发重x（1-运损率)
-            kui_tons = rec.pound_id_net_weight - rec.pound_id_primary_weight * (1 - rec.pound_id_percentage_data)
+            kui_tons = Decimal(str(rec.pound_id_net_weight)) - Decimal(str(rec.pound_id_primary_weight)) * Decimal(
+                str(1 - rec.pound_id_percentage_data))
 
             # 亏吨款
             kui_tools = lambda x: x if x < 0 else 0
-            kui_tons_price = kui_tools(kui_tons) * rec.goods_price
+            kui_tons_price = Decimal(str(kui_tools(float(kui_tons)))) * Decimal(str(rec.goods_price))
 
             # 扣减亏吨款
             deduct_tools = lambda x: -x if x < 0 else 0
-            deduct_price = deduct_tools(kui_tons_price)
+            deduct_price = deduct_tools(float(kui_tons_price))
 
             # 实际付车
-            amount_tax = amount_untaxed + kui_tons_price
+            amount_tax = float(str(amount_untaxed + kui_tons_price))
 
             # 结算金额
             if amount_tax % 10 < 9:
@@ -202,39 +214,38 @@ class ZyYundan(models.Model):
         Model_charge = self.env['zy.pound']
         if not self.single_supplement:
             domain = ['&', '|', ('car_id', '=', self.car_id.id), ('car_id_other', '=', self.car_id.id), '&', (
-                'delivery_date', '<=', datetime.datetime.strftime((self.establish_datetime.date()), '%Y-%m-%d')), (
+                'delivery_date', '<=', datetime.datetime.strftime((UtcToLocal(self.establish_datetime).date()), '%Y-%m-%d')), (
                           'manufacture_date', '>=',
-                          datetime.datetime.strftime((self.establish_datetime.date()), '%Y-%m-%d'))]
+                          datetime.datetime.strftime((UtcToLocal(self.establish_datetime).date()), '%Y-%m-%d'))]
             _logger.info(domain)
             Model_charge.search(domain, limit=1, order='id DESC')
 
             return {'domain': {
                 'pound_id': ['&', '|', ('car_id', '=', self.car_id.id), ('car_id_other', '=', self.car_id.id), '&', (
-                    'delivery_date', '<=', datetime.datetime.strftime((self.establish_datetime.date()), '%Y-%m-%d')),
+                    'delivery_date', '<=', datetime.datetime.strftime((UtcToLocal(self.establish_datetime).date()), '%Y-%m-%d')),
                              (
                                  'manufacture_date', '>=',
-                                 datetime.datetime.strftime((self.establish_datetime.date()), '%Y-%m-%d'))]}}
+                                 datetime.datetime.strftime((UtcToLocal(self.establish_datetime).date()), '%Y-%m-%d'))]}}
         else:
             domain = ['&', '|', ('car_id', '=', self.car_id.id), ('car_id_other', '=', self.car_id.id), '&', (
                 'delivery_date', '<=',
-                datetime.datetime.strftime((self.single_supplement_datetime.date()), '%Y-%m-%d')),
+                datetime.datetime.strftime((UtcToLocal(self.single_supplement_datetime).date()), '%Y-%m-%d')),
                       ('manufacture_date', '>=',
-                       datetime.datetime.strftime((self.single_supplement_datetime.date()), '%Y-%m-%d'))]
+                       datetime.datetime.strftime((UtcToLocal(self.single_supplement_datetime).date()), '%Y-%m-%d'))]
             _logger.info(domain)
             Model_charge.search(domain, limit=1, order='id DESC')
 
             return {'domain': {
                 'pound_id': ['&', '|', ('car_id', '=', self.car_id.id), ('car_id_other', '=', self.car_id.id), '&', (
                     'delivery_date', '<=',
-                    datetime.datetime.strftime((self.single_supplement_datetime.date()), '%Y-%m-%d')), (
+                    datetime.datetime.strftime((UtcToLocal(self.single_supplement_datetime).date()), '%Y-%m-%d')), (
                                  'manufacture_date', '>=',
-                                 datetime.datetime.strftime((self.single_supplement_datetime.date()), '%Y-%m-%d'))]}}
+                                 datetime.datetime.strftime((UtcToLocal(self.single_supplement_datetime).date()), '%Y-%m-%d'))]}}
 
     @api.onchange('establish_datetime', 'single_supplement_datetime')
     def _onchange_pound_date(self):
-        self.establish_date = datetime.datetime.strftime((self.establish_datetime.date()), '%Y-%m-%d')
-        self.single_supplement_date = datetime.datetime.strftime((self.single_supplement_datetime.date()),
-                                                                 '%Y-%m-%d')
+        self.establish_date = datetime.datetime.strftime((UtcToLocal(self.establish_datetime).date()), '%Y-%m-%d')
+        self.single_supplement_date = datetime.datetime.strftime((UtcToLocal(self.single_supplement_datetime).date()), '%Y-%m-%d')
 
     @api.model
     def create(self, vals):
@@ -247,26 +258,17 @@ class ZyYundan(models.Model):
         new_record = super(ZyYundan, self).create(vals)
         return new_record
 
-    # def write(self, vals):
-    #     if (self.state in ['match', 'to_payment', 'payment', 'rejected']) and ('state' in vals):
-    #         raise UserError(
-    #             _('【%s】状态下无法修改数据 ') % (
-    #                 self.state,))
-    #     self.with_context(tracking_disable=True)
-    #     return super(ZyYundan, self).write(vals)
-
     @api.depends('establish_datetime')
     def _get_field_compute_establish_date(self):
         """ 自动将时间字段改成日期字段 """
         for rec in self:
-            rec.establish_date = datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d')
+            rec.establish_date = datetime.datetime.strftime((UtcToLocal(rec.establish_datetime).date()), '%Y-%m-%d')
 
     @api.depends('single_supplement_datetime')
     def _get_field_compute_single_supplement_date(self):
         """ 自动将时间字段改成日期字段 """
         for rec in self:
-            rec.single_supplement_date = datetime.datetime.strftime((rec.single_supplement_datetime.date()),
-                                                                    '%Y-%m-%d')
+            rec.single_supplement_date = datetime.datetime.strftime((UtcToLocal(rec.single_supplement_datetime).date()), '%Y-%m-%d')
 
     def name_get(self):
         """ 选择时显示字段的字段名称 """
@@ -288,9 +290,9 @@ class ZyYundan(models.Model):
                               ('car_id', '=', rec.car_id.id),
                               ('car_id_other', '=', rec.car_id.id), '&', (
                                   'delivery_date', '<=',
-                                  datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d')), (
+                                  datetime.datetime.strftime((UtcToLocal(rec.establish_datetime).date()), '%Y-%m-%d')), (
                                   'manufacture_date', '>=',
-                                  datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d'))]
+                                  datetime.datetime.strftime((UtcToLocal(rec.establish_datetime).date()), '%Y-%m-%d'))]
                     _logger.info(domain)
                     res = Model_charge.search(domain, limit=1, order='id DESC')
                     if len(res) == 1:
@@ -306,9 +308,9 @@ class ZyYundan(models.Model):
                 else:
                     domain = ['&', '|', ('car_id', '=', rec.car_id.id), ('car_id_other', '=', rec.car_id.id), '&', (
                         'delivery_date', '<=',
-                        datetime.datetime.strftime((rec.single_supplement_datetime.date()), '%Y-%m-%d')), (
+                        datetime.datetime.strftime((UtcToLocal(rec.single_supplement_datetime).date()), '%Y-%m-%d')), (
                                   'manufacture_date', '>=',
-                                  datetime.datetime.strftime((rec.single_supplement_datetime.date()), '%Y-%m-%d'))]
+                                  datetime.datetime.strftime((UtcToLocal(rec.single_supplement_datetime).date()), '%Y-%m-%d'))]
                     _logger.info(domain)
                     res = Model_charge.search(domain, limit=1, order='id DESC')
                     if len(res) == 1:
@@ -330,10 +332,10 @@ class ZyYundan(models.Model):
             if rec.state == 'to_match' or rec.state == 'not_match' or rec.state == 'confirm_rejected':
                 if not rec.single_supplement:
                     domain = ['&', '|', ('car_id', '=', rec.car_id.id), ('car_id_other', '=', rec.car_id.id), '&', (
-                        'delivery_date', '<=', datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d')),
+                        'delivery_date', '<=', datetime.datetime.strftime((UtcToLocal(rec.establish_datetime).date()), '%Y-%m-%d')),
                               (
                                   'manufacture_date', '>=',
-                                  datetime.datetime.strftime((rec.establish_datetime.date()), '%Y-%m-%d'))]
+                                  datetime.datetime.strftime((UtcToLocal(rec.establish_datetime).date()), '%Y-%m-%d'))]
                     _logger.info(domain)
                     res = Model_charge.search(domain, limit=1, order='id DESC')
                     if len(res) == 1:
@@ -348,9 +350,9 @@ class ZyYundan(models.Model):
                 else:
                     domain = ['&', '|', ('car_id', '=', rec.car_id.id), ('car_id_other', '=', rec.car_id.id), '&', (
                         'delivery_date', '<=',
-                        datetime.datetime.strftime((rec.single_supplement_datetime.date()), '%Y-%m-%d')), (
+                        datetime.datetime.strftime((UtcToLocal(rec.single_supplement_datetime).date()), '%Y-%m-%d')), (
                                   'manufacture_date', '>=',
-                                  datetime.datetime.strftime((rec.single_supplement_datetime.date()), '%Y-%m-%d'))]
+                                  datetime.datetime.strftime((UtcToLocal(rec.single_supplement_datetime).date()), '%Y-%m-%d'))]
                     _logger.info(domain)
                     res = Model_charge.search(domain, limit=1, order='id DESC')
                     if len(res) == 1:
@@ -646,7 +648,8 @@ class ZyYunDanUnit(models.Model):
     """ 补单相关字段 """
     replenish_state = fields.Boolean(string='是否补单', default=False)
 
-    single_supplement_datetime = fields.Datetime('补单目标时间', default=lambda self: fields.Datetime.now(), required=True)
+    single_supplement_datetime = fields.Datetime('补单目标时间', default=lambda self: fields.Datetime.now(),
+                                                 required=True)
     single_supplement_date = fields.Date('补单目标日期', compute="_get_field_compute_single_supplement_date")
 
     state = fields.Selection(
@@ -666,8 +669,8 @@ class ZyYunDanUnit(models.Model):
     def _get_field_compute_single_supplement_date(self):
         """ 自动将时间字段改成日期字段 """
         for rec in self:
-            rec.single_supplement_date = datetime.datetime.strftime((rec.single_supplement_datetime.date()),
-                                                                    '%Y-%m-%d')
+            rec.single_supplement_date = datetime.datetime.strftime((UtcToLocal(rec.single_supplement_datetime).date()), '%Y-%m-%d')
+
 
     @api.onchange('single_supplement_datetime')
     def _get_field_onchange_single_supplement_date(self):

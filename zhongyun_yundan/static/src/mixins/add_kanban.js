@@ -6,7 +6,7 @@ const { onWillStart ,useState} = owl;
 
 export const AddDocumentUpload = {
     setup() {
-        this._super();
+
         this.actionService = useService('action');
         this.orm = useService('orm');
         this.state = useState({

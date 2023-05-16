@@ -77,7 +77,7 @@ class ImportXlsxPound(models.TransientModel):
 
         transport_company_data = self._getModelId((row[10].value, 'res.company'))
 
-        delivery_location_data = self._getModelId((row[11].value, 'zy.address'))
+        delivery_location_data = self._getAddressId(row[11].value, row[1].value)
 
         car_id_other_data = self._getModelId((row[12].value, 'zy.vehicle'))
 
@@ -102,7 +102,6 @@ class ImportXlsxPound(models.TransientModel):
         }
 
         self.env['zy.pound'].sudo().create(create_data)
-
 
     def import_pound(self):
         action = {
@@ -139,7 +138,7 @@ class ImportXlsxPound(models.TransientModel):
                 row = sh.row(rx)
                 check_result = self._check_row(row, rx)
                 if check_result['raiseError']:
-                    self.result = self.result + check_result['error']
+                    self.result = str(self.result) + check_result['error']
             if len(self.result) > 0:
                 return action
 
@@ -176,7 +175,6 @@ class ImportXlsxPound(models.TransientModel):
                 (this.filename, tools.ustr(e))
             )
 
-
     def _checkheader(self, row):
         """检查导入的excel的表头格式"""
         result = ""
@@ -206,35 +204,37 @@ class ImportXlsxPound(models.TransientModel):
         result = ""
         # 运输单位
         if not (self._getModelId((row[10].value, 'res.company'))):
-            result = result + "<div><span class='text-danger fa fa-close'></span>运输单位所在列<kbd>{}</kbd>不存在</div>".format(
+            result = result + r"<div><span class='text-danger fa fa-close'></span>运输单位所在列<kbd>{}</kbd>不存在</div>".format(
                 row[10].value)
 
         # 判断出厂日期栏
         if row[5].ctype != 3 and row[5].ctype != 1:
-            result = result + "<div><span class='text-danger fa fa-close'></span>出厂日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
+            result = result + r"<div><span class='text-danger fa fa-close'></span>出厂日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
                 row[5].value, "2020-5-12")
         if row[5].ctype == 1:
             try:
                 time.strptime(row[5].value, "%Y-%m-%d")
             except Exception:
-                result = result + "<div><span class='text-danger fa fa-close'></span>出厂日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
+                result = result + r"<div><span class='text-danger fa fa-close'></span>出厂日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
                     row[5].value, "2020-5-12")
 
         # 判断发货日期栏
         if row[6].ctype != 3 and row[6].ctype != 1:
-            result = result + "<div><span class='text-danger fa fa-close'></span>发货日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
+            result = result + r"<div><span class='text-danger fa fa-close'></span>发货日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
                 row[6].value, "2020-5-12")
         if row[6].ctype == 1:
             try:
                 time.strptime(row[6].value, "%Y-%m-%d")
             except Exception:
-                result = result + "<div><span class='text-danger fa fa-close'></span>发货日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
+                result = result + r"<div><span class='text-danger fa fa-close'></span>发货日期所在列<kbd>{}</kbd>不是有效的日期格式,正确的格如:<kbd>{}</kbd></div>".format(
                     row[6].value, "2020-5-12")
 
         # 判断发货地址栏
-        if not (self._getModelId((row[11].value, 'zy.address'))):
-            result = result + "<div><span class='text-danger fa fa-close'></span>发货地址所在列<kbd>{}</kbd>不存在</div>".format(
-                row[11].value)
+        if not (self._getAddressId(row[11].value, row[1].value)):
+            result = result + r"<div><span class='text-danger fa fa-close'></span>发货地址所在列<kbd>{}</kbd>不存在或供应商有问题</div>".format(row[11].value)
+        # if not (self._getModelId((row[11].value, 'zy.address'))):
+        #     result = result + "<div><span class='text-danger fa fa-close'></span>发货地址所在列<kbd>{}</kbd>不存在</div>".format(
+        #         row[11].value)
 
         # 判断车号栏
         vehicleId = self._getModelId((row[4].value, 'zy.vehicle'))
@@ -250,7 +250,7 @@ class ImportXlsxPound(models.TransientModel):
                 {"name": row[12].value})
 
         if len(result) > 0:
-            result = "<div><kbd>第{}行</kbd>出现如下错误:</div>".format(rx + 1) + result
+            result = r"<div><kbd>第{}行</kbd>出现如下错误:</div>".format(rx + 1) + result
             rais["raiseError"] = True
             rais["error"] = result
         return rais
@@ -278,6 +278,16 @@ class ImportXlsxPound(models.TransientModel):
             return False
         record = self.env[name_model[1]].sudo().search(
             [('name', '=', name_model[0])], limit=1)
+        if record.exists():
+            return record.id
+        return False
+
+    def _getAddressId(self, name_address, pound_supplier):
+        """ 根据地址名称和供货商名查询 """
+        if not(name_address or pound_supplier):
+            return False
+        record = self.env['zy.address'].sudo().search(
+            ['&', ('name', '=', name_address), ('supplier', '=', pound_supplier)], limit=1)
         if record.exists():
             return record.id
         return False

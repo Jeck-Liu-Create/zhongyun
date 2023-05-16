@@ -193,12 +193,14 @@ class ZyBuckle(models.Model):
             # rec.buckle_rules._compute_history_head()
             # 通知状态变化
             rec.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body=("计量价格已经被%s批准.")
                      % (self.env.user.name)
             )
             # 通知关注者计量价格可用
             rec.buckle_rules.message_post(
+                otification=True, email=False,
                 subtype_xmlid="mail.mt_comment",
                 body=("新的计量价格在%s计量中生效 .") % (rec.buckle_rules.name),
             )
@@ -214,6 +216,7 @@ class ZyBuckle(models.Model):
                 self.write({"state": "cancelled"})
 
                 rec.message_post(
+                    otification=True, email=False,
                     subtype_xmlid="mail.mt_comment",
                     body=("变更请求 <b>%s</b> 已被取消 %s.")
                          % (rec.display_name, self.env.user.name))

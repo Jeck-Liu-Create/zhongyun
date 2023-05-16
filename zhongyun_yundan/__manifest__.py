@@ -19,6 +19,7 @@
         'views/view.xml',
         'views/menu.xml',
         'views/view_vehicle.xml',
+        'wizard/yundan_rejected_wizard.xml',
         # 'data/email_template.xml'
     ],
     # 'qweb': [
@@ -38,6 +39,13 @@
             'zhongyun_yundan/static/src/views/yundan_listview.xml',
             'zhongyun_yundan/static/src/views/yundan_kanbanview.xml',
             'zhongyun_yundan/static/src/views/yundan_kanbanview.js',
+
+            'zhongyun_yundan/static/src/daterange/daterange_field.scss',
+            'zhongyun_yundan/static/src/daterange/daterange_field.js',
+            'zhongyun_yundan/static/src/daterange/daterange_field.xml',
+
+            'zhongyun_yundan/static/src/OnboardingBanner/no_content_helpers2.xml',
+
 
 
         ],

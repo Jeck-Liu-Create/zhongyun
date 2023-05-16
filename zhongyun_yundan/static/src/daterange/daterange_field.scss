@@ -1,0 +1,40 @@
+.daterangepicker .ranges li:hover {
+    background-color: #71639e !important;
+    color: #fff !important;
+}
+
+.daterangepicker .ranges li.active{
+    background-color: #71639e !important;
+    color: #fff !important;
+}
+
+.o_input_date{
+    padding: 0.5rem 0.75rem;
+    height: 24px;
+    //border: none;
+    border-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+}
+.ivu-input-suffix {
+    left: auto;
+    right: 0;
+}
+
+.o_form_control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1.08333333rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: white;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}

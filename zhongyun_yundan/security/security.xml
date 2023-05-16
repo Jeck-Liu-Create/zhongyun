@@ -4,14 +4,35 @@
               <field name="name">中运物流-运单</field>
        </record>
 
+       <record id="module_category_zy_yundan_unit" model="ir.module.category">
+              <field name="name">中运物流-运单组</field>
+       </record>
+
        <record id="module_zy_yundan" model="ir.module.category">
               <field name="name">运单管理</field>
               <field name="parent_id" ref="module_category_zy_yundan"/>
        </record>
 
-       <record id="module_zy_yundan_unit" model="ir.module.category">
-              <field name="name">运单组管理</field>
+       <record id="module_zy_yundan_business_user" model="ir.module.category">
+              <field name="name">外派业务用户</field>
               <field name="parent_id" ref="module_category_zy_yundan"/>
+       </record>
+
+       <record id="module_zy_yundan_account_cashier" model="ir.module.category">
+              <field name="name">出纳业务用户</field>
+              <field name="parent_id" ref="module_category_zy_yundan"/>
+       </record>
+
+<!--       <record id="module_zy_yundan_account_cashier_rejected_wizard" model="ir.module.category">-->
+<!--              <field name="name">运单退回与向导</field>-->
+<!--              <field name="parent_id" ref="module_category_zy_yundan"/>-->
+<!--       </record>-->
+       <record id="zy_yundan_group_account_cashier_rejected_wizard" model="res.groups">
+              <field name="name">运单退回向导</field>
+<!--              <field name="category_id"-->
+<!--                     ref="module_zy_yundan_account_cashier_rejected_wizard"/>-->
+              <field name="implied_ids"
+                     eval="[(4, ref('base.group_user'))]"/>
        </record>
 
        <record id="zy_yundan_group_user" model="res.groups">
@@ -25,16 +46,16 @@
        <record id="zy_yundan_group_business_user" model="res.groups">
               <field name="name">外派业务用户</field>
               <field name="category_id"
-                     ref="module_zy_yundan"/>
+                     ref="module_zy_yundan_business_user"/>
               <field name="implied_ids"
-                     eval="[(4, ref('zy_yundan_group_user'))]"/>
+                     eval="[(4, ref('base.group_user'))]"/>
        </record>
 
        <record id="zy_yundan_group_account_cashier" model="res.groups">
               <field name="name">出纳业务用户</field>
-              <field name="category_id" 
-                     ref="module_zy_yundan"/>
-              <field name="implied_ids" 
+              <field name="category_id"
+                     ref="module_zy_yundan_account_cashier"/>
+              <field name="implied_ids"
                      eval="[(4, ref('base.group_user'))]"/>
        </record>
 
@@ -50,7 +71,7 @@
        </record>
 
        <record model="ir.rule" id="zy_yudnan_request_global_user_rule">
-              <field name="name">出纳业务用户运单可见性</field>
+              <field name="name">外派业务用户运单可见性</field>
               <field name="model_id" ref="model_zy_yundan" />
               <field name="domain_force" >[('create_uid','=',user.id)]</field>
               <field name="groups" eval="[(4,ref('zy_yundan_group_business_user'))]" />
@@ -61,7 +82,6 @@
               <field name="model_id" ref="model_zy_yundan" />
               <field name="global" eval="True" />
               <field name="domain_force" >['|',('zy_yundan_company_id','=',False),('zy_yundan_company_id', 'in', company_ids)]</field>
-<!--              <field name="groups" eval="[(4, ref('zy_yundan_group_user')),(4, ref('zy_yundan_group_business_user')),(4, ref('zy_yundan_group_account_cashier'))]"/>-->
        </record>
 
        <record id="only_responsible_can_modify" model="ir.rule">
@@ -79,6 +99,15 @@
 
 <!--  ***************************************************************************     -->
 
+       <record id="module_zy_yundan_unit" model="ir.module.category">
+              <field name="name">运单组管理</field>
+              <field name="parent_id" ref="module_category_zy_yundan_unit"/>
+       </record>
+
+       <record id="module_zy_yundan_unit_business" model="ir.module.category">
+              <field name="name">外派业务用户</field>
+              <field name="parent_id" ref="module_category_zy_yundan_unit"/>
+       </record>
 
        <record id="zy_yundan_unit_group_user" model="res.groups">
               <field name="name">普通用户</field>
@@ -91,7 +120,7 @@
        <record id="zy_yundan_unit_group_business" model="res.groups">
               <field name="name">外派业务用户</field>
               <field name="category_id"
-                     ref="module_zy_yundan_unit"/>
+                     ref="module_zy_yundan_unit_business"/>
               <field name="implied_ids"
                      eval="[(4, ref('zy_yundan_unit_group_user'))]"/>
        </record>
@@ -108,7 +137,7 @@
        </record>
 
        <record model="ir.rule" id="zy_yundan_unit_request_global_user_rule">
-              <field name="name">出纳业务用户运单可见性</field>
+              <field name="name">外派业务用户运单可见性</field>
               <field name="model_id" ref="model_zy_yundan_unit" />
               <field name="domain_force" >[('create_uid','=',user.id)]</field>
               <field name="groups" eval="[(4,ref('zy_yundan_unit_group_business'))]" />
@@ -120,7 +149,6 @@
               <field name="model_id" ref="model_zy_yundan_unit" />
               <field name="global" eval="True" />
               <field name="domain_force" >['|',('yundan_unit_company_id','=',False),('yundan_unit_company_id', 'in', company_ids)]</field>
-<!--              <field name="groups" eval="[(4, ref('zy_yundan_unit_group_user')),(4, ref('zy_yundan_unit_group_business'))]"/>-->
        </record>
 
 </odoo>

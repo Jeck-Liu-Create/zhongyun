@@ -45,9 +45,9 @@ class ZyAddress(models.Model):
     # 备注
     remarke = fields.Text(string='备注')
 
-    _sql_constraints = [
-        ('name_Address', 'unique(name)', 'name must be unique'),
-    ]
+    # _sql_constraints = [
+    #     ('name_Address', 'unique(name)', 'name must be unique'),
+    # ]
 
     def name_get(self):
         """本方法用于自定义记录的显示名称"""
